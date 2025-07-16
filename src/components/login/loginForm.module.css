@@ -114,12 +114,141 @@
 }
 
 .extrasContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0;
   margin-top: -2%;
-  margin-left: 3%;
-  width: 90%;
+  width: 82%;
   font-family: Quicksand, sans-serif;
   font-size: 18px;
   padding: 0;
-  display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (min-width: 899px) and (max-width: 1199px) {
+  .formTitleLaptop {
+    color: #fd9f09;
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+    margin-bottom: -0.6%;
+  }
+  .errorMsg {
+    margin-top: 2%;
+    font-weight: 400;
+    color: red;
+    font-size: 18px;
+    font-family: Quicksand, sans-serif;
+  }
+
+  .wrapper {
+    justify-content: center;
+    width: 60%;
+    margin-top: -3%;
+  }
+
+  .form {
+    width: 100%;
+    padding: 4% 0 3% 0;
+    text-align: center;
+  }
+
+  .form .labels {
+    font-size: 18px;
+  }
+
+  .form svg {
+    font-size: 20px;
+    margin-left: 7px;
+    margin-top: -0.75px;
+  }
+
+  .form div {
+    padding: 1.5% 0;
+  }
+
+  .extras a {
+    font-family: Quicksand, sans-serif;
+    color: #333333;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .extras .check {
+    margin-top: 0.6%;
+  }
+  .extras input {
+    zoom: 1.1;
+    border: solid 1px #adadad;
+    margin-bottom: -0.25%;
+  }
+  .extras input {
+    zoom: 1.2;
+    border: solid 1px #adadad;
+    margin-bottom: -0.5%;
+  }
+  .extras label {
+    font-size: 16px;
+  }
+
+  .extrasContainer {
+    margin-top: -2%;
+    margin-left: 3%;
+    width: 90%;
+    font-family: Quicksand, sans-serif;
+    font-size: 18px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 1199px) and (max-width: 1519px) {
+  .formTitle {
+    font-size: 38px;
+  }
+  .form .labels {
+    font-size: 18px;
+  }
+
+  .form svg {
+    font-size: 20px;
+    color: #adadad;
+    cursor: pointer;
+    margin-left: 7px;
+    margin-top: -1.1px;
+  }
+
+  .extras a,
+  label {
+    font-size: 12px;
+  }
+  .extrasContainer div {
+    display: flex;
+    align-items: center;
+  }
+
+  .extras input {
+    zoom: 0.9;
+  }
+
+  .errorMsg {
+    margin-top: 0;
+    font-size: 18px;
+  }
+
+  .extrasContainer {
+    margin-top: -3%;
+    width: 80%;
+    font-family: Quicksand, sans-serif;
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 1519px) and (max-width: 1780px) {
+  .extrasContainer {
+    width: 84%;
+    font-size: 16px;
+  }
 }

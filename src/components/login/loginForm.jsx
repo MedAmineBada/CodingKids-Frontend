@@ -3,6 +3,7 @@ import { Container, Form } from "react-bootstrap";
 import styles from "./loginForm.module.css";
 import EyeToggle from "./passwordEye.jsx";
 import LoginButton from "./loginButton.jsx";
+import MediaQuery from "react-responsive";
 
 export default function LoginForm() {
   const [showPwd, setShowPwd] = useState(false);
@@ -34,9 +35,15 @@ export default function LoginForm() {
 
   return (
     <Container className={styles.wrapper}>
-      <h1 className={styles.formTitle}>Se Connecter</h1>
+      <MediaQuery minWidth={1199}>
+        <h1 className={styles.formTitle}>Se Connecter</h1>
+      </MediaQuery>
+
       <Container className={styles.topContainer} fluid>
         <Form className={styles.form} onSubmit={handleSubmit}>
+          <MediaQuery minWidth={900} maxWidth={1199}>
+            <h1 className={styles.formTitleLaptop}>Se Connecter</h1>
+          </MediaQuery>
           <Form.Group>
             {emailError && <p className={styles.errorMsg}>{emailError}</p>}
             <Form.Label className={styles.labels} column={true}>

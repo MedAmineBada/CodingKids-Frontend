@@ -7,7 +7,8 @@ h2 {
 .loginContainer,
 .rowContainer,
 .leftCol,
-.rightCol {
+.rightCol,
+.midCol {
   --bs-gutter-x: 0;
 }
 
@@ -23,10 +24,10 @@ h2 {
 
 .leftCol {
   height: 100vh;
-  background: #fd9f09 url("../../assets/images/loginBg.svg") no-repeat;
-  background-size: 105%;
-  background-position-y: 35%;
-  background-position-x: 115%;
+  background: #fd9f09 url("../../assets/images/loginBackground.svg") no-repeat;
+  background-size: 120%;
+  background-position-y: 40%;
+  background-position-x: 47%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,4 +82,116 @@ h2 {
 
 .title img {
   user-select: none;
+}
+
+/*STYLES FOR LAPTOP*/
+@media screen and (min-width: 900px) and (max-width: 1199px) {
+  .loginContainerLaptop {
+    background: #fd9f09 url("../../assets/images/loginBackground.svg") no-repeat;
+    background-size: 120%;
+    background-position-x: 50%;
+    background-position-y: 33%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .midCol {
+    margin-top: -2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .logoContainer {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    padding-bottom: 3%;
+  }
+  .bgTitle {
+    color: white;
+
+    font-size: 72px;
+    font-weight: 800;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .bgTitle2 {
+    margin-top: -3%;
+    color: white;
+    font-size: 34px;
+    font-weight: 800;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .logoContainer .logo {
+    scale: 0.9;
+    margin-bottom: -0.5%;
+  }
+  .logoContainer .horse {
+    scale: 0.75;
+    margin-left: -0.6%;
+    margin-right: -0.6%;
+  }
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -1.5%;
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1199px) and (max-height: 675px) {
+  .logoContainer {
+    margin-top: 0;
+  }
+  .logoContainer .logo {
+    scale: 0.8;
+    margin-bottom: -1%;
+  }
+  .logoContainer .horse {
+    scale: 0.6;
+    padding: 0 0 1%;
+    margin-left: -1.1%;
+    margin-right: -1.1%;
+  }
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -3%;
+  }
+  .logoContainer .bgTitle {
+    font-size: 60px;
+  }
+  .logoContainer .bgTitle2 {
+    font-size: 28px;
+    margin-top: -4%;
+  }
+}
+@media screen and (min-width: 1199px) and (max-width: 1519px) {
+  .bgTitle {
+    font-size: 72px;
+  }
+  .bgTitle2 {
+    margin-top: -2.5%;
+    font-size: 28px;
+  }
+  .title img {
+    scale: 0.7;
+    margin-top: -1.5%;
+    margin-left: -1.2%;
+    margin-right: -1.2%;
+  }
+  .logoContainer .logo {
+    scale: 1;
+    margin-bottom: 0%;
+  }
 }
