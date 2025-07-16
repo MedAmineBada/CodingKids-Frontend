@@ -1,6 +1,6 @@
 .wrapper {
   justify-content: center;
-  width: 54%;
+  width: 60%;
   margin-top: -3%;
 }
 
@@ -15,8 +15,7 @@
 
 .form {
   width: 100%;
-  padding-bottom: 2%;
-  padding-top: 2%;
+  padding: 4% 0 3% 0;
   text-align: center;
 }
 
@@ -43,7 +42,6 @@
   width: 66%;
   margin: 0 auto;
   font-family: Quicksand, sans-serif;
-  font-size: 20px;
   font-weight: 400;
   background: transparent;
   border: none;
@@ -70,50 +68,28 @@
 .form div {
   padding: 2% 0;
 }
-.connectButton {
-  font-family: Quicksand, sans-serif;
-  background: #fd9f09;
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-  padding: 10px 10px 12px 10px;
-  margin-top: 2%;
-  border: 2px solid transparent;
-  width: 65%;
-  border-radius: 40px;
-}
-.connectButton:hover {
-  background: #ffffff;
-  color: #fd9f09;
-  border-color: #fd9f09;
-  box-shadow: #fd9f09 0 0 6px;
-}
-.connectButton:active {
-  background: #fd9f09 !important;
-  border-color: #fd9f09 !important;
-}
+
 .check {
   margin: 0 0 -0.4%;
   padding: 0;
-  display: grid;
+  display: flex;
   align-items: center;
   grid-template-columns: 1fr 8fr;
 }
+
 .extras {
   margin: 0 auto;
   width: 100%;
-  gap: 15%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: Quicksand, sans-serif;
   color: #333333;
-  font-size: 20px;
+  font-size: 18px;
 }
 .extras a {
   font-family: Quicksand, sans-serif;
   color: #333333;
-  font-size: 20px;
   text-decoration: none;
 }
 .extras a:hover {
@@ -124,9 +100,9 @@
 }
 
 .extras input {
-  zoom: 1.6;
+  zoom: 1.2;
   border: solid 1px #adadad;
-  margin-bottom: -2%;
+  margin-bottom: -0.5%;
 }
 
 .errorMsg {
@@ -135,4 +111,15 @@
   color: red;
   font-size: 24px;
   font-family: Quicksand, sans-serif;
+}
+
+.extrasContainer {
+  margin-top: -2%;
+  margin-left: 3%;
+  width: 90%;
+  font-family: Quicksand, sans-serif;
+  font-size: 18px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import styles from "./loginForm.module.css";
 import EyeToggle from "./passwordEye.jsx";
+import LoginButton from "./loginButton.jsx";
 
 export default function LoginForm() {
   const [showPwd, setShowPwd] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  // Email validation regex
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -16,7 +16,6 @@ export default function LoginForm() {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    // Clear error on input change
     if (emailError) setEmailError("");
   };
 
@@ -46,6 +45,7 @@ export default function LoginForm() {
             <Form.Control
               className={styles.inputs}
               type="email"
+              id="email"
               placeholder="Entrez votre email"
               value={email}
               onChange={handleEmailChange}
@@ -63,24 +63,25 @@ export default function LoginForm() {
             />
           </Form.Group>
           <Form.Group>
-            <Button className={styles.connectButton} type="submit">
-              Connexion
-            </Button>
+            <LoginButton></LoginButton>
           </Form.Group>
           <Form.Group className={styles.extras}>
-            <div className={styles.check}>
-              <input id="check" type="checkbox" />
-              <label
-                htmlFor="check"
-                style={{ userSelect: "none", cursor: "pointer" }}
-              >
-                {" "}
-                &nbsp;Rester connecté?
-              </label>
+            <div className={styles.extrasContainer}>
+              <div className={styles.check}>
+                <input id="rememberMe" type="checkbox" />
+                <label
+                  htmlFor="rememberMe"
+                  style={{ userSelect: "none", cursor: "pointer" }}
+                >
+                  &nbsp;Rester connecté?
+                </label>
+              </div>
+              <div>
+                <a href="#" style={{ userSelect: "none", cursor: "pointer" }}>
+                  Mot de passe oublié?
+                </a>
+              </div>
             </div>
-            <a href="#" style={{ userSelect: "none", cursor: "pointer" }}>
-              Mot de passe oublié?
-            </a>
           </Form.Group>
         </Form>
       </Container>

@@ -1,8 +1,9 @@
 h1,
 h2 {
-  cursor: none;
+  cursor: default;
   user-select: none;
 }
+
 .loginContainer,
 .rowContainer,
 .leftCol,
@@ -37,14 +38,16 @@ h2 {
   display: grid;
   justify-items: center;
   align-content: center;
+  width: 100%;
 }
 
 .logo {
   width: 14%;
+  user-select: none;
 }
 
 .logoContainer {
-  margin-top: -5%;
+  margin-top: -7%;
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
@@ -73,5 +76,9 @@ h2 {
 .title {
   display: flex;
   justify-content: center;
-  margin-top: -0.75%;
+  margin-top: -0.7%;
+}
+
+.title img {
+  user-select: none;
 }

@@ -1,0 +1,22 @@
+.connectButton {
+  font-family: Quicksand, sans-serif;
+  background: #fd9f09;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 10px 10px 12px 10px;
+  margin-top: 2%;
+  border: 2px solid transparent;
+  width: 65%;
+  border-radius: 40px;
+}
+.connectButton:hover {
+  background: #ffffff;
+  color: #fd9f09;
+  border-color: #fd9f09;
+  box-shadow: #fd9f09 0 0 6px;
+}
+.connectButton:active {
+  background: #fd9f09 !important;
+  border-color: #fd9f09 !important;
+}
