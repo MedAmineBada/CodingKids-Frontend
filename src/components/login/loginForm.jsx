@@ -99,7 +99,7 @@ export default function LoginForm() {
           </Container>
         </MediaQuery>
 
-        <MediaQuery maxWidth={480}>
+        <MediaQuery maxWidth={575.5}>
           <h1>Se Connecter</h1>
 
           <Container fluid className={styles.top}>

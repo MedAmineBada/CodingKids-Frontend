@@ -64,7 +64,7 @@ function LoginContainer() {
       {/*<MediaQuery minWidth={769} maxWidth={899.5}></MediaQuery>*/}
       {/*<MediaQuery minWidth={481} maxWidth={768}></MediaQuery>*/}
 
-      <MediaQuery maxWidth={899.5}>
+      <MediaQuery maxWidth={575.5}>
         <Container fluid className={styles.wrapper}>
           <Container fluid className={styles.logoContainer}>
             <Logo className={styles.logo}></Logo>

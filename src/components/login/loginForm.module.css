@@ -125,7 +125,7 @@
   grid-template-columns: 1fr 1fr;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 576px) {
   .top input:not(.rememberMeContainer input[type="checkbox"]),
   .top input:not(.rememberMeContainer input[type="checkbox"]):focus {
     text-align: center;
@@ -245,11 +245,6 @@
     width: 80%;
     margin: 0 auto;
   }
-}
-
-@media screen and (min-width: 481px) and (max-width: 768px) {
-}
-@media screen and (min-width: 769px) and (max-width: 900px) {
 }
 
 @media screen and (min-width: 899px) and (max-width: 1199px) {

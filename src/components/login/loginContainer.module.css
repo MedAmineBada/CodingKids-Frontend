@@ -84,7 +84,7 @@ h2 {
   user-select: none;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 576px) {
   .wrapper {
     height: 100vh;
     background: #fd9f09 url("../../assets/images/loginMobileBg.svg") no-repeat
@@ -156,10 +156,7 @@ h2 {
     font-size: 32px;
   }
 }
-@media screen and (min-width: 481px) and (max-width: 768px) {
-}
-@media screen and (min-width: 769px) and (max-width: 900px) {
-}
+
 @media screen and (min-width: 900px) and (max-width: 1199px) {
   .loginContainerLaptop {
     background: #fd9f09 url("../../assets/images/loginBackground.svg") no-repeat;
