@@ -14,6 +14,7 @@ import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/700.css";
 
 import MediaQuery from "react-responsive";
+import HorseSVG from "./horse/horseSVG.jsx";
 
 function LoginContainer() {
   return (
@@ -39,7 +40,7 @@ function LoginContainer() {
           </Container>
         </Container>
       </MediaQuery>
-      <MediaQuery minWidth={900} maxWidth={1199}>
+      <MediaQuery minWidth={900} maxWidth={1198}>
         <Container fluid className={styles.loginContainerLaptop}>
           <Container className={styles.midCol}>
             <Container className={styles.logoContainer}>
@@ -58,6 +59,24 @@ function LoginContainer() {
             </Container>
             <LoginForm></LoginForm>
           </Container>
+        </Container>
+      </MediaQuery>
+      <MediaQuery minWidth={769} maxWidth={899.5}></MediaQuery>
+
+      <MediaQuery minWidth={481} maxWidth={768}></MediaQuery>
+
+      <MediaQuery maxWidth={480}>
+        <Container fluid className={styles.wrapper}>
+          <Container fluid className={styles.logoContainer}>
+            <Logo className={styles.logo}></Logo>
+            <Container className={styles.title}>
+              <HorseSVG></HorseSVG>
+              <h1 className={styles.bgTitle}>Coding Kids</h1>
+              <HorseSVG></HorseSVG>
+            </Container>
+            <h2 className={styles.bgTitle2}>Administration</h2>
+          </Container>
+          <LoginForm></LoginForm>
         </Container>
       </MediaQuery>
     </>
