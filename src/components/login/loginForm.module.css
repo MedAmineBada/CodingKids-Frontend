@@ -254,6 +254,9 @@
 
 @media screen and (min-width: 899px) and (max-width: 1199px) {
   .formTitleLaptop {
+    padding: 20px;
+  }
+  .formTitleLaptop {
     color: #fd9f09;
     font-size: 30px;
     font-weight: 700;

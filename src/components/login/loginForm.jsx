@@ -40,7 +40,7 @@ export default function LoginForm() {
           <h1 className={styles.formTitle}>Se Connecter</h1>
         </MediaQuery>
 
-        <MediaQuery minWidth={1199}>
+        <MediaQuery minWidth={900}>
           <Container className={styles.topContainer} fluid>
             <Form className={styles.form} onSubmit={handleSubmit}>
               <MediaQuery minWidth={900} maxWidth={1199}>

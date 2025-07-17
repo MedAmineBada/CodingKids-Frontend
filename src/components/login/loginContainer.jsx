@@ -40,7 +40,7 @@ function LoginContainer() {
           </Container>
         </Container>
       </MediaQuery>
-      <MediaQuery minWidth={900} maxWidth={1198}>
+      <MediaQuery minWidth={900} maxWidth={1199}>
         <Container fluid className={styles.loginContainerLaptop}>
           <Container className={styles.midCol}>
             <Container className={styles.logoContainer}>
@@ -61,11 +61,10 @@ function LoginContainer() {
           </Container>
         </Container>
       </MediaQuery>
-      <MediaQuery minWidth={769} maxWidth={899.5}></MediaQuery>
+      {/*<MediaQuery minWidth={769} maxWidth={899.5}></MediaQuery>*/}
+      {/*<MediaQuery minWidth={481} maxWidth={768}></MediaQuery>*/}
 
-      <MediaQuery minWidth={481} maxWidth={768}></MediaQuery>
-
-      <MediaQuery maxWidth={480}>
+      <MediaQuery maxWidth={899.5}>
         <Container fluid className={styles.wrapper}>
           <Container fluid className={styles.logoContainer}>
             <Logo className={styles.logo}></Logo>
