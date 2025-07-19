@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import styles from "./loginForm.module.css";
-import EyeToggle from "./passwordEyeComponent.jsx";
+import EyeToggle from "./PasswordEye.jsx";
 import LoginButton from "./button/LoginButton.jsx";
 import MediaQuery from "react-responsive";
 
