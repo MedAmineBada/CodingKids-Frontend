@@ -1,0 +1,33 @@
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fd9f09;
+  background: linear-gradient(
+    180deg,
+    rgba(253, 159, 9, 1) 0%,
+    rgba(253, 207, 6, 1) 18%
+  );
+}
+.title {
+  height: 22vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title h1 {
+  font-size: 40px;
+  font-family: Inter, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
+}
+.content {
+  background-color: white;
+  height: 78vh;
+  border-radius: 40px 40px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
