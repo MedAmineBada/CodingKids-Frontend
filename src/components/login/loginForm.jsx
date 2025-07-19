@@ -39,7 +39,64 @@ export default function LoginForm() {
         <MediaQuery minWidth={1199}>
           <h1 className={styles.formTitle}>Se Connecter</h1>
         </MediaQuery>
-
+        <MediaQuery minWidth={576} maxWidth={899.5}>
+          <Container className={styles.topContainer} fluid>
+            <Form className={styles.form} onSubmit={handleSubmit}>
+              <MediaQuery minWidth={900} maxWidth={1199}>
+                <h1 className={styles.formTitleLaptop}>Se Connecter</h1>
+              </MediaQuery>
+              <Form.Group>
+                {emailError && <p className={styles.errorMsg}>{emailError}</p>}
+                <Form.Label className={styles.labels} column={true}>
+                  Email
+                </Form.Label>
+                <Form.Control
+                  className={styles.inputs}
+                  type="email"
+                  id="email"
+                  placeholder="Entrez votre email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label className={styles.labels} column={true}>
+                  Mot de passe
+                  <EyeToggle onChange={setShowPwd} />
+                </Form.Label>
+                <Form.Control
+                  className={styles.inputs}
+                  type={showPwd ? "text" : "password"}
+                  placeholder="Entrez votre mot de passe"
+                />
+              </Form.Group>
+              <Form.Group>
+                <LoginButton></LoginButton>
+              </Form.Group>
+              <Form.Group className={styles.extras}>
+                <div className={styles.extrasContainer}>
+                  <div className={styles.check}>
+                    <input id="rememberMe" type="checkbox" />
+                    <label
+                      htmlFor="rememberMe"
+                      style={{ userSelect: "none", cursor: "pointer" }}
+                    >
+                      &nbsp;Rester connecté?
+                    </label>
+                  </div>
+                  <div>
+                    <a
+                      href="#"
+                      style={{ userSelect: "none", cursor: "pointer" }}
+                    >
+                      Mot de passe oublié?
+                    </a>
+                  </div>
+                </div>
+              </Form.Group>
+            </Form>
+          </Container>
+        </MediaQuery>
         <MediaQuery minWidth={900}>
           <Container className={styles.topContainer} fluid>
             <Form className={styles.form} onSubmit={handleSubmit}>

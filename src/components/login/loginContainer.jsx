@@ -61,8 +61,27 @@ function LoginContainer() {
           </Container>
         </Container>
       </MediaQuery>
-      {/*<MediaQuery minWidth={769} maxWidth={899.5}></MediaQuery>*/}
-      {/*<MediaQuery minWidth={481} maxWidth={768}></MediaQuery>*/}
+      <MediaQuery minWidth={576} maxWidth={899.5}>
+        <Container fluid className={styles.loginContainerLaptop}>
+          <Container className={styles.midCol}>
+            <Container className={styles.logoContainer}>
+              <Logo className={styles.logo}></Logo>
+              <Container className={styles.title}>
+                <img src={horse} alt="" className={styles.horse} />
+                <h1 className={styles.bgTitle}>Coding Kids</h1>
+                <img
+                  src={horse}
+                  alt=""
+                  className={styles.horse}
+                  style={{ transform: "scaleX(-1)" }}
+                />
+              </Container>
+              <h2 className={styles.bgTitle2}>Administration</h2>
+            </Container>
+            <LoginForm></LoginForm>
+          </Container>
+        </Container>
+      </MediaQuery>
 
       <MediaQuery maxWidth={575.5}>
         <Container fluid className={styles.wrapper}>

@@ -156,7 +156,70 @@ h2 {
     font-size: 32px;
   }
 }
+@media screen and (min-width: 576px) and (max-width: 900px) {
+  .loginContainerLaptop {
+    background: #fd9f09 url("../../assets/images/loginBackground.svg") no-repeat;
+    background-size: 120%;
+    background-position-x: 50%;
+    background-position-y: 33%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .midCol {
+    margin-top: -2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .logoContainer {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    padding-bottom: 3%;
+  }
+  .bgTitle {
+    color: white;
 
+    font-size: 42px;
+    font-weight: 800;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .bgTitle2 {
+    margin-top: -6%;
+    color: white;
+    font-size: 21px;
+    font-weight: 800;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .logoContainer .logo {
+    scale: 1.3;
+    margin-bottom: -0.5%;
+  }
+  .logoContainer .horse {
+    scale: 0.4;
+    margin-left: -2%;
+    margin-right: -2%;
+    margin-bottom: 2%;
+  }
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -1.5%;
+  }
+}
 @media screen and (min-width: 900px) and (max-width: 1199px) {
   .loginContainerLaptop {
     background: #fd9f09 url("../../assets/images/loginBackground.svg") no-repeat;
