@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import AppRoutes from "./routes.jsx";
+import AppRoutes from "./Routes.jsx";
 
 function App() {
   return <AppRoutes></AppRoutes>;

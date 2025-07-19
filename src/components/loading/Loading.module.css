@@ -5,8 +5,10 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #fd9f09 url("../../assets/images/loadingBg.svg") no-repeat center
-    center;
+  background: #fd9f09 url("../../assets/images/backgrounds/loadingMobileBg.svg")
+    no-repeat center;
+  background-position-y: 35%;
+
   background-size: cover;
   z-index: 9999;
 }
@@ -17,7 +19,54 @@
   font-weight: 500;
   text-transform: capitalize;
   text-align: center;
-  font-size: 52px;
+  font-size: 24px;
   color: #ffffff;
   cursor: default;
+}
+
+@media (min-width: 600px) {
+  .loadingContainer {
+    background: #fd9f09
+      url("../../assets/images/backgrounds/loginBackground.svg") no-repeat;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: cover;
+  }
+
+  .loadingContainer h1 {
+    user-select: none;
+    font-family: Quicksand, sans-serif;
+    font-weight: 500;
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 38px;
+    color: #ffffff;
+    cursor: default;
+  }
+}
+
+@media screen and (min-width: 1350px) {
+  .loadingContainer {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #fd9f09 url("../../assets/images/backgrounds/loadingBg.svg")
+      no-repeat center center;
+    background-size: cover;
+    z-index: 9999;
+  }
+
+  .loadingContainer h1 {
+    user-select: none;
+    font-family: Quicksand, sans-serif;
+    font-weight: 500;
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 52px;
+    color: #ffffff;
+    cursor: default;
+  }
 }

@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 
 import styles from "./loginContainer.module.css";
-import horse from "../../assets/images/horse.svg";
+import horse from "../../assets/images/icons/horse.svg";
 
 import Logo from "../logo/logo.jsx";
 import LoginForm from "./LoginForm.jsx";
@@ -15,12 +15,10 @@ import "@fontsource/quicksand/700.css";
 
 import MediaQuery from "react-responsive";
 import HorseIcon from "./horse/HorseIcon.jsx";
-import Loading from "../loading/Loading.jsx";
 
 function LoginContainer() {
   return (
     <>
-      <Loading></Loading>
       <MediaQuery minWidth={1199}>
         <Container fluid className={styles.loginContainer}>
           <Container fluid className={styles.rowContainer}>
@@ -83,7 +81,6 @@ function LoginContainer() {
           </Container>
         </Container>
       </MediaQuery>
-
       <MediaQuery maxWidth={575.5}>
         <Container fluid className={styles.wrapper}>
           <Container fluid className={styles.logoContainer}>
