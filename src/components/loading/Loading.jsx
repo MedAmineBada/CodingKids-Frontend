@@ -1,9 +1,9 @@
 import { Container } from "react-bootstrap";
-import styles from "./loadingContainer.module.css";
+import styles from "./Loading.module.css";
 import "@fontsource/quicksand/500.css";
 import { CircularLoading } from "respinner";
 
-function LoadingContainer() {
+function Loading() {
   return (
     <Container fluid className={styles.loadingContainer}>
       <CircularLoading
@@ -17,4 +17,4 @@ function LoadingContainer() {
   );
 }
 
-export default LoadingContainer;
+export default Loading;

@@ -4,7 +4,7 @@ import styles from "./loginContainer.module.css";
 import horse from "../../assets/images/horse.svg";
 
 import Logo from "../logo/logo.jsx";
-import LoginForm from "./loginForm.jsx";
+import LoginForm from "./LoginForm.jsx";
 
 import "@fontsource/inter/700";
 import "@fontsource/inter/800";
@@ -14,12 +14,13 @@ import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/700.css";
 
 import MediaQuery from "react-responsive";
-import HorseSVG from "./horse/horseSVG.jsx";
+import HorseIcon from "./horse/HorseIcon.jsx";
+import Loading from "../loading/Loading.jsx";
 
 function LoginContainer() {
   return (
     <>
-      {/*<LoadingContainer></LoadingContainer>*/}
+      <Loading></Loading>
       <MediaQuery minWidth={1199}>
         <Container fluid className={styles.loginContainer}>
           <Container fluid className={styles.rowContainer}>
@@ -88,9 +89,9 @@ function LoginContainer() {
           <Container fluid className={styles.logoContainer}>
             <Logo className={styles.logo}></Logo>
             <Container className={styles.title}>
-              <HorseSVG></HorseSVG>
+              <HorseIcon></HorseIcon>
               <h1 className={styles.bgTitle}>Coding Kids</h1>
-              <HorseSVG></HorseSVG>
+              <HorseIcon></HorseIcon>
             </Container>
             <h2 className={styles.bgTitle2}>Administration</h2>
           </Container>

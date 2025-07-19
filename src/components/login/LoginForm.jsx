@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import styles from "./loginForm.module.css";
-import EyeToggle from "./passwordEye.jsx";
-import LoginButton from "./button/loginButton.jsx";
+import EyeToggle from "./passwordEyeComponent.jsx";
+import LoginButton from "./button/LoginButton.jsx";
 import MediaQuery from "react-responsive";
 
 export default function LoginForm() {

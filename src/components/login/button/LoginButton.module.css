@@ -20,7 +20,7 @@
   background: #fd9f09 !important;
   border-color: #fd9f09 !important;
 }
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 899px) {
   .connectButton {
     font-size: 21px;
     width: 80%;
@@ -36,10 +36,7 @@
     margin: 0;
   }
 }
-@media screen and (min-width: 481px) and (max-width: 768px) {
-}
-@media screen and (min-width: 769px) and (max-width: 900px) {
-}
+
 @media screen and (min-width: 899px) and (max-width: 1199px) {
   .connectButton {
     font-size: 18px;

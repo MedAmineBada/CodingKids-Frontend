@@ -1,4 +1,4 @@
-import styles from "./loginButton.module.css";
+import styles from "./LoginButton.module.css";
 import { Container } from "react-bootstrap";
 
 const LoginButton = ({ type = "submit" }) => {

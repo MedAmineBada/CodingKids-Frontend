@@ -1,4 +1,4 @@
-function HorseSVG() {
+function HorseIcon() {
   return (
     <svg
       width="1em"
@@ -14,4 +14,4 @@ function HorseSVG() {
     </svg>
   );
 }
-export default HorseSVG;
+export default HorseIcon;
