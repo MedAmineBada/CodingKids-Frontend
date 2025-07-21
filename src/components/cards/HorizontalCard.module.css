@@ -1,0 +1,76 @@
+.card {
+  background-color: #d9d9d9;
+  display: flex;
+  padding: 25px 25px;
+  gap: 20px;
+  height: 70vh;
+  border-radius: 40px;
+  align-items: center;
+  flex-direction: column-reverse;
+  letter-spacing: 8px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+.content h1 {
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  font-weight: 700;
+  transform: scale(-1);
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.content p {
+  font-family: Quicksand, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+.image img {
+  width: 56px;
+  height: 56px;
+  rotate: -90deg;
+}
+.disconnectCard h1,
+.disconnectCard p {
+  color: #c92b2b;
+}
+
+@media screen and (min-width: 1400px) {
+  .card {
+    padding: 25px 35px;
+    overflow: hidden;
+  }
+  .content h1 {
+    font-size: 30px;
+  }
+
+  .image img {
+    width: 65px;
+    height: 65px;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .card {
+    padding: 25px 40px;
+    overflow: hidden;
+  }
+  .content h1 {
+    font-size: 40px;
+    letter-spacing: 10px;
+  }
+
+  .image img {
+    width: 80px;
+    height: 80px;
+  }
+}
