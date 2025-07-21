@@ -4,16 +4,68 @@
   padding: 25px 25px;
   gap: 20px;
   height: 70vh;
-  border-radius: 40px;
+  border-radius: 20px;
   align-items: center;
   flex-direction: column-reverse;
   letter-spacing: 8px;
+  width: 10%;
+  border: transparent 2px solid;
+  cursor: pointer;
+  transition: flex 0.5s ease;
 }
 
+.card:hover {
+  flex-grow: 0.2;
+  box-shadow: #fdcf06ff 0 0 20px;
+  border: #fdcf06ff 3px solid;
+}
+.disconnectCard:hover {
+  box-shadow: #c92b2b 0 0 20px;
+  border: #c92b2b 3px solid;
+}
+.card:hover .content {
+  padding-bottom: 60%;
+  justify-content: space-between;
+  transition-duration: 0.5s;
+}
+.card:hover .content h1 {
+  letter-spacing: 0;
+  writing-mode: horizontal-tb;
+  transform: scale(1);
+  text-align: center;
+}
+.content p {
+  font-family: Quicksand, sans-serif;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  display: none;
+
+  opacity: 0;
+  letter-spacing: 0;
+  user-select: none;
+  transition: opacity 0.2s;
+}
+.card:hover .content p {
+  display: block;
+  position: relative;
+}
+.card:hover img {
+  rotate: 0deg;
+  scale: 1.2;
+
+  transition-duration: 0.5s;
+}
 .content {
   display: flex;
   flex-direction: column;
   align-content: center;
+  height: 100%;
+  justify-content: end;
+  transition-duration: 0.5s;
 }
 .content h1 {
   font-family: Inter, sans-serif;
@@ -25,20 +77,14 @@
   color: #333;
   margin: 0;
   padding: 0;
+  cursor: pointer;
 }
 
-.content p {
-  font-family: Quicksand, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-  display: none;
-}
 .image img {
   width: 56px;
   height: 56px;
   rotate: -90deg;
+  transition-duration: 0.5s;
 }
 .disconnectCard h1,
 .disconnectCard p {

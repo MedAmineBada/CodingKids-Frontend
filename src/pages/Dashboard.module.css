@@ -66,6 +66,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 16px;
+    overflow: hidden;
   }
 }
 @media screen and (min-width: 1400px) {
