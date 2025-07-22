@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Scan from "@/pages/Scan.jsx";
 
 export default function AppRoutes() {
   return (
@@ -13,8 +14,10 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/scan" element={<Scan />} />
       </Routes>
     </Router>
   );

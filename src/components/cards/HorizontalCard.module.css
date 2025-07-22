@@ -16,13 +16,8 @@
 
 .card:hover {
   flex-grow: 0.2;
-  box-shadow: #fdcf06ff 0 0 20px;
-  border: #fdcf06ff 3px solid;
 }
-.disconnectCard:hover {
-  box-shadow: #c92b2b 0 0 20px;
-  border: #c92b2b 3px solid;
-}
+
 .card:hover .content {
   padding-bottom: 60%;
   justify-content: space-between;

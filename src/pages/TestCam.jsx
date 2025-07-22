@@ -15,13 +15,7 @@ function CameraCapture() {
     <div style={{ textAlign: "center" }}>
       <h2>Take a Photo</h2>
 
-      <input
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onChange={handleCapture}
-        style={{ marginBottom: "20px" }}
-      />
+      <input type="file" accept="image/*" capture="environment" />
 
       {image && (
         <div>
