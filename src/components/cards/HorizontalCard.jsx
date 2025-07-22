@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./HorizontalCard.module.css";
 
-function HorizontalCard({ image, text, title, type }) {
+function HorizontalCard({ image, text, title, type, route }) {
   const [hovered, setHovered] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const timerRef = useRef(null);
@@ -17,7 +17,11 @@ function HorizontalCard({ image, text, title, type }) {
 
     return () => clearTimeout(timerRef.current);
   }, [hovered]);
-
+  function handleClick() {
+    if (route) {
+      window.location.href = route;
+    }
+  }
   const cardClass =
     type === "disconnect"
       ? `${styles.card} ${styles.disconnectCard}`
@@ -28,6 +32,7 @@ function HorizontalCard({ image, text, title, type }) {
       className={cardClass}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
     >
       <div className={styles.image}>
         <img src={image} alt="" />

@@ -1,19 +1,23 @@
 import styles from "./VerticalCard.module.css";
 
-function VerticalCard(props) {
+function VerticalCard({ image, text, title, type, route }) {
   const cardClass =
-    props.type === "disconnect"
+    type === "disconnect"
       ? `${styles.card} ${styles.disconnectCard}`
       : styles.card;
-
+  function handleClick() {
+    if (route) {
+      window.location.href = route;
+    }
+  }
   return (
-    <div className={cardClass}>
+    <div className={cardClass} onClick={handleClick}>
       <div className={styles.image}>
-        <img src={props.image} alt="" />
+        <img src={image} alt="" />
       </div>
       <div className={styles.content}>
-        <h1>{props.title}</h1>
-        <p>{props.text}</p>
+        <h1>{title}</h1>
+        <p>{text}</p>
       </div>
     </div>
   );
