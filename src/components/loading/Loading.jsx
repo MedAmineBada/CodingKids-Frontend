@@ -9,7 +9,7 @@ function Loading() {
     <Container fluid className={styles.loadingContainer}>
       <MediaQuery maxWidth={599.5}>
         <CircularLoading
-          size={60}
+          size={100}
           stroke="#fff"
           className={styles.loader}
           strokeWidth={7}

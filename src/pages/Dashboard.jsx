@@ -13,19 +13,30 @@ import StudentsIcon from "@/assets/images/icons/students.svg";
 import TeacherIcon from "@/assets/images/icons/teachers.svg";
 import DisconnectIcon from "@/assets/images/icons/disconnect.svg";
 import HorizontalCard from "@/components/cards/HorizontalCard.jsx";
+import { useState } from "react";
+import ScanResultModal from "@/components/modals/ScanResult.jsx";
 
 function Dashboard() {
   if (localStorage.getItem("scanResult") !== null) {
     localStorage.removeItem("scanResult");
   }
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  function handleClose() {
+    localStorage.removeItem("scanResult");
+    setShow(false);
+  }
+
   return (
     <>
+      <ScanResultModal show={show} handleClose={handleClose} />
       <div className={styles.title}>
         <h1>Dashboard</h1>
       </div>
       <div className={styles.content}>
         <MediaQuery maxWidth={1199.5}>
           <VerticalCard
+            handleShow={handleShow}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."
@@ -59,6 +70,7 @@ function Dashboard() {
         </MediaQuery>
         <MediaQuery minWidth={1200}>
           <HorizontalCard
+            handleShow={handleShow}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."

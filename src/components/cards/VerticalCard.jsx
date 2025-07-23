@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import styles from "./VerticalCard.module.css";
 
-function VerticalCard({ image, text, title, type, route }) {
+function VerticalCard({ image, text, title, type, route, handleShow }) {
   const fileInputRef = useRef(null);
 
   const cardClass =
@@ -20,6 +20,7 @@ function VerticalCard({ image, text, title, type, route }) {
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    handleShow();
 
     try {
       const formData = new FormData();
@@ -32,12 +33,8 @@ function VerticalCard({ image, text, title, type, route }) {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Upload failed with status ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("Upload successful", data);
+      localStorage.setItem("scanResult", JSON.stringify(data));
     } catch (err) {
       if (err.status === 404) {
         alert("Erreur: Etudiant n'existe pas");

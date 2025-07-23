@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./HorizontalCard.module.css";
 
-function HorizontalCard({ image, text, title, type, route }) {
+function HorizontalCard({ image, text, title, type, route, handleShow }) {
   const [hovered, setHovered] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const timerRef = useRef(null);
@@ -30,6 +30,7 @@ function HorizontalCard({ image, text, title, type, route }) {
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    handleShow();
 
     try {
       const formData = new FormData();
@@ -42,12 +43,8 @@ function HorizontalCard({ image, text, title, type, route }) {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Upload failed with status ${response.status}`);
-      }
       const data = await response.json();
-      localStorage.setItem("scanResult", data);
-      location.href = route;
+      localStorage.setItem("scanResult", JSON.stringify(data));
     } catch (err) {
       if (err.status === 404) {
         alert("Erreur: Etudiant n'existe pas");

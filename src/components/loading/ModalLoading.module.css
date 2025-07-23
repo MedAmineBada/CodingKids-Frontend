@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 2%;
+}
+.container h1 {
+  font-size: 7vw;
+  text-align: center;
+  font-family: Inter, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fd9f09;
+}
+@media (min-width: 700px) {
+  .container h1 {
+    font-size: 3.2vw;
+  }
+}
+@media (min-width: 1000px) {
+  .container h1 {
+    font-size: 2.5vw;
+  }
+}
