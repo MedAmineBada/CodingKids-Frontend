@@ -15,6 +15,9 @@ import DisconnectIcon from "@/assets/images/icons/disconnect.svg";
 import HorizontalCard from "@/components/cards/HorizontalCard.jsx";
 
 function Dashboard() {
+  if (localStorage.getItem("scanResult") !== null) {
+    localStorage.removeItem("scanResult");
+  }
   return (
     <>
       <div className={styles.title}>

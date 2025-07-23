@@ -17,16 +17,34 @@ function VerticalCard({ image, text, title, type, route }) {
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      localStorage.setItem("scannedImage", reader.result);
-      window.location.href = "/scan";
-    };
-    reader.readAsDataURL(file);
+    try {
+      const formData = new FormData();
+      formData.append("qr", file);
+
+      const uploadUrl = import.meta.env.VITE_API_URL + "/scan";
+
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Upload successful", data);
+    } catch (err) {
+      if (err.status === 404) {
+        alert("Erreur: Etudiant n'existe pas");
+      } else {
+        alert("Internal Server Error");
+      }
+    }
   };
 
   return (
@@ -47,13 +65,13 @@ function VerticalCard({ image, text, title, type, route }) {
           type="file"
           accept="image/*"
           capture="environment"
-          onChange={handleFileChange}
           style={{
             visibility: "hidden",
             position: "absolute",
             width: 0,
             height: 0,
           }}
+          onChange={handleFileChange}
         />
       )}
     </>

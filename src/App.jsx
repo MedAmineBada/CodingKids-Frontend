@@ -1,5 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import AppRoutes from "./Routes.jsx";
 
 function App() {
