@@ -1,7 +1,7 @@
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import ModalLoading from "@/components/loading/ModalLoading.jsx";
+import StudentProfile from "@/components/studentProfile/StudentProfile.jsx";
 
 function ScanResultModal({ show, handleClose }) {
   const handleClearAndClose = () => {
@@ -37,13 +37,19 @@ function ScanResultModal({ show, handleClose }) {
     >
       <Modal.Header closeButton style={{ border: "none" }}></Modal.Header>
       <Modal.Body>
-        {scanResult ? <h1>{scanResult}</h1> : <ModalLoading></ModalLoading>}
+        {scanResult ? (
+          <StudentProfile
+            data={JSON.parse(localStorage.getItem("scanResult"))}
+          ></StudentProfile>
+        ) : (
+          <ModalLoading></ModalLoading>
+        )}
       </Modal.Body>
-      <Modal.Footer closeButton style={{ border: "none" }}>
-        <Button variant="secondary" onClick={handleClearAndClose}>
-          Close
-        </Button>
-      </Modal.Footer>
+      {/*<Modal.Footer closeButton style={{ border: "none" }}>*/}
+      {/*  <Button variant="secondary" onClick={handleClearAndClose}>*/}
+      {/*    Close*/}
+      {/*  </Button>*/}
+      {/*</Modal.Footer>*/}
     </Modal>
   );
 }
