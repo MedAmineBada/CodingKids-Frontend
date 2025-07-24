@@ -1,7 +1,22 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styles from "./VerticalCard.module.css";
+import ErrorModal from "@/components/modals/ErrorModal.jsx";
 
-function VerticalCard({ image, text, title, type, route, handleShow }) {
+function VerticalCard({
+  image,
+  text,
+  title,
+  type,
+  route,
+  handleShow,
+  handleClose,
+}) {
+  const [responseCode, setResponseCode] = useState(200);
+  const [message, setMessage] = useState(
+    "Une erreur est survenue. Veuillez réessayer plus tard.",
+  );
+  const [showError, setShowError] = useState(false);
+
   const fileInputRef = useRef(null);
 
   const cardClass =
@@ -25,27 +40,52 @@ function VerticalCard({ image, text, title, type, route, handleShow }) {
     try {
       const formData = new FormData();
       formData.append("qr", file);
-
       const uploadUrl = import.meta.env.VITE_API_URL + "/scan";
-
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
       });
 
-      const data = await response.json();
-      localStorage.setItem("scanResult", JSON.stringify(data));
-    } catch (err) {
-      if (err.status === 404) {
-        alert("Erreur: Etudiant n'existe pas");
+      if (response.status === 200) {
+        const data = await response.json();
+        localStorage.setItem("scanResult", JSON.stringify(data));
       } else {
-        alert("Internal Server Error");
+        const status = response.status;
+        let msg = "Une erreur est survenue. Veuillez réessayer plus tard.";
+
+        if (status === 400) {
+          msg =
+            "Le fichier téléchargé n’est pas une image prise en charge. Veuillez envoyer un fichier image (JPEG, PNG, …).";
+        } else if (status === 404) {
+          msg =
+            "Aucun étudiant n’est associé à ce code QR. Vérifiez que vous scannez le bon code.";
+        } else if (status === 500) {
+          msg =
+            "Le code QR est manquant ou illisible. Assurez-vous que l’image est nette et que le QR code est entièrement visible.";
+        }
+
+        setResponseCode(status);
+        setMessage(msg);
+        setShowError(true);
+        handleClose();
       }
+    } catch {
+      setResponseCode(500);
+      setShowError(true);
+      handleClose();
     }
   };
 
   return (
     <>
+      {route === "/scan" && showError === true ? (
+        <ErrorModal
+          show={showError}
+          message={message}
+          code={responseCode}
+          onClose={() => setShowError(false)}
+        />
+      ) : null}
       <div className={cardClass} onClick={handleClick}>
         <div className={styles.image}>
           <img src={image} alt="" />

@@ -1,6 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
+import ModalLoading from "@/components/loading/ModalLoading.jsx";
 
 function ScanResultModal({ show, handleClose }) {
   const handleClearAndClose = () => {
@@ -36,14 +37,11 @@ function ScanResultModal({ show, handleClose }) {
     >
       <Modal.Header closeButton style={{ border: "none" }}></Modal.Header>
       <Modal.Body>
-        {/*{scanResult ? <h1>{scanResult}</h1> : <ModalLoading></ModalLoading>}*/}
+        {scanResult ? <h1>{scanResult}</h1> : <ModalLoading></ModalLoading>}
       </Modal.Body>
       <Modal.Footer closeButton style={{ border: "none" }}>
         <Button variant="secondary" onClick={handleClearAndClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={handleClearAndClose}>
-          Enregistrer
         </Button>
       </Modal.Footer>
     </Modal>

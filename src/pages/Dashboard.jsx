@@ -20,23 +20,25 @@ function Dashboard() {
   if (localStorage.getItem("scanResult") !== null) {
     localStorage.removeItem("scanResult");
   }
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  function handleClose() {
+  const [showRes, setShowRes] = useState(false);
+  const handleShowRes = () => setShowRes(true);
+
+  function handleCloseRes() {
     localStorage.removeItem("scanResult");
-    setShow(false);
+    setShowRes(false);
   }
 
   return (
     <>
-      <ScanResultModal show={show} handleClose={handleClose} />
+      <ScanResultModal show={showRes} handleClose={handleCloseRes} />
       <div className={styles.title}>
         <h1>Dashboard</h1>
       </div>
       <div className={styles.content}>
         <MediaQuery maxWidth={1199.5}>
           <VerticalCard
-            handleShow={handleShow}
+            handleShow={handleShowRes}
+            handleClose={handleCloseRes}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."
@@ -70,7 +72,8 @@ function Dashboard() {
         </MediaQuery>
         <MediaQuery minWidth={1200}>
           <HorizontalCard
-            handleShow={handleShow}
+            handleShow={handleShowRes}
+            handleClose={handleCloseRes}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."
