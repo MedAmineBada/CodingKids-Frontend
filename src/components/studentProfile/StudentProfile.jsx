@@ -1,7 +1,11 @@
+import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
+
 function StudentProfile({ data }) {
   return (
     <div>
       <h1>Student Profile</h1>
+      <StudentImage id={data["id"]}></StudentImage>
+
       <div>
         <p>Name: {data["name"]}</p>
         <p>Email: {data["email"]}</p>

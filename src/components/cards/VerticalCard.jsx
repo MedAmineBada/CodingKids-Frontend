@@ -101,7 +101,6 @@ function VerticalCard({
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          capture="environment"
           style={{
             visibility: "hidden",
             position: "absolute",
