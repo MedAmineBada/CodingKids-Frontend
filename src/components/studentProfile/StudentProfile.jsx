@@ -1,18 +1,43 @@
 import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import MediaQuery from "react-responsive";
+import styles from "./StudentProfile.module.css";
 
 function StudentProfile({ data }) {
   return (
-    <div>
-      <h1>Student Profile</h1>
-      <StudentImage id={data["id"]}></StudentImage>
-
-      <div>
-        <p>Name: {data["name"]}</p>
-        <p>Email: {data["email"]}</p>
-        <p>Tel. 1: {data["tel1"]}</p>
-        <p>Tel. 2: {data["tel2"]}</p>
-        <p>Date de naissance: {data["birth_date"]}</p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.imgwrapper}>
+          <StudentImage id={data["id"]} shadow={10}></StudentImage>
+        </div>
+        <h1>{data["name"]}</h1>
       </div>
+      <MediaQuery maxWidth={800}>
+        <div className={styles.swiper}>
+          <Swiper
+            rewind={false}
+            navigation={true}
+            modules={[Navigation]}
+            className="mySwiper"
+          >
+            <SwiperSlide>
+              <p>Informations</p>
+            </SwiperSlide>
+            <SwiperSlide>
+              <p>Présences</p>
+            </SwiperSlide>
+            <SwiperSlide>
+              <p>Paiements</p>
+            </SwiperSlide>
+            <SwiperSlide>
+              <p>Envoyer un e-mail</p>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </MediaQuery>
     </div>
   );
 }

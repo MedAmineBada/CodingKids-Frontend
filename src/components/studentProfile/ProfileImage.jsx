@@ -2,11 +2,12 @@ import styles from "./ProfileImage.module.css";
 import { useEffect, useState } from "react";
 import { CircularLoading } from "respinner";
 
-function StudentImage({ id }) {
+function StudentImage({ id, shadow }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true); // New loading state
-
+  const [loading, setLoading] = useState(true);
+  const boxShadowStyle =
+    typeof shadow === "number" ? { boxShadow: `0 0 ${shadow}px #333333` } : {};
   useEffect(() => {
     let isMounted = true;
     const abortController = new AbortController();
@@ -61,7 +62,7 @@ function StudentImage({ id }) {
   }, [id]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={boxShadowStyle}>
       {loading ? (
         <CircularLoading size="60%" stroke="white" strokeWidth={7} />
       ) : (

@@ -22,7 +22,8 @@
     "react-loaders": "^3.0.1",
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.6.3",
-    "respinner": "^4.0.3"
+    "respinner": "^4.0.3",
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
