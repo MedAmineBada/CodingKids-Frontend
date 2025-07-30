@@ -9,9 +9,6 @@
   align-items: center;
 }
 
-.card:hover {
-  background: #a4a4a4;
-}
 .content {
   display: flex;
   flex-direction: column;

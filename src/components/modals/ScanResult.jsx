@@ -35,21 +35,20 @@ function ScanResultModal({ show, handleClose }) {
       centered
       fullscreen={true}
     >
-      <Modal.Header closeButton style={{ border: "none" }}></Modal.Header>
-      <Modal.Body>
+      <Modal.Header
+        closeButton
+        style={{ border: "none", background: "transparent" }}
+      ></Modal.Header>
+      <Modal.Body style={{ padding: 0, paddingTop: "10px" }}>
         {scanResult ? (
           <StudentProfile
             data={JSON.parse(localStorage.getItem("scanResult"))}
+            handleClose={handleClearAndClose}
           ></StudentProfile>
         ) : (
           <ModalLoading></ModalLoading>
         )}
       </Modal.Body>
-      {/*<Modal.Footer closeButton style={{ border: "none" }}>*/}
-      {/*  <Button variant="secondary" onClick={handleClearAndClose}>*/}
-      {/*    Close*/}
-      {/*  </Button>*/}
-      {/*</Modal.Footer>*/}
     </Modal>
   );
 }
