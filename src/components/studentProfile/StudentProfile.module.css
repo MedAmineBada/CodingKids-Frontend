@@ -95,6 +95,9 @@
   color: #ffffff;
 }
 .swiper table {
+  text-align: left;
+}
+.swiper table .col2 {
   text-align: right;
 }
 .swiper button:hover {

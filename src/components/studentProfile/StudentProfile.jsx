@@ -85,23 +85,25 @@ export default function StudentProfile({ data, handleClose }) {
                     <tbody>
                       <tr>
                         <td>Date de nais.:</td>
-                        <td>{formatIsoDateToDmy(data.birth_date)}</td>
+                        <td className={styles.col2}>
+                          {formatIsoDateToDmy(data.birth_date)}
+                        </td>
                       </tr>
                       <tr>
                         <td>Tel. 1:</td>
-                        <td>
+                        <td className={styles.col2}>
                           <a href={`tel:${data.tel1}`}>{data.tel1}</a>
                         </td>
                       </tr>
                       <tr>
                         <td>Tel. 2:</td>
-                        <td>
+                        <td className={styles.col2}>
                           <a href={`tel:${data.tel2}`}>{data.tel2}</a>
                         </td>
                       </tr>
                       <tr>
                         <td>E-mail:</td>
-                        <td>
+                        <td className={styles.col2}>
                           <a href={`mailto:${data.email}`}>{data.email}</a>
                         </td>
                       </tr>

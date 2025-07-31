@@ -39,7 +39,12 @@ function ScanResultModal({ show, handleClose }) {
         closeButton
         style={{ border: "none", background: "transparent" }}
       ></Modal.Header>
-      <Modal.Body style={{ padding: 0, paddingTop: "10px" }}>
+      <Modal.Body
+        style={{
+          padding: 0,
+          paddingTop: "10px",
+        }}
+      >
         {scanResult ? (
           <StudentProfile
             data={JSON.parse(localStorage.getItem("scanResult"))}
