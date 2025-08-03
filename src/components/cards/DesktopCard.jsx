@@ -108,7 +108,6 @@ function DesktopCard({
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          capture="environment"
           onChange={handleFileChange}
           style={{
             visibility: "hidden",

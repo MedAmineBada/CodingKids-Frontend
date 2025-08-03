@@ -1,8 +1,8 @@
 import Modal from "react-bootstrap/Modal";
-import styles from "./InfoModal.module.css";
+import styles from "./SuccessModal.module.css";
 import "@fontsource/quicksand/600";
 
-function InfoModal({ title, message, show = false, onClose }) {
+function SuccessModal({ title, message, show = false, onClose }) {
   return (
     <Modal
       className={styles.container}
@@ -25,4 +25,4 @@ function InfoModal({ title, message, show = false, onClose }) {
   );
 }
 
-export default InfoModal;
+export default SuccessModal;

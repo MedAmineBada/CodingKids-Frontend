@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import MediaQuery from "react-responsive";
 import styles from "./StudentProfile.module.css";
 import { deleteStudent } from "@/services/StudentServices";
-import InfoModal from "@/components/modals/InfoModal.jsx";
+import SuccessModal from "@/components/modals/SuccessModal.jsx";
 
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
@@ -55,12 +55,12 @@ export default function StudentProfile({ data, handleClose }) {
         onClose={() => setShowError(false)}
       />
 
-      <InfoModal
+      <SuccessModal
         onClose={handleCloseSuccess}
         title="Succès"
         message="L’étudiant a été supprimé avec succès."
         show={showSuccess}
-      ></InfoModal>
+      ></SuccessModal>
 
       <div className={styles.container}>
         <div className={styles.header}>
