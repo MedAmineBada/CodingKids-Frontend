@@ -1,0 +1,31 @@
+export async function scanStudent(file) {
+  const formData = new FormData();
+  formData.append("qr", file);
+  const uploadUrl = import.meta.env.VITE_API_URL + "/scan";
+  const response = await fetch(uploadUrl, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (response.status === 200) {
+    const data = await response.json();
+    localStorage.setItem("scanResult", JSON.stringify(data));
+    return { status: 200, msg: "", showError: false };
+  } else {
+    const status = response.status;
+    let msg = "Une erreur est survenue. Veuillez réessayer plus tard.";
+
+    if (status === 400) {
+      msg =
+        "Le fichier téléchargé n’est pas une image prise en charge. Veuillez envoyer un fichier image (JPEG, PNG, …).";
+    } else if (status === 404) {
+      msg =
+        "Aucun étudiant n’est associé à ce code QR. Vérifiez que vous scannez le bon code.";
+    } else if (status === 500) {
+      msg =
+        "Le code QR est manquant ou illisible. Assurez-vous que l’image est nette et que le QR code est entièrement visible.";
+    }
+
+    return { status: status, msg: msg, showError: true };
+  }
+}

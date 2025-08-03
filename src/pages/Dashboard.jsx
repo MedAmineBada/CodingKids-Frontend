@@ -5,14 +5,14 @@ import "@fontsource/inter/900";
 import "@fontsource/quicksand/500.css";
 
 import MediaQuery from "react-responsive";
-import VerticalCard from "@/components/cards/VerticalCard.jsx";
+import MobileCard from "@/components/cards/MobileCard.jsx";
 
 import QrIcon from "@/assets/images/icons/qr.svg";
 import RegisterIcon from "@/assets/images/icons/register.svg";
 import StudentsIcon from "@/assets/images/icons/students.svg";
 import TeacherIcon from "@/assets/images/icons/teachers.svg";
 import DisconnectIcon from "@/assets/images/icons/disconnect.svg";
-import HorizontalCard from "@/components/cards/HorizontalCard.jsx";
+import DesktopCard from "@/components/cards/DesktopCard.jsx";
 import { useState } from "react";
 import ScanResultModal from "@/components/modals/ScanResult.jsx";
 
@@ -36,74 +36,74 @@ function Dashboard() {
       </div>
       <div className={styles.content}>
         <MediaQuery maxWidth={1199.5}>
-          <VerticalCard
+          <MobileCard
             handleShow={handleShowRes}
             handleClose={handleCloseRes}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."
             route="/scan"
-          ></VerticalCard>
-          <VerticalCard
+          ></MobileCard>
+          <MobileCard
             image={RegisterIcon}
             title="Inscription"
             text="Inscrire un étudiant dans le système."
             route="/inscription"
-          ></VerticalCard>
-          <VerticalCard
+          ></MobileCard>
+          <MobileCard
             image={StudentsIcon}
             title="Étudiants"
             text="Gérer les étudiants dans le système."
             route="/etudiants"
-          ></VerticalCard>
-          <VerticalCard
+          ></MobileCard>
+          <MobileCard
             image={TeacherIcon}
             title="Enseignants"
             text="Gérer les étudiants dans le système."
             route="/enseignants"
-          ></VerticalCard>
-          <VerticalCard
+          ></MobileCard>
+          <MobileCard
             image={DisconnectIcon}
             title="Déconnecter"
             text="Se déconnecter du système."
             type="disconnect"
             route="/login"
-          ></VerticalCard>
+          ></MobileCard>
         </MediaQuery>
         <MediaQuery minWidth={1200}>
-          <HorizontalCard
+          <DesktopCard
             handleShow={handleShowRes}
             handleClose={handleCloseRes}
             image={QrIcon}
             title="Scanner"
             text="Scanner le Code QR d'un étudiant."
             route="/scan"
-          ></HorizontalCard>
-          <HorizontalCard
+          ></DesktopCard>
+          <DesktopCard
             image={RegisterIcon}
             title="Inscription"
             text="Inscrire un étudiant dans le système."
             route="/inscription"
-          ></HorizontalCard>
-          <HorizontalCard
+          ></DesktopCard>
+          <DesktopCard
             image={StudentsIcon}
             title="Étudiants"
             text="Gérer les étudiants dans le système."
             route="/etudiants"
-          ></HorizontalCard>
-          <HorizontalCard
+          ></DesktopCard>
+          <DesktopCard
             image={TeacherIcon}
             title="Enseignants"
             text="Gérer les étudiants dans le système."
             route="/enseignants"
-          ></HorizontalCard>
-          <HorizontalCard
+          ></DesktopCard>
+          <DesktopCard
             image={DisconnectIcon}
             title="Déconnecter"
             text="Se déconnecter du système."
             type="disconnect"
             route="/login"
-          ></HorizontalCard>
+          ></DesktopCard>
         </MediaQuery>
       </div>
     </>
