@@ -22,6 +22,7 @@
   font-weight: 500;
   font-size: 28px;
   padding: 5px 0 8px 0;
+  font-family: Quicksand, sans-serif;
 }
 .swiper {
   width: 100%;
@@ -32,7 +33,7 @@
 
 .imgwrapper {
   width: 100px;
-  height: 100px;
+  height: auto;
 }
 
 .content {
@@ -51,13 +52,13 @@
   color: #fd9f09;
   font-family: Inter, sans-serif;
 }
-.content p {
+.content td:not(.col2) {
   text-align: left;
   padding: 0;
   margin: 8px;
-  font-size: 14px;
+  font-size: 18px;
   color: #333333;
-  font-weight: 700;
+  font-weight: 500;
   font-family: Inter, sans-serif;
 }
 .content a {
@@ -84,12 +85,18 @@
   background-color: #eaeaea;
   font-size: 18px;
   border: none;
-  padding: 14px 0;
+  padding: 20px 0;
   border-radius: 10px;
   font-weight: 500;
   text-transform: capitalize;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
+.btnwrapper button svg {
+  font-size: 24px;
+}
 .modbtns button:nth-child(2) {
   background-color: #dc3545;
   color: #ffffff;
@@ -97,12 +104,129 @@
 .swiper table {
   text-align: left;
 }
+.swiper table td {
+  text-wrap: nowrap;
+}
 .swiper table .col2 {
   text-align: right;
+  font-size: 18px;
+  font-weight: 500;
 }
 .swiper button:hover {
   background-color: #c7c7c7;
 }
 .modbtns button:nth-child(2):hover {
   background-color: #c9323f;
+}
+
+@media screen and (min-width: 800px) {
+  .container {
+    justify-content: center;
+    height: 100%;
+  }
+  .header {
+    margin-top: -2.5%;
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: start;
+    padding: 0 40px;
+  }
+  .header h1 {
+    font-family: inter, sans-serif;
+    width: 100%;
+    text-transform: capitalize;
+    overflow: hidden;
+    font-weight: 600;
+    font-size: 38px;
+    padding: 0;
+    text-align: left;
+  }
+  .imgwrapper {
+    width: 120px;
+    height: auto;
+  }
+  .contentWrapper {
+    padding: 40px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "info pres pay"
+      "btns pres pay";
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info {
+    background-color: #eaeaea;
+    padding: 30px;
+    border-radius: 20px;
+    grid-area: info;
+  }
+  .info h1 {
+    text-align: center;
+    color: #fd9f09;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+    font-size: 42px;
+    font-weight: 700;
+  }
+  .info table {
+    width: 100%;
+    text-align: left;
+    font-family: Quicksand, sans-serif;
+    font-size: 25px;
+  }
+  .info table td {
+    text-wrap: nowrap;
+    font-weight: 600;
+  }
+  .info table .col2 {
+    text-align: right;
+    font-weight: 500;
+  }
+  .buttons {
+    display: flex;
+    gap: 10px;
+    grid-area: btns;
+  }
+  .buttons .btn {
+    border-radius: 20px;
+    width: 100%;
+    padding: 40px;
+    cursor: pointer;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .buttons .btn:first-child {
+    background-color: #eaeaea;
+  }
+  .buttons .btn:last-child {
+    background-color: #dc3545;
+    color: #ffffff;
+  }
+  .buttons .btn:first-child:hover {
+    transition-duration: 200ms;
+    background-color: #c5c5c5;
+  }
+  .buttons .btn:last-child:hover {
+    transition-duration: 200ms;
+    background-color: #c02937;
+    color: #ffffff;
+  }
+  .buttons .btn svg {
+    font-size: 72px;
+  }
 }

@@ -1,0 +1,64 @@
+.container h4 {
+  color: #fd9f09;
+  font-family: Inter, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 24px;
+}
+.container p {
+  color: #333333;
+  font-family: Quicksand, sans-serif;
+  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 18px;
+}
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.btns button {
+  font-size: 16px;
+  padding: 10px 20px;
+  font-family: Quicksand, sans-serif;
+  font-weight: 500;
+}
+.footer {
+  padding: 0 0 30px;
+}
+
+@media (min-width: 1000px) {
+  .container h4 {
+    color: #fd9f09;
+    font-family: Inter, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 32px;
+    text-wrap: nowrap;
+  }
+  .container p {
+    font-size: 21px;
+    color: #333333;
+    font-family: Quicksand, sans-serif;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .btns button {
+    font-size: 20px;
+    padding: 10px 20px;
+    font-family: Quicksand, sans-serif;
+    font-weight: 500;
+  }
+  .footer {
+    padding: 0 0 30px;
+  }
+}

@@ -1,5 +1,7 @@
 import styles from "./Dashboard.module.css";
 
+import "@fontsource/inter/500";
+import "@fontsource/inter/600";
 import "@fontsource/inter/700";
 import "@fontsource/inter/900";
 import "@fontsource/quicksand/500.css";

@@ -37,7 +37,7 @@ function ScanResultModal({ show, handleClose }) {
     >
       <Modal.Header
         closeButton
-        style={{ border: "none", background: "transparent" }}
+        style={{ border: "none", background: "transparent", fontSize: "20px" }}
       ></Modal.Header>
       <Modal.Body
         style={{
