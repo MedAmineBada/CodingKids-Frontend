@@ -28,7 +28,6 @@ function StudentImage({ id, shadow }) {
             setError(true);
             return;
           }
-          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const blob = await response.blob();

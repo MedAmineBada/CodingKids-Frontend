@@ -3,7 +3,10 @@
   font-family: Inter, sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-size: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  backdrop-filter: brightness(40%);
+  background-color: #ffffff;
 }
 .container p {
   color: #333333;
@@ -23,7 +26,15 @@
   font-size: 16px;
   padding: 10px 20px;
   font-family: Quicksand, sans-serif;
-  font-weight: 500;
+  font-weight: 600;
+}
+.btns button:last-child {
+  background-color: #fd9f09;
+  border-color: #fd9f09;
+}
+.btns button:last-child:hover {
+  background-color: #ea940b;
+  border-color: #ea940b;
 }
 .footer {
   padding: 0 0 30px;
@@ -37,6 +48,7 @@
     letter-spacing: 1px;
     font-size: 32px;
     text-wrap: nowrap;
+    background-color: #ffffff;
   }
   .container p {
     font-size: 21px;

@@ -21,7 +21,11 @@ function ConfirmModal({
       onHide={onClose}
     >
       <Modal.Header
-        style={{ border: "none", paddingTop: 30, paddingBottom: 0 }}
+        style={{
+          border: "none",
+          paddingTop: 30,
+          paddingBottom: 0,
+        }}
       ></Modal.Header>
       <Modal.Body
         style={{
@@ -39,9 +43,7 @@ function ConfirmModal({
           <Button variant="secondary" onClick={onClose}>
             {btn_no}
           </Button>
-          <Button variant="danger" onClick={func}>
-            {btn_yes}
-          </Button>
+          <Button onClick={func}>{btn_yes}</Button>
         </div>
       </Modal.Footer>
     </Modal>

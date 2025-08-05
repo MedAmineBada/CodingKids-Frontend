@@ -10,6 +10,7 @@ import styles from "./StudentProfile.module.css";
 import { deleteStudent } from "@/services/StudentServices";
 import SuccessModal from "@/components/modals/SuccessModal.jsx";
 import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
+import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx";
 
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
@@ -20,17 +21,22 @@ function formatIsoDateToDmy(inputDate) {
 }
 
 export default function StudentProfile({ data, handleClose }) {
-  const [showError, setShowError] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showModify, setShowModify] = useState(false);
+
+  const [student, setStudent] = useState(data);
+
+  function handleModifySuccess(updatedStudent) {
+    localStorage.setItem("scanResult", JSON.stringify(updatedStudent));
+    setStudent(updatedStudent);
+  }
 
   function handleCloseSuccess() {
     setShowSuccess(false);
     handleClose();
-  }
-  function handleCloseConfirm() {
-    setShowConfirm(false);
   }
 
   async function handleDeleteStudent(id) {
@@ -53,6 +59,12 @@ export default function StudentProfile({ data, handleClose }) {
 
   return (
     <>
+      <ModifyStudentModal
+        show={showModify}
+        student={data}
+        onClose={() => setShowModify(false)}
+        onSuccess={handleModifySuccess}
+      ></ModifyStudentModal>
       <ConfirmModal
         show={showConfirm}
         title="Confirmer la suppression"
@@ -60,7 +72,7 @@ export default function StudentProfile({ data, handleClose }) {
         btn_yes="Supprimer"
         btn_no="Annuler"
         onClose={() => setShowConfirm(false)}
-        func={() => handleDeleteStudent(data.id)}
+        func={() => handleDeleteStudent(student.id)}
       ></ConfirmModal>
 
       <ErrorModal
@@ -81,9 +93,9 @@ export default function StudentProfile({ data, handleClose }) {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
-            <StudentImage id={data.id} shadow={10} />
+            <StudentImage id={student.id} shadow={10} />
           </div>
-          <h1>{data.name}</h1>
+          <h1>{student.name}</h1>
         </div>
 
         <MediaQuery maxWidth={800}>
@@ -102,25 +114,27 @@ export default function StudentProfile({ data, handleClose }) {
                       <tr>
                         <td>Date de nais.:</td>
                         <td className={styles.col2}>
-                          {formatIsoDateToDmy(data.birth_date)}
+                          {formatIsoDateToDmy(student.birth_date)}
                         </td>
                       </tr>
                       <tr>
                         <td>Tel. 1:</td>
                         <td className={styles.col2}>
-                          <a href={`tel:${data.tel1}`}>{data.tel1}</a>
+                          <a href={`tel:${student.tel1}`}>{student.tel1}</a>
                         </td>
                       </tr>
                       <tr>
                         <td>Tel. 2:</td>
                         <td className={styles.col2}>
-                          <a href={`tel:${data.tel2}`}>{data.tel2}</a>
+                          <a href={`tel:${student.tel2}`}>{student.tel2}</a>
                         </td>
                       </tr>
                       <tr>
                         <td>E-mail:</td>
                         <td className={styles.col2}>
-                          <a href={`mailto:${data.email}`}>{data.email}</a>
+                          <a href={`mailto:${student.email}`}>
+                            {student.email}
+                          </a>
                         </td>
                       </tr>
                     </tbody>
@@ -128,7 +142,7 @@ export default function StudentProfile({ data, handleClose }) {
 
                   <div className={styles.btnwrapper}>
                     <div className={styles.modbtns}>
-                      <button>
+                      <button onClick={() => setShowModify(true)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1em"
@@ -187,32 +201,32 @@ export default function StudentProfile({ data, handleClose }) {
                   <tr>
                     <td>Date de nais.:</td>
                     <td className={styles.col2}>
-                      {formatIsoDateToDmy(data.birth_date)}
+                      {formatIsoDateToDmy(student.birth_date)}
                     </td>
                   </tr>
                   <tr>
                     <td>Tel. 1:</td>
                     <td className={styles.col2}>
-                      <a>{data.tel1}</a>
+                      <a>{student.tel1}</a>
                     </td>
                   </tr>
                   <tr>
                     <td>Tel. 2:</td>
                     <td className={styles.col2}>
-                      <a>{data.tel2}</a>
+                      <a>{student.tel2}</a>
                     </td>
                   </tr>
                   <tr>
                     <td>E-mail:</td>
                     <td className={styles.col2}>
-                      <a href={`mailto:${data.email}`}>{data.email}</a>
+                      <a href={`mailto:${student.email}`}>{student.email}</a>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div className={styles.buttons}>
-              <div className={styles.btn}>
+              <div className={styles.btn} onClick={() => setShowModify(true)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"

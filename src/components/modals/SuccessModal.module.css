@@ -1,3 +1,6 @@
+.container {
+  backdrop-filter: brightness(40%);
+}
 .container h4 {
   color: Green;
   font-family: Inter, sans-serif;
