@@ -1,3 +1,5 @@
+import { removeAllSpaces } from "@/services/utils.js";
+
 export async function deleteStudent(id) {
   return (
     await fetch(`${import.meta.env.VITE_API_URL}/students/${id}/delete`, {
@@ -14,6 +16,7 @@ export async function updateStudent(id, data) {
     birth_date: data.birth_date,
     tel1: data.tel1,
     tel2: data.tel2,
+    email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 
   const response = await fetch(url, {
