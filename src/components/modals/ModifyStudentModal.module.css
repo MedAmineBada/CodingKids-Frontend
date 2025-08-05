@@ -37,6 +37,13 @@
   font-size: 16px;
   text-transform: capitalize;
 }
+.field input[type="date"] {
+  color: #333333;
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+}
 .field input[type="number"] {
   letter-spacing: 2px;
   -webkit-appearance: textfield;
@@ -70,4 +77,37 @@
 }
 .btns button:last-child:hover {
   background-color: #e8930c;
+}
+@media screen and (min-width: 1000px) {
+  .body {
+    gap: 12px;
+  }
+  .header {
+    font-size: 36px;
+  }
+  .field {
+    width: 70%;
+    font-family: Inter, sans-serif;
+    font-size: 21px;
+    font-weight: 500;
+  }
+  .field input {
+    padding: 10px 4px;
+    font-size: 20px;
+  }
+  .field input[type="date"] {
+    font-size: 20px;
+  }
+  .btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+  .btns button {
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 20px;
+  }
 }
