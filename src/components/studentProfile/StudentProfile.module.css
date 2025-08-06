@@ -103,6 +103,7 @@
 }
 .swiper table {
   text-align: left;
+  width: 100%;
 }
 .swiper table td {
   text-wrap: nowrap;
@@ -126,7 +127,7 @@
     height: 100%;
   }
   .header {
-    margin-top: -2.5%;
+    margin-top: -1.5%;
     display: flex;
     gap: 20px;
     flex-direction: row;

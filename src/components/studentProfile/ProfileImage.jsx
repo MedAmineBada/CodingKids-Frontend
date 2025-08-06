@@ -1,51 +1,44 @@
 import styles from "./ProfileImage.module.css";
 import { useEffect, useState } from "react";
 import { CircularLoading } from "respinner";
+import { getImage } from "@/services/ImageServices.js";
 
-function StudentImage({ id, shadow }) {
+function StudentImage({ id, shadow, onClickFunction, cursor }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const boxShadowStyle =
-    typeof shadow === "number" ? { boxShadow: `0 0 ${shadow}px #333333` } : {};
+    typeof shadow === "number"
+      ? { boxShadow: `0 0 ${shadow}px #333333`, cursor: cursor }
+      : { cursor: cursor };
+
   useEffect(() => {
     let isMounted = true;
-    const abortController = new AbortController();
-    let objectUrlForCleanup = null;
+    let objectUrl = null;
 
     const fetchImage = async () => {
       try {
         setLoading(true);
         setError(false);
 
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/students/${id}/image`,
-          { signal: abortController.signal },
-        );
+        const { status, blob } = await getImage(id);
 
-        if (!response.ok) {
-          if (response.status === 404) {
-            setError(true);
-            return;
-          }
-        }
+        if (!isMounted) return;
 
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        objectUrlForCleanup = objectUrl;
-
-        if (isMounted) {
+        if (status === 200) {
+          objectUrl = URL.createObjectURL(blob);
           setImageUrl(objectUrl);
-        }
-      } catch (err) {
-        if (err.name !== "AbortError" && isMounted) {
-          console.error("Fetch error:", err);
+          localStorage.setItem("imageUrl", objectUrl);
+        } else if (status === 404) {
+          setError(true);
+          localStorage.setItem("imageUrl", null);
+        } else {
           setError(true);
         }
+      } catch {
+        if (isMounted) setError(true);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
@@ -53,10 +46,7 @@ function StudentImage({ id, shadow }) {
 
     return () => {
       isMounted = false;
-      abortController.abort();
-      if (objectUrlForCleanup) {
-        URL.revokeObjectURL(objectUrlForCleanup);
-      }
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [id]);
 
@@ -69,6 +59,7 @@ function StudentImage({ id, shadow }) {
           src={error ? "/NoImage.svg" : imageUrl}
           alt="Student"
           className={styles.image}
+          onClick={onClickFunction}
         />
       )}
     </div>

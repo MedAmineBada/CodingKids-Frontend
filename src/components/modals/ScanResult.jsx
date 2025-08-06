@@ -2,10 +2,12 @@ import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import ModalLoading from "@/components/loading/ModalLoading.jsx";
 import StudentProfile from "@/components/studentProfile/StudentProfile.jsx";
+import { clearStudentLocalStorage } from "@/services/utils.js";
 
 function ScanResultModal({ show, handleClose }) {
   const handleClearAndClose = () => {
     setScanResult(null);
+    clearStudentLocalStorage();
     handleClose();
   };
 
@@ -37,7 +39,13 @@ function ScanResultModal({ show, handleClose }) {
     >
       <Modal.Header
         closeButton
-        style={{ border: "none", background: "transparent", fontSize: "20px" }}
+        style={{
+          border: "none",
+          background: "transparent",
+          fontSize: "20px",
+          paddingBottom: 0,
+          paddingLeft: 0,
+        }}
       ></Modal.Header>
       <Modal.Body
         style={{
