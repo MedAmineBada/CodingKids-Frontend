@@ -2,11 +2,19 @@ import styles from "./ProfileImage.module.css";
 import { useEffect, useState } from "react";
 import { CircularLoading } from "respinner";
 import { getImage } from "@/services/ImageServices.js";
+import ImageModal from "@/components/modals/ImageModal/ImageModal.jsx";
 
-function StudentImage({ id, shadow, onClickFunction, cursor }) {
+function StudentImage({ id, shadow, cursor }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [showImage, setShowImage] = useState(false);
+
+  function handleImageClick() {
+    setShowImage(true);
+  }
+
   const boxShadowStyle =
     typeof shadow === "number"
       ? { boxShadow: `0 0 ${shadow}px #333333`, cursor: cursor }
@@ -49,9 +57,20 @@ function StudentImage({ id, shadow, onClickFunction, cursor }) {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [id]);
-
+  function changeImage(img) {
+    const blobUrl = URL.createObjectURL(img);
+    setImageUrl(blobUrl);
+  }
   return (
     <div className={styles.wrapper} style={boxShadowStyle}>
+      <ImageModal
+        cursor={"pointer"}
+        show={showImage}
+        onClose={() => setShowImage(false)}
+        url={imageUrl}
+        func={changeImage}
+      ></ImageModal>
+
       {loading ? (
         <CircularLoading size="60%" stroke="white" strokeWidth={7} />
       ) : (
@@ -59,7 +78,7 @@ function StudentImage({ id, shadow, onClickFunction, cursor }) {
           src={error ? "/NoImage.svg" : imageUrl}
           alt="Student"
           className={styles.image}
-          onClick={onClickFunction}
+          onClick={handleImageClick}
         />
       )}
     </div>

@@ -11,7 +11,6 @@ import { deleteStudent } from "@/services/StudentServices";
 import SuccessModal from "@/components/modals/SuccessModal.jsx";
 import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
 import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx";
-import ImageModal from "@/components/modals/ImageModal/ImageModal.jsx";
 
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
@@ -27,9 +26,6 @@ export default function StudentProfile({ data, handleClose }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showModify, setShowModify] = useState(false);
-  const [showImage, setShowImage] = useState(false);
-
-  const [imageUrl, setImageUrl] = useState(null);
 
   const [student, setStudent] = useState(data);
 
@@ -61,20 +57,8 @@ export default function StudentProfile({ data, handleClose }) {
     }
   }
 
-  function handleImageClick() {
-    setImageUrl(JSON.stringify(localStorage.getItem("imageUrl")));
-    setShowImage(true);
-  }
-
   return (
     <>
-      <ImageModal
-        cursor={"pointer"}
-        show={showImage}
-        onClose={() => setShowImage(false)}
-        url={imageUrl}
-      ></ImageModal>
-
       <ModifyStudentModal
         show={showModify}
         student={data}
@@ -110,12 +94,7 @@ export default function StudentProfile({ data, handleClose }) {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
-            <StudentImage
-              cursor={"pointer"}
-              id={student.id}
-              shadow={5}
-              onClickFunction={handleImageClick}
-            />
+            <StudentImage cursor={"pointer"} id={student.id} shadow={5} />
           </div>
           <h1>{student.name}</h1>
         </div>

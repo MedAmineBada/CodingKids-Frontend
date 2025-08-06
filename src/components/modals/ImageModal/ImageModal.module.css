@@ -13,8 +13,15 @@
 .image {
   width: 60%;
   border-radius: 100%;
+  border: solid 3px #ffffff;
 }
 .image img {
   width: 100%;
   border-radius: 100%;
+}
+
+@media screen and (min-width: 1000px) {
+  .image {
+    width: 100%;
+  }
 }
