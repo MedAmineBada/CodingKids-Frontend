@@ -26,7 +26,6 @@ export default function StudentProfile({ data, handleClose }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showModify, setShowModify] = useState(false);
-
   const [student, setStudent] = useState(data);
 
   function handleModifySuccess(updatedStudent) {

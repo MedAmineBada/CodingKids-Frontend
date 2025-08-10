@@ -30,16 +30,13 @@ function StudentImage({ id, shadow, cursor }) {
         setError(false);
 
         const { status, blob } = await getImage(id);
-
         if (!isMounted) return;
 
         if (status === 200) {
           objectUrl = URL.createObjectURL(blob);
           setImageUrl(objectUrl);
-          localStorage.setItem("imageUrl", objectUrl);
         } else if (status === 404) {
-          setError(true);
-          localStorage.setItem("imageUrl", null);
+          setError(false);
         } else {
           setError(true);
         }
@@ -57,14 +54,17 @@ function StudentImage({ id, shadow, cursor }) {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [id]);
+
   function changeImage(img) {
     const blobUrl = URL.createObjectURL(img);
     setImageUrl(blobUrl);
   }
+
   return (
     <div className={styles.wrapper} style={boxShadowStyle}>
       <ImageModal
-        cursor={"pointer"}
+        id={id}
+        cursor={"default"}
         show={showImage}
         onClose={() => setShowImage(false)}
         url={imageUrl}

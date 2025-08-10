@@ -15,3 +15,15 @@ export const getImage = async (id) => {
     return { status: 500, blob: null };
   }
 };
+
+export async function uploadImage(id, file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const uploadUrl = `${import.meta.env.VITE_API_URL}/students/${id}/image/replace`;
+
+  const response = await fetch(uploadUrl, {
+    method: "PATCH",
+    body: formData,
+  });
+}
