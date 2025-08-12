@@ -12,6 +12,10 @@ function ConfirmModal({
   btn_no,
   func,
 }) {
+  function handleClick() {
+    func();
+    onClose();
+  }
   return (
     <Modal
       className={styles.container}
@@ -43,7 +47,7 @@ function ConfirmModal({
           <Button variant="secondary" onClick={onClose}>
             {btn_no}
           </Button>
-          <Button onClick={func}>{btn_yes}</Button>
+          <Button onClick={handleClick}>{btn_yes}</Button>
         </div>
       </Modal.Footer>
     </Modal>

@@ -27,3 +27,15 @@ export async function uploadImage(id, file) {
     body: formData,
   });
 }
+
+export async function deleteImage(id) {
+  try {
+    const url = `${import.meta.env.VITE_API_URL}/students/${id}/image/delete`;
+
+    const response = await fetch(url, { method: "DELETE" });
+
+    return response.status;
+  } catch {
+    return 500;
+  }
+}

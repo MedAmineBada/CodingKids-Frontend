@@ -4,12 +4,14 @@ import Modal from "react-bootstrap/Modal";
 import { useRef, useState } from "react";
 import CropImg from "@/components/modals/CropModal/CropImg.jsx";
 import { getCroppedImg } from "@/services/utils.js";
-import { uploadImage } from "@/services/ImageServices.js";
+import { deleteImage, uploadImage } from "@/services/ImageServices.js";
+import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
 
-function ImageModal({ id, show, onClose, url, cursor, func }) {
+function ImageModal({ id, show, onClose, url, cursor, func, delfunc }) {
   const fileInputRef = useRef(null);
   const [imgUrl, setImgUrl] = useState(url);
   const [showCrop, setShowCrop] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   function handleModClick() {
     fileInputRef.current?.click();
@@ -35,9 +37,31 @@ function ImageModal({ id, show, onClose, url, cursor, func }) {
     setImgUrl(URL.createObjectURL(file));
     setShowCrop(true);
   }
+  function handleDelClick() {
+    setShowConfirm(true);
+  }
+  async function handleDelete() {
+    const res = await deleteImage(id);
+    if (res === 200) {
+      delfunc();
+    } else if (res === 404) {
+      /* empty */
+    } else {
+      /* empty */
+    }
+  }
 
   return (
     <>
+      <ConfirmModal
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        title="Confirmer la suppression"
+        message="Êtes-vous sûr de vouloir supprimer l’image ?"
+        btn_yes="Supprimer"
+        btn_no="Annuler "
+        func={handleDelete}
+      ></ConfirmModal>
       <CropImg
         show={showCrop}
         close={() => setShowCrop(false)}
@@ -57,7 +81,7 @@ function ImageModal({ id, show, onClose, url, cursor, func }) {
           </div>
           <div className={styles.manageBtns}>
             <div onClick={handleModClick}>Modifier</div>
-            <div>Effacer</div>
+            <div onClick={handleDelClick}>Effacer</div>
           </div>
           <input
             ref={fileInputRef}

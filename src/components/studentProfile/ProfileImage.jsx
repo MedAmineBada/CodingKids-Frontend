@@ -10,7 +10,10 @@ function StudentImage({ id, shadow, cursor }) {
   const [loading, setLoading] = useState(true);
 
   const [showImage, setShowImage] = useState(false);
-
+  function deleteRefresh() {
+    setError(true);
+    setImageUrl(null);
+  }
   function handleImageClick() {
     setShowImage(true);
   }
@@ -36,7 +39,7 @@ function StudentImage({ id, shadow, cursor }) {
           objectUrl = URL.createObjectURL(blob);
           setImageUrl(objectUrl);
         } else if (status === 404) {
-          setError(false);
+          setError(true);
         } else {
           setError(true);
         }
@@ -58,6 +61,7 @@ function StudentImage({ id, shadow, cursor }) {
   function changeImage(img) {
     const blobUrl = URL.createObjectURL(img);
     setImageUrl(blobUrl);
+    setError(false);
   }
 
   return (
@@ -69,6 +73,7 @@ function StudentImage({ id, shadow, cursor }) {
         onClose={() => setShowImage(false)}
         url={imageUrl}
         func={changeImage}
+        delfunc={deleteRefresh}
       ></ImageModal>
 
       {loading ? (
