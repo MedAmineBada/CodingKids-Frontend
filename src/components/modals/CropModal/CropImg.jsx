@@ -18,7 +18,7 @@ function CropImg({ show, close, cropComplete, url }) {
       centered={true}
       show={show}
       onHide={close}
-      size="lg"
+      size="m"
       className={styles.modal}
     >
       <Modal.Body className={styles.body}>
@@ -39,17 +39,8 @@ function CropImg({ show, close, cropComplete, url }) {
           }}
         />
       </Modal.Body>
-      <Modal.Footer>
-        <button
-          onClick={() => {
-            if (croppedAreaPixels) cropComplete(croppedAreaPixels);
-          }}
-        >
-          Enregistrer
-        </button>
-      </Modal.Footer>
-      <MediaQuery minWidth={1000}>
-        <Modal.Footer>
+      <Modal.Footer className={styles.footer}>
+        <MediaQuery minWidth={1000}>
           <input
             type="range"
             value={zoom}
@@ -60,8 +51,15 @@ function CropImg({ show, close, cropComplete, url }) {
             onChange={(e) => setZoom(Number(e.target.value))}
             className="zoom-range"
           />
-        </Modal.Footer>
-      </MediaQuery>
+        </MediaQuery>
+        <button
+          onClick={() => {
+            if (croppedAreaPixels) cropComplete(croppedAreaPixels);
+          }}
+        >
+          Enregistrer
+        </button>
+      </Modal.Footer>
     </Modal>
   );
 }

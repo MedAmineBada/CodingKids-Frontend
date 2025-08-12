@@ -29,6 +29,7 @@ function ImageModal({ id, show, onClose, url, cursor, func }) {
   }
 
   async function handleFileChange(e) {
+    onClose();
     const file = e.target.files?.[0];
     if (!file) return;
     setImgUrl(URL.createObjectURL(file));

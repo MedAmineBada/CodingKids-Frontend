@@ -1,10 +1,16 @@
+.modal {
+  --bs-modal-bg: transparent;
+  --bs-modal-border-color: transparent;
+  backdrop-filter: brightness(40%);
+}
 .body {
   display: flex;
+  aspect-ratio: 1/1;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   width: 100%;
-  height: 500px;
+  overflow: hidden;
+  border-radius: 20px;
 }
 .cropContainter {
   background-color: #333333;
@@ -16,4 +22,37 @@
 .cropMedia {
   width: 100%;
   height: 100%;
+}
+.footer {
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer input {
+  transition-duration: 400ms;
+}
+.footer button {
+  background-color: transparent;
+  border: none;
+  border-radius: 90px;
+  color: #fd9f09;
+  font-size: 20px;
+  font-family: Quicksand, sans-serif;
+  font-weight: 700;
+  transition-duration: 400ms;
+}
+.footer button:hover {
+  color: white;
+}
+.footer button:focus-visible {
+  outline: none;
+}
+.footer input {
+  accent-color: #fd9f09;
+}
+@media screen and (max-width: 1000px) {
+  .footer {
+    justify-content: center;
+  }
 }
