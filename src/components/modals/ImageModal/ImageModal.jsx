@@ -44,10 +44,6 @@ function ImageModal({ id, show, onClose, url, cursor, func, delfunc }) {
     const res = await deleteImage(id);
     if (res === 200) {
       delfunc();
-    } else if (res === 404) {
-      /* empty */
-    } else {
-      /* empty */
     }
   }
 
@@ -59,7 +55,7 @@ function ImageModal({ id, show, onClose, url, cursor, func, delfunc }) {
         title="Confirmer la suppression"
         message="Êtes-vous sûr de vouloir supprimer l’image ?"
         btn_yes="Supprimer"
-        btn_no="Annuler "
+        btn_no="Annuler"
         func={handleDelete}
       ></ConfirmModal>
       <CropImg

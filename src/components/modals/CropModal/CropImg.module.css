@@ -52,6 +52,9 @@
   accent-color: #fd9f09;
 }
 @media screen and (max-width: 1000px) {
+  .body {
+    border-radius: 0;
+  }
   .footer {
     justify-content: center;
   }
