@@ -26,6 +26,8 @@ export async function uploadImage(id, file) {
     method: "PATCH",
     body: formData,
   });
+
+  return response.status;
 }
 
 export async function deleteImage(id) {

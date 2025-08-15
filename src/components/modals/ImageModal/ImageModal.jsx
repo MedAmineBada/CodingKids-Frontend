@@ -83,7 +83,6 @@ function ImageModal({ id, show, onClose, url, cursor, func, delfunc }) {
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            capture="environment"
             style={{
               visibility: "hidden",
               position: "absolute",

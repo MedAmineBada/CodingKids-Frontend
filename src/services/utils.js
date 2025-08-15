@@ -57,3 +57,24 @@ export async function getCroppedImg(imageSrc, crop) {
     );
   });
 }
+
+export async function urlToFile(
+  url,
+  filename = "cropped.webp",
+  mimeType = "image/webp",
+) {
+  if (url.startsWith("data:")) {
+    const [meta, data] = url.split(",");
+    const matches = meta.match(/data:(.*?);base64/);
+    const mime = matches ? matches[1] : mimeType;
+    const binary = atob(data);
+    const len = binary.length;
+    const u8 = new Uint8Array(len);
+    for (let i = 0; i < len; i++) u8[i] = binary.charCodeAt(i);
+    return new File([u8], filename, { type: mime });
+  }
+
+  const resp = await fetch(url);
+  const blob = await resp.blob();
+  return new File([blob], filename, { type: blob.type || mimeType });
+}

@@ -51,5 +51,7 @@ export async function addStudent(data) {
     body: JSON.stringify(payload),
   });
 
-  return response.status;
+  data = await response.json();
+
+  return { status: response.status, id: data.id };
 }
