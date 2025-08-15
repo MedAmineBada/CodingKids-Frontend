@@ -17,6 +17,7 @@ import DisconnectIcon from "@/assets/images/icons/disconnect.svg";
 import DesktopCard from "@/components/cards/DesktopCard.jsx";
 import { useState } from "react";
 import ScanResultModal from "@/components/modals/ScanResult.jsx";
+import Inscription from "@/components/modals/Inscription/Inscription.jsx";
 
 function Dashboard() {
   if (localStorage.getItem("scanResult") !== null) {
@@ -24,6 +25,7 @@ function Dashboard() {
   }
   const [showRes, setShowRes] = useState(false);
   const handleShowRes = () => setShowRes(true);
+  const [showInscription, setShowInscription] = useState(false);
 
   function handleCloseRes() {
     localStorage.removeItem("scanResult");
@@ -33,6 +35,10 @@ function Dashboard() {
   return (
     <>
       <ScanResultModal show={showRes} handleClose={handleCloseRes} />
+      <Inscription
+        show={showInscription}
+        close={() => setShowInscription(false)}
+      ></Inscription>
       <div className={styles.title}>
         <h1>Dashboard</h1>
       </div>
@@ -50,7 +56,7 @@ function Dashboard() {
             image={RegisterIcon}
             title="Inscription"
             text="Inscrire un étudiant dans le système."
-            route="/inscription"
+            clickfunc={() => setShowInscription(true)}
           ></MobileCard>
           <MobileCard
             image={StudentsIcon}
@@ -85,7 +91,7 @@ function Dashboard() {
             image={RegisterIcon}
             title="Inscription"
             text="Inscrire un étudiant dans le système."
-            route="/inscription"
+            clickfunc={() => setShowInscription(true)}
           ></DesktopCard>
           <DesktopCard
             image={StudentsIcon}

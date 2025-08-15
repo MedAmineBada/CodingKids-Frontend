@@ -1,0 +1,22 @@
+.wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  border: 1px solid #808080;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  transition-duration: 200ms;
+}
+.wrapper img {
+  width: 100%;
+  border-radius: 100%;
+  color: #fd9f09;
+}
+.addimg {
+  font-size: 30px;
+}

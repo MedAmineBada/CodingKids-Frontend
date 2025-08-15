@@ -11,6 +11,7 @@ function DesktopCard({
   route,
   handleShow,
   handleClose,
+  clickfunc,
 }) {
   const [hovered, setHovered] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
@@ -38,6 +39,8 @@ function DesktopCard({
   const handleClick = () => {
     if (route === "/scan") {
       fileInputRef.current?.click();
+    } else if (clickfunc) {
+      clickfunc();
     } else if (route) {
       window.location.href = route;
     }

@@ -11,6 +11,7 @@ function MobileCard({
   route,
   handleShow,
   handleClose,
+  clickfunc,
 }) {
   const [responseCode, setResponseCode] = useState(200);
   const [message, setMessage] = useState(
@@ -28,6 +29,8 @@ function MobileCard({
   const handleClick = () => {
     if (route === "/scan") {
       fileInputRef.current?.click();
+    } else if (clickfunc) {
+      clickfunc();
     } else if (route) {
       window.location.href = route;
     }

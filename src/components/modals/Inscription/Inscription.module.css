@@ -1,0 +1,86 @@
+.header h1 {
+  font-family: Inter, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 21px;
+  margin: 0;
+  color: #fd9f09;
+}
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper table {
+  font-family: Quicksand, sans-serif;
+  width: 100%;
+  font-size: 16px;
+}
+.wrapper table {
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+.wrapper table td:not(.col2) {
+  font-weight: 600;
+  text-wrap: nowrap;
+}
+.col2 input {
+  text-align: center;
+  width: 100%;
+  padding: 4px;
+}
+.col2 input:focus {
+  outline: none;
+}
+.col2 input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+  appearance: textfield;
+  letter-spacing: 2px;
+}
+
+.col2 input[type="number"]::-webkit-inner-spin-button,
+.col2 input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.imagewrap {
+  width: 22%;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.imagewrap h1 {
+  margin: 2px 0 0;
+  font-weight: 600;
+  width: fit-content;
+  font-size: 16px;
+  text-wrap: nowrap;
+  text-align: center;
+}
+.btn button {
+  font-size: 18px;
+  margin-top: 6px;
+  border: none;
+  background: #fd9f09;
+  color: #fff;
+  font-family: Quicksand, sans-serif;
+  padding: 8px 30px;
+  font-weight: 600;
+  border-radius: 20px;
+}
+.btn button:hover {
+  background-color: #e78e06;
+}
+.col2 input::placeholder {
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.wrapper span {
+  color: #fd9f09;
+  font-size: 20px;
+}
