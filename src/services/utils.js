@@ -78,3 +78,28 @@ export async function urlToFile(
   const blob = await resp.blob();
   return new File([blob], filename, { type: blob.type || mimeType });
 }
+
+export async function verifyStr(string) {
+  return removeAllSpaces(string) !== "" && /^[A-Za-z\s]+$/.test(string);
+}
+
+export async function verifyTel(string) {
+  return (
+    removeAllSpaces(string) !== "" &&
+    /^[0-9]+$/.test(string) &&
+    string.length === 8
+  );
+}
+
+export async function verifyMail(string) {
+  return (
+    removeAllSpaces(string) !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(string)
+  );
+}
+
+export async function verifyDOB(dateString) {
+  if (removeAllSpaces(dateString) === "") return false;
+  const date = new Date(dateString);
+  const now = new Date();
+  return !isNaN(date.getTime()) && date <= now;
+}

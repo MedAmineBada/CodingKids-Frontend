@@ -4,8 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import AddImage from "@/components/modals/Inscription/AddImage.jsx";
 import { addStudent } from "@/services/StudentServices.js";
 import CropImg from "@/components/modals/CropModal/CropImg.jsx";
-import { getCroppedImg, urlToFile } from "@/services/utils.js";
+import {
+  getCroppedImg,
+  urlToFile,
+  verifyDOB,
+  verifyMail,
+  verifyStr,
+  verifyTel,
+} from "@/services/utils.js";
 import { uploadImage } from "@/services/ImageServices.js";
+import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import SuccessModal from "@/components/modals/SuccessModal.jsx";
 
 function useScreenWidth() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -21,6 +30,16 @@ function useScreenWidth() {
 
 function Inscription({ show, close }) {
   const [imgSrc, setImgSrc] = useState(null);
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const [errMsg, setErrMsg] = useState(null);
+  const [errCode, setErrCode] = useState(500);
+
+  const [successMsg, setSuccessMsg] = useState(null);
+  const [successTitle, setSuccessTitle] = useState(null);
+
   const [showCrop, setShowCrop] = useState(false);
 
   const nameRef = useRef();
@@ -33,36 +52,124 @@ function Inscription({ show, close }) {
   const modalSize = width >= 1000 ? "lg" : "m";
   const fileInputRef = useRef(null);
 
+  async function verifyInput() {
+    if (!(await verifyStr(nameRef.current.value))) {
+      setErrCode(422);
+      setErrMsg(
+        "Le nom ne doit pas être vide et doit contenir uniquement des lettres alphabétiques.",
+      );
+      setShowError(true);
+      return false;
+    } else if (!(await verifyDOB(dobRef.current.value))) {
+      setErrCode(422);
+      setErrMsg(
+        "La date de naissance doit être valide et ne pas être dans le futur.",
+      );
+      setShowError(true);
+      return false;
+    } else if (!(await verifyTel(tel1Ref.current.value))) {
+      setErrCode(422);
+      setErrMsg(
+        "Le numéro de téléphone 1 doit contenir uniquement des chiffres et comporter 8 caractères.",
+      );
+      setShowError(true);
+      return false;
+    } else if (!(await verifyTel(tel2Ref.current.value))) {
+      setErrCode(422);
+      setErrMsg(
+        "Le numéro de téléphone 2 doit contenir uniquement des chiffres et comporter 8 caractères.",
+      );
+      setShowError(true);
+      return false;
+    } else if (tel1Ref.current.value === tel2Ref.current.value) {
+      setErrCode(422);
+      setErrMsg("Les numéros de téléphone 1 et 2 doivent être différents.");
+      setShowError(true);
+      return false;
+    } else if (!(await verifyMail(emailRef.current.value))) {
+      setErrCode(422);
+      setErrMsg(
+        "L'adresse e-mail ne doit pas être vide et doit avoir un format valide.",
+      );
+      setShowError(true);
+      return false;
+    }
+    return true;
+  }
+
   async function handleSubmit() {
     try {
-      const student = {
-        name: nameRef.current.value,
-        email: emailRef.current.value,
-        birth_date: dobRef.current.value,
-        tel1: tel1Ref.current.value,
-        tel2: tel2Ref.current.value,
-      };
+      if (await verifyInput()) {
+        const student = {
+          name: nameRef.current.value,
+          email: emailRef.current.value,
+          birth_date: dobRef.current.value,
+          tel1: tel1Ref.current.value,
+          tel2: tel2Ref.current.value,
+        };
 
-      const res = await addStudent(student);
+        const res = await addStudent(student);
 
-      if (res.status === 201) {
-        if (imgSrc) {
-          const file = await urlToFile(imgSrc, res.id + "-tempimage.webp");
-          const imgres = await uploadImage(res.id, file);
+        if (res.status === 201) {
+          if (imgSrc) {
+            const file = await urlToFile(imgSrc, res.id + "-tempimage.webp");
+            const imgres = await uploadImage(res.id, file);
 
-          if (imgres === 422) {
-            // errthings
-          } else if (imgres === 500) {
-            // errthings
+            if (imgres !== 200) {
+              try {
+                if (imgres === 404) {
+                  setErrCode(404);
+                  setErrMsg(
+                    "Étudiant introuvable lors du téléchargement de l'image, essayez de modifier l'élève et d'ajouter l'image.",
+                  );
+                  setShowError(true);
+                } else if (imgres === 422) {
+                  setErrCode(422);
+                  setErrMsg(
+                    "Le fichier téléchargé n'est peut-être pas une image. Choisissez ou prenez une photo et réessayez.",
+                  );
+                  setShowError(true);
+                } else {
+                  setErrCode(500);
+                  setErrMsg(
+                    "L’étudiant a peut-être été ajouté, mais l’image n’a pas pu être téléchargée.",
+                  );
+                  setShowError(true);
+                }
+              } catch {
+                setErrCode(500);
+                setErrMsg(
+                  "L’étudiant a peut-être été ajouté, mais l’image n’a pas pu être téléchargée.",
+                );
+                setShowError(true);
+              }
+            }
           }
+          setSuccessTitle("Inscription Réussie!");
+          setSuccessMsg("L'étudiant a été ajouté avec succès.");
+          setShowSuccess(true);
+          setImgSrc(null);
+          close();
+        } else if (res.status === 422) {
+          setErrCode(422);
+          setErrMsg(
+            "Les données de l'Étudiant sont manquantes ou sous une forme incorrecte. Vérifiez qu'aucun champ n'est manquant ou incorrect.",
+          );
+          setShowError(true);
+        } else {
+          setErrCode(500);
+          setErrMsg(
+            "Une erreur s'est produite lors de l'ajout de l'élève. Veuillez réessayer.",
+          );
+          setShowError(true);
         }
-      } else if (res.status === 422) {
-        // smth
-      } else {
-        // smth
       }
     } catch {
-      // ---
+      setErrCode(500);
+      setErrMsg(
+        "Une erreur s'est produite lors de l'ajout de l'élève. Veuillez réessayer.",
+      );
+      setShowError(true);
     }
   }
 
@@ -91,6 +198,18 @@ function Inscription({ show, close }) {
 
   return (
     <>
+      <SuccessModal
+        show={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title={successTitle}
+        message={successMsg}
+      ></SuccessModal>
+      <ErrorModal
+        show={showError}
+        onClose={() => setShowError(false)}
+        code={errCode}
+        message={errMsg}
+      ></ErrorModal>
       <CropImg
         show={showCrop}
         close={() => setShowCrop(false)}
