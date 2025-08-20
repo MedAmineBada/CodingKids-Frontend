@@ -1,0 +1,14 @@
+.body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scale: 2;
+  border: none;
+  color: #fff;
+}
+.modal {
+  --bs-modal-bg: none;
+  --bs-modal-border-color: none;
+  backdrop-filter: brightness(20%);
+  transition-duration: 100ms;
+}

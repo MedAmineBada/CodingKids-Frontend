@@ -1,3 +1,5 @@
+import jsPDF from "jspdf";
+
 export function cleanSpaces(text) {
   return text.trim().replace(/\s+/g, " ");
 }
@@ -102,4 +104,15 @@ export async function verifyDOB(dateString) {
   const date = new Date(dateString);
   const now = new Date();
   return !isNaN(date.getTime()) && date <= now;
+}
+
+export function saveQRToPDF(src) {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "px",
+    format: [390, 390],
+  });
+  doc.addImage(src, "WEBP", 0, 0, 390, 390);
+
+  doc.save("QREtudiant.pdf");
 }

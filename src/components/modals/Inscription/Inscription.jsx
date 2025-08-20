@@ -14,7 +14,10 @@ import {
 } from "@/services/utils.js";
 import { uploadImage } from "@/services/ImageServices.js";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
-import SuccessModal from "@/components/modals/SuccessModal.jsx";
+import MediaQuery from "react-responsive";
+import QRModal from "@/components/modals/QRModal/QRModal.jsx";
+import { getQR } from "@/services/QRServices.js";
+import LoadSpinner from "@/components/Spinner/Spinner.jsx";
 
 function useScreenWidth() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -30,16 +33,14 @@ function useScreenWidth() {
 
 function Inscription({ show, close }) {
   const [imgSrc, setImgSrc] = useState(null);
+  const [qrSrc, setQrSrc] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
 
   const [errMsg, setErrMsg] = useState(null);
   const [errCode, setErrCode] = useState(500);
-
-  const [successMsg, setSuccessMsg] = useState(null);
-  const [successTitle, setSuccessTitle] = useState(null);
-
   const [showCrop, setShowCrop] = useState(false);
 
   const nameRef = useRef();
@@ -97,9 +98,37 @@ function Inscription({ show, close }) {
     return true;
   }
 
+  async function fetchQR(id) {
+    const { status, blob } = await getQR(id);
+    try {
+      if (status === 200) {
+        setQrSrc(URL.createObjectURL(blob));
+      } else if (status === 404) {
+        setErrMsg(
+          "Le code QR de l’étudiant n’a pas été trouvé. Veuillez réessayer.",
+        );
+        setErrCode(404);
+        setShowError(true);
+      } else {
+        setErrMsg(
+          "Une erreur s’est produite lors de la récupération du code QR de l’étudiant. Veuillez réessayer.",
+        );
+        setErrCode(500);
+        setShowError(true);
+      }
+    } catch {
+      setErrMsg(
+        "Une erreur s’est produite lors de la récupération du code QR de l’étudiant. Veuillez réessayer.",
+      );
+      setErrCode(500);
+      setShowError(true);
+    }
+  }
   async function handleSubmit() {
     try {
       if (await verifyInput()) {
+        setLoading(true);
+
         const student = {
           name: nameRef.current.value,
           email: emailRef.current.value,
@@ -145,8 +174,7 @@ function Inscription({ show, close }) {
               }
             }
           }
-          setSuccessTitle("Inscription Réussie!");
-          setSuccessMsg("L'étudiant a été ajouté avec succès.");
+          await fetchQR(res.id);
           setShowSuccess(true);
           setImgSrc(null);
           close();
@@ -170,6 +198,8 @@ function Inscription({ show, close }) {
         "Une erreur s'est produite lors de l'ajout de l'élève. Veuillez réessayer.",
       );
       setShowError(true);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -198,12 +228,13 @@ function Inscription({ show, close }) {
 
   return (
     <>
-      <SuccessModal
+      <LoadSpinner show={loading}></LoadSpinner>
+      <QRModal
         show={showSuccess}
         onClose={() => setShowSuccess(false)}
-        title={successTitle}
-        message={successMsg}
-      ></SuccessModal>
+        src={qrSrc}
+        title="Étudiant Ajouté"
+      ></QRModal>
       <ErrorModal
         show={showError}
         onClose={() => setShowError(false)}
@@ -296,11 +327,20 @@ function Inscription({ show, close }) {
                 </tr>
               </tbody>
             </table>
+            <MediaQuery maxWidth={999.5}>
+              <div className={styles.btn}>
+                <button onClick={handleSubmit}>Ajouter</button>
+              </div>
+            </MediaQuery>
+          </div>
+        </Modal.Body>
+        <MediaQuery minWidth={1000}>
+          <Modal.Footer>
             <div className={styles.btn}>
               <button onClick={handleSubmit}>Ajouter</button>
             </div>
-          </div>
-        </Modal.Body>
+          </Modal.Footer>
+        </MediaQuery>
       </Modal>
     </>
   );
