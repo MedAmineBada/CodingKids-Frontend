@@ -55,3 +55,18 @@ export async function addStudent(data) {
 
   return { status: response.status, id: data.id };
 }
+
+export async function getAllStudents() {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/students/`);
+
+    if (response.status === 200) {
+      const responseData = await response.json();
+      return { status: response.status, students: responseData };
+    } else {
+      return { status: response.status, students: null };
+    }
+  } catch {
+    return { status: 500, students: null };
+  }
+}

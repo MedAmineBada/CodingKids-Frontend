@@ -39,80 +39,82 @@ function Dashboard() {
         show={showInscription}
         close={() => setShowInscription(false)}
       ></Inscription>
-      <div className={styles.title}>
-        <h1>Dashboard</h1>
-      </div>
-      <div className={styles.content}>
-        <MediaQuery maxWidth={1199.5}>
-          <MobileCard
-            handleShow={handleShowRes}
-            handleClose={handleCloseRes}
-            image={QrIcon}
-            title="Scanner"
-            text="Scanner le Code QR d'un étudiant."
-            route="/scan"
-          ></MobileCard>
-          <MobileCard
-            image={RegisterIcon}
-            title="Inscription"
-            text="Inscrire un étudiant dans le système."
-            clickfunc={() => setShowInscription(true)}
-          ></MobileCard>
-          <MobileCard
-            image={StudentsIcon}
-            title="Étudiants"
-            text="Gérer les étudiants dans le système."
-            route="/etudiants"
-          ></MobileCard>
-          <MobileCard
-            image={TeacherIcon}
-            title="Enseignants"
-            text="Gérer les étudiants dans le système."
-            route="/enseignants"
-          ></MobileCard>
-          <MobileCard
-            image={DisconnectIcon}
-            title="Déconnecter"
-            text="Se déconnecter du système."
-            type="disconnect"
-            route="/login"
-          ></MobileCard>
-        </MediaQuery>
-        <MediaQuery minWidth={1200}>
-          <DesktopCard
-            handleShow={handleShowRes}
-            handleClose={handleCloseRes}
-            image={QrIcon}
-            title="Scanner"
-            text="Scanner le Code QR d'un étudiant."
-            route="/scan"
-          ></DesktopCard>
-          <DesktopCard
-            image={RegisterIcon}
-            title="Inscription"
-            text="Inscrire un étudiant dans le système."
-            clickfunc={() => setShowInscription(true)}
-          ></DesktopCard>
-          <DesktopCard
-            image={StudentsIcon}
-            title="Étudiants"
-            text="Gérer les étudiants dans le système."
-            route="/etudiants"
-          ></DesktopCard>
-          <DesktopCard
-            image={TeacherIcon}
-            title="Enseignants"
-            text="Gérer les étudiants dans le système."
-            route="/enseignants"
-          ></DesktopCard>
-          <DesktopCard
-            image={DisconnectIcon}
-            title="Déconnecter"
-            text="Se déconnecter du système."
-            type="disconnect"
-            route="/login"
-          ></DesktopCard>
-        </MediaQuery>
+      <div className={styles.body}>
+        <div className={styles.title}>
+          <h1>Dashboard</h1>
+        </div>
+        <div className={styles.content}>
+          <MediaQuery maxWidth={1199.5}>
+            <MobileCard
+              handleShow={handleShowRes}
+              handleClose={handleCloseRes}
+              image={QrIcon}
+              title="Scanner"
+              text="Scanner le Code QR d'un étudiant."
+              route="/scan"
+            ></MobileCard>
+            <MobileCard
+              image={RegisterIcon}
+              title="Inscription"
+              text="Inscrire un étudiant dans le système."
+              clickfunc={() => setShowInscription(true)}
+            ></MobileCard>
+            <MobileCard
+              image={StudentsIcon}
+              title="Étudiants"
+              text="Gérer les étudiants dans le système."
+              route="/etudiants"
+            ></MobileCard>
+            <MobileCard
+              image={TeacherIcon}
+              title="Enseignants"
+              text="Gérer les étudiants dans le système."
+              route="/enseignants"
+            ></MobileCard>
+            <MobileCard
+              image={DisconnectIcon}
+              title="Déconnecter"
+              text="Se déconnecter du système."
+              type="disconnect"
+              route="/login"
+            ></MobileCard>
+          </MediaQuery>
+          <MediaQuery minWidth={1200}>
+            <DesktopCard
+              handleShow={handleShowRes}
+              handleClose={handleCloseRes}
+              image={QrIcon}
+              title="Scanner"
+              text="Scanner le Code QR d'un étudiant."
+              route="/scan"
+            ></DesktopCard>
+            <DesktopCard
+              image={RegisterIcon}
+              title="Inscription"
+              text="Inscrire un étudiant dans le système."
+              clickfunc={() => setShowInscription(true)}
+            ></DesktopCard>
+            <DesktopCard
+              image={StudentsIcon}
+              title="Étudiants"
+              text="Gérer les étudiants dans le système."
+              route="/etudiants"
+            ></DesktopCard>
+            <DesktopCard
+              image={TeacherIcon}
+              title="Enseignants"
+              text="Gérer les étudiants dans le système."
+              route="/enseignants"
+            ></DesktopCard>
+            <DesktopCard
+              image={DisconnectIcon}
+              title="Déconnecter"
+              text="Se déconnecter du système."
+              type="disconnect"
+              route="/login"
+            ></DesktopCard>
+          </MediaQuery>
+        </div>
       </div>
     </>
   );

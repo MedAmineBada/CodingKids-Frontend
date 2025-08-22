@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Etudiants from "@/pages/Etudiants.jsx";
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/etudiants" element={<Etudiants />} />
       </Routes>
     </Router>
   );
