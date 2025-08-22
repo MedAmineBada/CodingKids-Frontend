@@ -28,7 +28,7 @@
   width: 70%;
   font-family: Quicksand, sans-serif;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 14px;
 }
 
 .table td {
@@ -47,7 +47,7 @@
 }
 .table button {
   width: 60px;
-  font-size: 20px;
+  font-size: 16px;
   background-color: transparent;
   border: none;
   display: flex;
@@ -130,4 +130,46 @@
   text-decoration: underline;
   font-weight: 800;
   color: #fd9f09;
+}
+.filters {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2% 1.2%;
+  gap: 5%;
+}
+.sort {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.arrbtncont:hover {
+  background-color: #e89209;
+}
+.arrbtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.arrbtn p {
+  margin: 0;
+}
+.sort a {
+  font-size: 12px;
+}
+.sort button {
+  font-size: 10px;
+  font-weight: 500;
+  font-family: Quicksand, sans-serif;
+}
+.searchbtn {
+  font-size: 16px;
+}
+.searchfield {
+  font-size: 12px;
 }

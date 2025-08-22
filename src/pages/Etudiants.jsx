@@ -1,21 +1,29 @@
 import styles from "./Etudiants.module.css";
 import { getAllStudents } from "@/services/StudentServices.js";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Button, Dropdown, Form, InputGroup } from "react-bootstrap";
 
 function Etudiants() {
   const PAGE_SIZE = 12;
   const [etudiants, setEtudiants] = useState([]);
-  const [page, setPage] = useState(1); // 1-based page number
+  const [page, setPage] = useState(1);
+  const [order, setOrder] = useState("id");
+  const [search, setSearch] = useState("");
+  const [sortDir, setSortDir] = useState("-");
+
+  const inputRef = useRef(null);
 
   async function fetchStudents() {
-    const { status, students } = await getAllStudents();
+    const { status, students } = await getAllStudents(sortDir + order, search);
     setEtudiants(students ?? []);
   }
 
   useEffect(() => {
     fetchStudents();
   }, []);
-
+  useEffect(() => {
+    fetchStudents();
+  }, [order, sortDir, search]);
   const totalPages = Math.max(1, Math.ceil(etudiants.length / PAGE_SIZE));
 
   useEffect(() => {
@@ -56,12 +64,114 @@ function Etudiants() {
 
     return pages;
   }
+  function handleFilter(param) {
+    setOrder(param);
+  }
+  function handleSortDir() {
+    if (sortDir === "-") {
+      setSortDir("");
+    } else {
+      setSortDir("-");
+    }
+  }
+
+  function handleSearch() {
+    setSearch(inputRef.current.value);
+  }
 
   return (
     <>
       <div className={styles.page}>
         <h1>Etudiants</h1>
         <div className={styles.content}>
+          <div className={styles.filters}>
+            <div className={styles.sort}>
+              <Dropdown className={styles.drop}>
+                <Dropdown.Toggle variant="secondary">Trier par</Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleFilter("name")}>
+                    Ordre Alphabétique
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleFilter("id")}>
+                    Date d'inscription
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Button onClick={() => handleSortDir()} variant="secondary">
+                {sortDir === "" ? (
+                  <div className={styles.arrbtn}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        d="m2 8l6-6l6 6m-3 13h11m-11-4h8m-8-4h5M8 2v20"
+                      />
+                    </svg>
+                    <p>Croissant</p>
+                  </div>
+                ) : (
+                  <div className={styles.arrbtn}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        d="m2 16l6 6l6-6M11 3h11M11 7h8m-8 4h5M8 22V2"
+                      />
+                    </svg>
+                    <p>Décroissant</p>
+                  </div>
+                )}
+              </Button>
+            </div>
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
+            >
+              <InputGroup>
+                <Form.Control
+                  ref={inputRef}
+                  className={styles.searchfield}
+                  placeholder="Qui cherchez-vous ?"
+                />
+                <Button
+                  className={styles.searchbtn}
+                  variant="outline-secondary"
+                  type="submit"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 26 26"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M10 .188A9.812 9.812 0 0 0 .187 10A9.812 9.812 0 0 0 10 19.813c2.29 0 4.393-.811 6.063-2.125l.875.875a1.845 1.845 0 0 0 .343 2.156l4.594 4.625c.713.714 1.88.714 2.594 0l.875-.875a1.84 1.84 0 0 0 0-2.594l-4.625-4.594a1.824 1.824 0 0 0-2.157-.312l-.875-.875A9.812 9.812 0 0 0 10 .188zM10 2a8 8 0 1 1 0 16a8 8 0 0 1 0-16zM4.937 7.469a5.446 5.446 0 0 0-.812 2.875a5.46 5.46 0 0 0 5.469 5.469a5.516 5.516 0 0 0 3.156-1a7.166 7.166 0 0 1-.75.03a7.045 7.045 0 0 1-7.063-7.062c0-.104-.005-.208 0-.312z"
+                    />
+                  </svg>
+                </Button>
+              </InputGroup>
+            </Form>
+          </div>
           <table className={styles.table}>
             <tbody>
               {pageData.length === 0 ? (
@@ -77,8 +187,8 @@ function Etudiants() {
                       <button className={styles.qrbtn}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="1.4rem"
-                          height="1.4rem"
+                          width="1.4em"
+                          height="1.4em"
                           viewBox="0 0 32 32"
                         >
                           <path
@@ -104,8 +214,8 @@ function Etudiants() {
                       <button className={styles.editbtn}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="1.15rem"
-                          height="1.15rem"
+                          width="1.15em"
+                          height="1.15em"
                           viewBox="0 0 384 384"
                         >
                           <path

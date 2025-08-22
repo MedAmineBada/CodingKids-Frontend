@@ -56,10 +56,11 @@ export async function addStudent(data) {
   return { status: response.status, id: data.id };
 }
 
-export async function getAllStudents() {
+export async function getAllStudents(order = "", search = "") {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/students/`);
-
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/students/?order_by=${order}&name_search=${search}`,
+    );
     if (response.status === 200) {
       const responseData = await response.json();
       return { status: response.status, students: responseData };
