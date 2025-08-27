@@ -99,8 +99,9 @@ function Inscription({ show, close }) {
   }
 
   async function fetchQR(id) {
-    const { status, blob } = await getQR(id);
     try {
+      const { status, blob } = await getQR(id);
+
       if (status === 200) {
         setQrSrc(URL.createObjectURL(blob));
       } else if (status === 404) {

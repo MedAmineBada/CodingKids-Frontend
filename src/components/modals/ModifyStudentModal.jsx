@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import styles from "./ModifyStudentModal.module.css";
 import "@fontsource/quicksand/600";
 import { Button } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { updateStudent } from "@/services/StudentServices.js";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import {
@@ -14,11 +14,21 @@ import {
 function ModifyStudentModal({ show, student, onClose, onSuccess }) {
   const [showError, setShowError] = useState(false);
 
-  const [name, setName] = useState(student.name);
-  const [date, setDate] = useState(student.birth_date);
-  const [tel1, setTel1] = useState(student.tel1);
-  const [tel2, setTel2] = useState(student.tel2);
-  const [email, setEmail] = useState(student.email);
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [tel1, setTel1] = useState("");
+  const [tel2, setTel2] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (student) {
+      setName(student.name ?? "");
+      setDate(student.birth_date ?? "");
+      setTel1(student.tel1 ?? "");
+      setTel2(student.tel2 ?? "");
+      setEmail(student.email ?? "");
+    }
+  }, [student]);
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [errorCode, setErrorCode] = useState(500);
@@ -58,6 +68,7 @@ function ModifyStudentModal({ show, student, onClose, onSuccess }) {
 
       if (result === 200) {
         onSuccess(newData);
+        onClose();
       } else if (result === 404) {
         code = 404;
         msg = "L'étudiant à modifier n'a pas été trouvé.";
@@ -82,7 +93,6 @@ function ModifyStudentModal({ show, student, onClose, onSuccess }) {
     } catch {
       setShowError(true);
     }
-    onClose();
   }
   return (
     <>

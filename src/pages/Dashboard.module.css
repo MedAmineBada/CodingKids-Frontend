@@ -41,7 +41,7 @@
 }
 
 @media screen and (min-width: 1200px) {
-  body {
+  .body {
     display: flex;
     flex-direction: column;
     background: #fd9f09 url("@/assets/images/backgrounds/dashBg.svg") no-repeat;
