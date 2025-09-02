@@ -2,6 +2,7 @@
   --swiper-navigation-color: #a4a4a4;
   --swiper-navigation-size: 24px;
 }
+
 .container {
   display: flex;
   flex-direction: column;

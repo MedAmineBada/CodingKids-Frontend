@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,11 +6,15 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import MediaQuery from "react-responsive";
-import styles from "./StudentProfile.module.css";
 import { deleteStudent } from "@/services/StudentServices";
 import SuccessModal from "@/components/modals/SuccessModal.jsx";
 import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
 import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx";
+import { DayPicker } from "react-day-picker";
+import styles from "./StudentProfile.module.css";
+
+import { addAttendance, getAttendances } from "@/services/AttendanceService.js";
+import { fr } from "date-fns/locale";
 
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
@@ -27,6 +31,21 @@ export default function StudentProfile({ data, handleClose }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showModify, setShowModify] = useState(false);
   const [student, setStudent] = useState(data);
+  const [selected, setSelected] = useState(null);
+
+  const currentYear = new Date().getFullYear();
+  const endMonth = new Date(currentYear + 1, 11, 31);
+
+  useEffect(() => {
+    getAttendanceDates(student.id);
+  }, []);
+
+  async function getAttendanceDates(id) {
+    console.log(await getAttendances(id));
+  }
+  async function handleAddAttend(id) {
+    await addAttendance(id, new Date().toISOString().split("T")[0]);
+  }
 
   function handleModifySuccess(updatedStudent) {
     localStorage.setItem("scanResult", JSON.stringify(updatedStudent));
@@ -171,7 +190,9 @@ export default function StudentProfile({ data, handleClose }) {
                         Effacer
                       </button>
                     </div>
-                    <button>Marquer présent</button>
+                    <button onClick={() => handleAddAttend(student.id)}>
+                      Marquer présent
+                    </button>
                     <button>Enregistrer le paiement</button>
                   </div>
                 </div>
@@ -180,6 +201,18 @@ export default function StudentProfile({ data, handleClose }) {
               <SwiperSlide>
                 <div className={styles.content}>
                   <h1>Présences</h1>
+                  <DayPicker
+                    locale={fr}
+                    captionLayout={"dropdown"}
+                    animate
+                    selected={["2025-09-02", "2025-09-03"]}
+                    onSelect={setSelected}
+                    mode="multiple"
+                    showOutsideDays
+                    fixedWeeks
+                    endMonth={endMonth}
+                    navLayout={"around"}
+                  />
                 </div>
               </SwiperSlide>
 

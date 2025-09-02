@@ -221,6 +221,7 @@ function Etudiants() {
         show={showProfile}
         centered={true}
         onHide={() => setShowProfile(false)}
+        size="xl"
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>

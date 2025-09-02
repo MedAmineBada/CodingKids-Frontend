@@ -2,3 +2,26 @@ body {
   padding: 0;
   margin: 0;
 }
+.rdp-root {
+  --rdp-accent-color: #fd9f09;
+  --rdp-outside-opacity: 0.4;
+  --rdp-day_button-width: 38px;
+  --rdp-day_button-height: 38px;
+  font-family: Quicksand, sans-serif;
+  text-transform: capitalize;
+}
+.rdp-selected .rdp-day_button {
+  background-color: var(--rdp-accent-color);
+  color: white;
+  font-weight: 700;
+}
+.rdp-selected .rdp-day_button:hover {
+  background-color: var(--rdp-accent-color);
+  filter: brightness(0.9);
+  color: white;
+  font-weight: 700;
+}
+.rdp-dropdown {
+  text-transform: capitalize;
+  font-family: Quicksand, sans-serif;
+}
