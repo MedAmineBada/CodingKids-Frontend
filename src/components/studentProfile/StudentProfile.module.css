@@ -128,14 +128,14 @@
     height: 100%;
   }
   .header {
-    margin-top: -1.5%;
+    margin-top: -2%;
     display: flex;
-    gap: 20px;
-    flex-direction: row;
+    gap: 0;
+    flex-direction: column;
     align-items: center;
     width: 100%;
-    justify-content: start;
-    padding: 0 40px;
+    justify-content: center;
+    padding: 0;
   }
   .header h1 {
     font-family: inter, sans-serif;
@@ -143,17 +143,19 @@
     text-transform: capitalize;
     overflow: hidden;
     font-weight: 600;
-    font-size: 38px;
+    font-size: 32px;
     padding: 0;
-    text-align: left;
+    text-align: center;
   }
   .imgwrapper {
-    width: 120px;
+    width: 90px;
+    margin-bottom: 1%;
     height: auto;
   }
   .contentWrapper {
     padding: 40px;
-    width: 100%;
+    width: 80%;
+
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
@@ -164,34 +166,6 @@
     gap: 10px;
   }
 
-  .info {
-    background-color: #eaeaea;
-    padding: 30px;
-    border-radius: 20px;
-    grid-area: info;
-  }
-  .info h1 {
-    text-align: center;
-    color: #fd9f09;
-    font-family: Inter, sans-serif;
-    text-transform: uppercase;
-    font-size: 42px;
-    font-weight: 700;
-  }
-  .info table {
-    width: 100%;
-    text-align: left;
-    font-family: Quicksand, sans-serif;
-    font-size: 25px;
-  }
-  .info table td {
-    text-wrap: nowrap;
-    font-weight: 600;
-  }
-  .info table .col2 {
-    text-align: right;
-    font-weight: 500;
-  }
   .buttons {
     display: flex;
     gap: 10px;
@@ -231,5 +205,35 @@
   }
   .buttons .btn svg {
     font-size: 72px;
+  }
+  .deskContent {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    width: 100%;
+  }
+  .contentWrapper {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    padding: 0 0 20px;
+    margin: 0 auto;
+  }
+
+  .content h1 {
+    font-size: 42px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fd9f09;
+    font-family: Inter, sans-serif;
   }
 }

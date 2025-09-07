@@ -10,6 +10,7 @@ body {
   font-family: Quicksand, sans-serif;
   text-transform: capitalize;
 }
+
 .rdp-selected .rdp-day_button {
   background-color: var(--rdp-accent-color);
   color: white;

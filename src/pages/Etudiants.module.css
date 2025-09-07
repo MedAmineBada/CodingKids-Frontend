@@ -5,6 +5,9 @@
   display: flex;
   flex-direction: column;
 }
+.modalheader {
+  border: none;
+}
 .page h1 {
   background: url("@/assets/images/backgrounds/loadingMobileBg.svg") no-repeat
     center center fixed;
@@ -264,6 +267,7 @@
   .controlbtns nav button:last-child {
     font-size: 25px;
   }
+
   .filters {
     width: 100%;
     display: grid;
