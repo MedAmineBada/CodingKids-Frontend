@@ -13,7 +13,11 @@ import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx";
 import { DayPicker } from "react-day-picker";
 import styles from "./StudentProfile.module.css";
 
-import { addAttendance, getAttendances } from "@/services/AttendanceService.js";
+import {
+  addAttendance,
+  deleteAttendance,
+  getAttendances,
+} from "@/services/AttendanceService.js";
 import { fr } from "date-fns/locale";
 import { formatDateToYYYYMMDD } from "@/services/utils.js";
 
@@ -71,6 +75,19 @@ export default function StudentProfile({ data, handleClose }) {
         setShowConfirm(false);
       } else {
         setSelectedDays([...selectedDays, day]);
+      }
+    } catch {
+      setShowConfirm(false);
+    }
+  }
+
+  async function deleteAttendConfirm(day) {
+    try {
+      const { status, data } = await deleteAttendance(student.id, day);
+      if (status !== 200) {
+        setShowConfirm(false);
+      } else {
+        setSelectedDays(selectedDays.filter((d) => d !== day));
       }
     } catch {
       setShowConfirm(false);
@@ -290,9 +307,7 @@ export default function StudentProfile({ data, handleClose }) {
                           `Supprimer la présence de: ${formattedRemoved}?`,
                         );
                         setConfirmFunc(() => () => {
-                          setSelectedDays(
-                            selectedDays.filter((d) => d !== removed),
-                          );
+                          deleteAttendConfirm(removed);
                         });
                       }
                     }}
@@ -315,8 +330,58 @@ export default function StudentProfile({ data, handleClose }) {
                         setSelectedDays([]);
                         return;
                       }
-                      const arr = days.map((d) => formatDateToYYYYMMDD(d));
-                      setSelectedDays(arr);
+
+                      const formattedSelected = selectedDays.map((d) =>
+                        formatDateToYYYYMMDD(new Date(d)),
+                      );
+                      const formattedDays = days.map((d) =>
+                        formatDateToYYYYMMDD(d),
+                      );
+
+                      const added = formattedDays.find(
+                        (d) => !formattedSelected.includes(d),
+                      );
+                      const removed = formattedSelected.find(
+                        (d) => !formattedDays.includes(d),
+                      );
+
+                      if (added) {
+                        const formattedAdded = new Intl.DateTimeFormat(
+                          "fr-FR",
+                          {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        ).format(new Date(added));
+
+                        setShowOpt(true);
+                        setConfirmTitle("Ajouter une présence");
+                        setConfirmMessage(
+                          `Marquer l'étudiant comme présent le: ${formattedAdded}?`,
+                        );
+                        setConfirmFunc(() => () => addAttendConfirm(added));
+                      } else if (removed) {
+                        const formattedRemoved = new Intl.DateTimeFormat(
+                          "fr-FR",
+                          {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        ).format(new Date(removed));
+
+                        setShowOpt(true);
+                        setConfirmTitle("Supprimer la présence");
+                        setConfirmMessage(
+                          `Supprimer la présence de: ${formattedRemoved}?`,
+                        );
+                        setConfirmFunc(() => () => {
+                          deleteAttendConfirm(removed);
+                        });
+                      }
                     }}
                     mode="multiple"
                     showOutsideDays
