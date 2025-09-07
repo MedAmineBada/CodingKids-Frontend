@@ -15,6 +15,7 @@ import styles from "./StudentProfile.module.css";
 
 import { addAttendance, getAttendances } from "@/services/AttendanceService.js";
 import { fr } from "date-fns/locale";
+import { formatDateToYYYYMMDD } from "@/services/utils.js";
 
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
@@ -30,10 +31,11 @@ export default function StudentProfile({ data, handleClose }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showModify, setShowModify] = useState(false);
+
   const [student, setStudent] = useState(data);
-  const [selectedDay, setSelectedDay] = useState(null);
 
   const [dates, setDates] = useState([]);
+  const [selectedDays, setSelectedDays] = useState([]);
 
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 1, 11, 31);
@@ -45,6 +47,7 @@ export default function StudentProfile({ data, handleClose }) {
   async function getAttendanceDates() {
     const result = await getAttendances(student.id);
     setDates(result.dates);
+    setSelectedDays(result.dates);
   }
   async function handleAddAttend(id) {
     await addAttendance(id, new Date().toISOString().split("T")[0]);
@@ -59,6 +62,19 @@ export default function StudentProfile({ data, handleClose }) {
   function handleCloseSuccess() {
     setShowSuccess(false);
     handleClose();
+  }
+
+  async function addAttendConfirm(day) {
+    try {
+      const { status, data } = await addAttendance(student.id, day);
+      if (status !== 201) {
+        setShowConfirm(false);
+      } else {
+        setSelectedDays([...selectedDays, day]);
+      }
+    } catch {
+      setShowConfirm(false);
+    }
   }
 
   async function handleDeleteStudent(id) {
@@ -81,7 +97,7 @@ export default function StudentProfile({ data, handleClose }) {
   const [showOpt, setShowOpt] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState("");
   const [confirmMessage, setConfirmMessage] = useState("");
-
+  const [confirmFunc, setConfirmFunc] = useState(null);
   return (
     <>
       <ConfirmModal
@@ -91,6 +107,7 @@ export default function StudentProfile({ data, handleClose }) {
         message={confirmMessage}
         btn_yes="Confirmer"
         btn_no="Annuler"
+        func={confirmFunc}
       ></ConfirmModal>
       <ModifyStudentModal
         show={showModify}
@@ -215,17 +232,76 @@ export default function StudentProfile({ data, handleClose }) {
                 <MediaQuery minWidth={800}>
                   <DayPicker
                     locale={fr}
-                    captionLayout={"dropdown"}
+                    captionLayout="dropdown"
                     animate
-                    selected={dates}
-                    onSelect={() => {}}
                     mode="multiple"
+                    selected={selectedDays.map((d) => new Date(d))}
+                    onSelect={(days) => {
+                      if (!days) {
+                        setSelectedDays([]);
+                        return;
+                      }
+
+                      const formattedSelected = selectedDays.map((d) =>
+                        formatDateToYYYYMMDD(new Date(d)),
+                      );
+                      const formattedDays = days.map((d) =>
+                        formatDateToYYYYMMDD(d),
+                      );
+
+                      const added = formattedDays.find(
+                        (d) => !formattedSelected.includes(d),
+                      );
+                      const removed = formattedSelected.find(
+                        (d) => !formattedDays.includes(d),
+                      );
+
+                      if (added) {
+                        const formattedAdded = new Intl.DateTimeFormat(
+                          "fr-FR",
+                          {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        ).format(new Date(added));
+
+                        setShowOpt(true);
+                        setConfirmTitle("Ajouter une présence");
+                        setConfirmMessage(
+                          `Marquer l'étudiant comme présent le: ${formattedAdded}?`,
+                        );
+                        setConfirmFunc(() => () => addAttendConfirm(added));
+                      } else if (removed) {
+                        const formattedRemoved = new Intl.DateTimeFormat(
+                          "fr-FR",
+                          {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        ).format(new Date(removed));
+
+                        setShowOpt(true);
+                        setConfirmTitle("Supprimer la présence");
+                        setConfirmMessage(
+                          `Supprimer la présence de: ${formattedRemoved}?`,
+                        );
+                        setConfirmFunc(() => () => {
+                          setSelectedDays(
+                            selectedDays.filter((d) => d !== removed),
+                          );
+                        });
+                      }
+                    }}
                     showOutsideDays
                     fixedWeeks
                     endMonth={endMonth}
                     numberOfMonths={2}
                     pagedNavigation
-                    navLayout={"around"}
+                    navLayout="around"
                   />
                 </MediaQuery>
                 <MediaQuery maxWidth={799.5}>
@@ -233,8 +309,15 @@ export default function StudentProfile({ data, handleClose }) {
                     locale={fr}
                     captionLayout={"dropdown"}
                     animate
-                    selected={dates}
-                    onSelect={() => {}}
+                    selected={selectedDays.map((d) => new Date(d))}
+                    onSelect={(days) => {
+                      if (!days) {
+                        setSelectedDays([]);
+                        return;
+                      }
+                      const arr = days.map((d) => formatDateToYYYYMMDD(d));
+                      setSelectedDays(arr);
+                    }}
                     mode="multiple"
                     showOutsideDays
                     fixedWeeks

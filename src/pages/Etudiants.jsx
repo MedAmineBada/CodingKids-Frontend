@@ -220,7 +220,10 @@ function Etudiants() {
       <Modal
         show={showProfile}
         centered={true}
-        onHide={() => setShowProfile(false)}
+        onHide={() => {
+          setShowProfile(false);
+          fetchStudents();
+        }}
         size="lg"
       >
         <Modal.Header className={styles.modalheader} closeButton></Modal.Header>

@@ -129,7 +129,7 @@ export function formatDateToYYYYMMDD(date) {
   return `${year}-${month}-${day}`;
 }
 
-export function foundInArray(item, array) {
+export function ItemInArray(item, array) {
   for (let i = 0; i < array.length; i++) {
     if (array[i] === item) return true;
   }
