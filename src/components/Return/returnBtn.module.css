@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  position: absolute;
+  background-color: #ffffff;
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  bottom: 0;
+  border: solid #fd9f09 3px;
+  margin: 10px;
+  transition-duration: 400ms;
+}
+.container svg {
+  font-size: 30px;
+  color: #fd9f09;
+  transition-duration: 400ms;
+}
+.container:hover {
+  background: #fd9f09;
+}
+.container:hover > svg {
+  color: white;
+  scale: 1.4;
+}

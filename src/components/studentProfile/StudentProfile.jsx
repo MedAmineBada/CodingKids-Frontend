@@ -54,8 +54,25 @@ export default function StudentProfile({ data, handleClose }) {
     setSelectedDays(result.dates);
   }
   async function handleAddAttend(id) {
-    await addAttendance(id, new Date().toISOString().split("T")[0]);
-    await getAttendanceDates();
+    try {
+      const { status, data } = await addAttendance(
+        id,
+        new Date().toISOString().split("T")[0],
+      );
+      if (!(status === 201)) {
+        setErrCode(status);
+        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+        if (status === 409) {
+          setErrMsg("L'étudiant était déjà présent à cette date.");
+        }
+        setShowErr(true);
+      }
+      await getAttendanceDates();
+    } catch {
+      setErrCode(500);
+      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+      setShowErr(true);
+    }
   }
 
   function handleModifySuccess(updatedStudent) {
@@ -73,11 +90,23 @@ export default function StudentProfile({ data, handleClose }) {
       const { status, data } = await addAttendance(student.id, day);
       if (status !== 201) {
         setShowConfirm(false);
+        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+        if (status === 404) {
+          setErrMsg("L'étudiant n'existe pas.");
+        }
+        if (status === 409) {
+          setErrMsg("L'étudiant était déjà présent à cette date.");
+        }
+        setErrCode(status);
+        setShowErr(true);
       } else {
         setSelectedDays([...selectedDays, day]);
       }
     } catch {
       setShowConfirm(false);
+      setErrCode(500);
+      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+      setShowErr(true);
     }
   }
 
@@ -86,11 +115,20 @@ export default function StudentProfile({ data, handleClose }) {
       const { status, data } = await deleteAttendance(student.id, day);
       if (status !== 200) {
         setShowConfirm(false);
+        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+        if (status === 404) {
+          setErrMsg("L'étudiant n'existe pas.");
+        }
+        setErrCode(status);
+        setShowErr(true);
       } else {
         setSelectedDays(selectedDays.filter((d) => d !== day));
       }
     } catch {
       setShowConfirm(false);
+      setErrCode(500);
+      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+      setShowErr(true);
     }
   }
 
@@ -115,6 +153,26 @@ export default function StudentProfile({ data, handleClose }) {
   const [confirmTitle, setConfirmTitle] = useState("");
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmFunc, setConfirmFunc] = useState(null);
+
+  const [showErr, setShowErr] = useState(false);
+  const [errCode, setErrCode] = useState(false);
+  const [errMsg, setErrMsg] = useState(false);
+
+  async function markPresent(id) {
+    try {
+      setConfirmTitle("Marquer la présence");
+      setConfirmMessage(
+        "Etes-vous sûr de vouloir marquer l'élève comme présent?",
+      );
+      setConfirmFunc(() => () => handleAddAttend(id));
+      setShowOpt(true);
+    } catch {
+      setErrCode(500);
+      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
+      setShowErr(true);
+    }
+  }
+
   return (
     <>
       <ConfirmModal
@@ -142,6 +200,13 @@ export default function StudentProfile({ data, handleClose }) {
         onClose={() => setShowConfirm(false)}
         func={() => handleDeleteStudent(student.id)}
       ></ConfirmModal>
+
+      <ErrorModal
+        show={showErr}
+        onClose={() => setShowErr(false)}
+        code={errCode}
+        message={errMsg}
+      ></ErrorModal>
 
       <ErrorModal
         show={showError}
@@ -235,7 +300,7 @@ export default function StudentProfile({ data, handleClose }) {
                       Effacer
                     </button>
                   </div>
-                  <button onClick={() => handleAddAttend(student.id)}>
+                  <button onClick={() => markPresent(student.id)}>
                     Marquer présent
                   </button>
                   <button>Enregistrer le paiement</button>

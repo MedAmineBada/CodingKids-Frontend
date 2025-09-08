@@ -9,6 +9,7 @@ import { getQR } from "@/services/QRServices.js";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import StudentProfile from "@/components/studentProfile/StudentProfile.jsx";
 import Modal from "react-bootstrap/Modal";
+import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
 
 function Etudiants() {
   const PAGE_SIZE = 12;
@@ -258,6 +259,7 @@ function Etudiants() {
         onClose={() => setShowModify(false)}
         onSuccess={() => finishModify()}
       />
+      <ReturnBtn route="/dashboard"></ReturnBtn>
       <div className={styles.page}>
         <h1>Etudiants</h1>
         <div className={styles.content}>
