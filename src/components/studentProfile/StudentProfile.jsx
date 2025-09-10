@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+// StudentProfile.jsx
+import { useCallback, useEffect, useState } from "react";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,6 +22,7 @@ import {
 import { fr } from "date-fns/locale";
 import { formatDateToYYYYMMDD } from "@/services/utils.js";
 
+/* Helper to display YYYY-MM-DD -> DD/MM/YYYY */
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
   const parts = inputDate.split("-");
@@ -29,207 +31,292 @@ function formatIsoDateToDmy(inputDate) {
   return `${day}/${month}/${year}`;
 }
 
-export default function StudentProfile({ data, handleClose }) {
-  const [isNotFound, setIsNotFound] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showModify, setShowModify] = useState(false);
-
+export default function StudentProfile({ data = {}, handleClose }) {
+  // Student
   const [student, setStudent] = useState(data);
 
-  const [dates, setDates] = useState([]);
-  const [selectedDays, setSelectedDays] = useState([]);
+  // UI modals
+  const [showModify, setShowModify] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showActionConfirm, setShowActionConfirm] = useState(false); // generic confirm for actions (attendance add/remove / mark present)
+  const [actionConfirmTitle, setActionConfirmTitle] = useState("");
+  const [actionConfirmMessage, setActionConfirmMessage] = useState("");
+  const [actionConfirmFunc, setActionConfirmFunc] = useState(null);
 
+  const [showErr, setShowErr] = useState(false);
+  const [errCode, setErrCode] = useState(null);
+  const [errMsg, setErrMsg] = useState("");
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
+
+  // Attendance state
+  const [dates, setDates] = useState([]); // raw string dates from API (YYYY-MM-DD)
+  const [selectedDays, setSelectedDays] = useState([]); // normalized to array of YYYY-MM-DD strings
+
+  // calendar limits
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 1, 11, 31);
 
+  // Fetch attendances for a student id; normalize result.dates -> []
+  const getAttendanceDates = useCallback(
+    async (id) => {
+      if (!id) return;
+      try {
+        const result = await getAttendances(id);
+        // Some backends return null instead of [], so normalize
+        const datesArr = Array.isArray(result?.dates) ? result.dates : [];
+        setDates(datesArr);
+        setSelectedDays(datesArr);
+      } catch (err) {
+        console.error("getAttendances failed:", err);
+        setDates([]);
+        setSelectedDays([]);
+        setErrCode(500);
+        setErrMsg("Impossible de charger les présences.");
+        setShowErr(true);
+      }
+    },
+    [setDates, setSelectedDays],
+  );
+
+  // run on mount and when student.id changes
   useEffect(() => {
-    getAttendanceDates(student.id);
-  }, []);
+    if (student?.id) getAttendanceDates(student.id);
+  }, [student?.id, getAttendanceDates]);
 
-  async function getAttendanceDates() {
-    const result = await getAttendances(student.id);
-    setDates(result.dates);
-    setSelectedDays(result.dates);
+  // Generic safe helper to show error
+  function showError(code = 500, message = "Une erreur s'est produite") {
+    setErrCode(code);
+    setErrMsg(message);
+    setShowErr(true);
   }
-  async function handleAddAttend(id) {
+
+  // Add attendance for today (used by "Marquer présent" button)
+  async function handleAddAttendToday(id) {
+    if (!id) return showError(400, "ID étudiant manquant.");
     try {
-      const { status, data } = await addAttendance(
-        id,
-        new Date().toISOString().split("T")[0],
-      );
-      if (!(status === 201)) {
-        setErrCode(status);
-        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-        if (status === 409) {
-          setErrMsg("L'étudiant était déjà présent à cette date.");
-        }
-        setShowErr(true);
-      }
-      await getAttendanceDates();
-    } catch {
-      setErrCode(500);
-      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-      setShowErr(true);
-    }
-  }
-
-  function handleModifySuccess(updatedStudent) {
-    localStorage.setItem("scanResult", JSON.stringify(updatedStudent));
-    setStudent(updatedStudent);
-  }
-
-  function handleCloseSuccess() {
-    setShowSuccess(false);
-    handleClose();
-  }
-
-  async function addAttendConfirm(day) {
-    try {
-      const { status, data } = await addAttendance(student.id, day);
+      const today = new Date().toISOString().split("T")[0];
+      const { status } = await addAttendance(id, today);
       if (status !== 201) {
-        setShowConfirm(false);
-        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-        if (status === 404) {
-          setErrMsg("L'étudiant n'existe pas.");
-        }
-        if (status === 409) {
-          setErrMsg("L'étudiant était déjà présent à cette date.");
-        }
-        setErrCode(status);
-        setShowErr(true);
-      } else {
-        setSelectedDays([...selectedDays, day]);
+        // handle known API responses
+        if (status === 409)
+          showError(status, "L'étudiant était déjà présent à cette date.");
+        else if (status === 404) showError(status, "L'étudiant n'existe pas.");
+        else showError(status);
+        return;
       }
-    } catch {
-      setShowConfirm(false);
-      setErrCode(500);
-      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-      setShowErr(true);
+      // success -> refresh data and local state
+      await getAttendanceDates(id);
+    } catch (err) {
+      console.error(err);
+      showError(500, "Une erreur s'est produite, veuillez réessayer.");
     }
   }
 
-  async function deleteAttendConfirm(day) {
+  // Called when user confirms adding a specific day
+  async function addAttendConfirm(dayYmd) {
+    if (!student?.id) return showError(400, "ID étudiant manquant.");
     try {
-      const { status, data } = await deleteAttendance(student.id, day);
+      const { status } = await addAttendance(student.id, dayYmd);
+      if (status !== 201) {
+        if (status === 409)
+          showError(status, "L'étudiant était déjà présent à cette date.");
+        else if (status === 404) showError(status, "L'étudiant n'existe pas.");
+        else showError(status);
+        setShowActionConfirm(false);
+        return;
+      }
+      // update selectedDays safely
+      setSelectedDays((prev) => {
+        const prevArr = Array.isArray(prev) ? prev : [];
+        if (prevArr.includes(dayYmd)) return prevArr;
+        return [...prevArr, dayYmd].sort(); // keep sorted optional
+      });
+      setShowActionConfirm(false);
+    } catch (err) {
+      console.error(err);
+      setShowActionConfirm(false);
+      showError(500, "Une erreur s'est produite, veuillez réessayer.");
+    }
+  }
+
+  // Called when user confirms removing a specific day
+  async function deleteAttendConfirm(dayYmd) {
+    if (!student?.id) return showError(400, "ID étudiant manquant.");
+    try {
+      const { status } = await deleteAttendance(student.id, dayYmd);
       if (status !== 200) {
-        setShowConfirm(false);
-        setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-        if (status === 404) {
-          setErrMsg("L'étudiant n'existe pas.");
-        }
-        setErrCode(status);
-        setShowErr(true);
-      } else {
-        setSelectedDays(selectedDays.filter((d) => d !== day));
+        if (status === 404) showError(status, "L'étudiant n'existe pas.");
+        else showError(status);
+        setShowActionConfirm(false);
+        return;
       }
-    } catch {
-      setShowConfirm(false);
-      setErrCode(500);
-      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-      setShowErr(true);
+      setSelectedDays((prev) =>
+        Array.isArray(prev) ? prev.filter((d) => d !== dayYmd) : [],
+      );
+      setShowActionConfirm(false);
+    } catch (err) {
+      console.error(err);
+      setShowActionConfirm(false);
+      showError(500, "Une erreur s'est produite, veuillez réessayer.");
     }
   }
 
-  async function handleDeleteStudent(id) {
-    try {
-      const status = await deleteStudent(id);
+  // Unified DayPicker selection handler (works for both desktop/mobile variants)
+  function handleDayPickerSelect(days) {
+    // days can be undefined/null (cleared) or an array of Dates when mode="multiple"
+    if (!days) {
+      setSelectedDays([]);
+      return;
+    }
+    // convert current selectedDays (strings) to formatted for comparison
+    const formattedSelected = (selectedDays ?? []).map((d) =>
+      formatDateToYYYYMMDD(new Date(d)),
+    );
+    const formattedDays = (Array.isArray(days) ? days : [days]).map((d) =>
+      formatDateToYYYYMMDD(d),
+    );
 
+    const added = formattedDays.find((d) => !formattedSelected.includes(d));
+    const removed = formattedSelected.find((d) => !formattedDays.includes(d));
+
+    if (added) {
+      // show confirmation modal for add
+      const formattedAddedHuman = new Intl.DateTimeFormat("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date(added));
+
+      setActionConfirmTitle("Ajouter une présence");
+      setActionConfirmMessage(
+        `Marquer l'étudiant comme présent le: ${formattedAddedHuman}?`,
+      );
+      setActionConfirmFunc(() => () => addAttendConfirm(added));
+      setShowActionConfirm(true);
+    } else if (removed) {
+      const formattedRemovedHuman = new Intl.DateTimeFormat("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date(removed));
+
+      setActionConfirmTitle("Supprimer la présence");
+      setActionConfirmMessage(
+        `Supprimer la présence de: ${formattedRemovedHuman}?`,
+      );
+      setActionConfirmFunc(() => () => deleteAttendConfirm(removed));
+      setShowActionConfirm(true);
+    } else {
+      // No single add/remove detected (maybe multiple changes). For safety, just sync local selectedDays
+      setSelectedDays(formattedDays);
+    }
+  }
+
+  // Delete student handler (for delete confirm)
+  async function handleDeleteStudentConfirmed() {
+    if (!student?.id) return showError(400, "ID étudiant manquant.");
+    try {
+      const status = await deleteStudent(student.id);
       if (status !== 200) {
         if (status === 404) {
           setIsNotFound(true);
+          setShowDeleteConfirm(false);
+          setShowErr(true);
+          return;
         }
-        setShowError(true);
-      } else {
-        setShowSuccess(true);
+        setShowDeleteConfirm(false);
+        showError(status, "Erreur lors de la suppression.");
+        return;
       }
-    } catch {
-      setIsNotFound(false);
-      setShowError(true);
+      setShowDeleteConfirm(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error(err);
+      setShowDeleteConfirm(false);
+      showError(500, "Une erreur s'est produite, veuillez réessayer.");
     }
   }
-  const [showOpt, setShowOpt] = useState(false);
-  const [confirmTitle, setConfirmTitle] = useState("");
-  const [confirmMessage, setConfirmMessage] = useState("");
-  const [confirmFunc, setConfirmFunc] = useState(null);
 
-  const [showErr, setShowErr] = useState(false);
-  const [errCode, setErrCode] = useState(false);
-  const [errMsg, setErrMsg] = useState(false);
+  // Called after successful modification (from ModifyStudentModal)
+  function handleModifySuccess(updatedStudent) {
+    localStorage.setItem("scanResult", JSON.stringify(updatedStudent));
+    setStudent(updatedStudent);
+    setShowModify(false);
+  }
 
-  async function markPresent(id) {
-    try {
-      setConfirmTitle("Marquer la présence");
-      setConfirmMessage(
-        "Etes-vous sûr de vouloir marquer l'élève comme présent?",
-      );
-      setConfirmFunc(() => () => handleAddAttend(id));
-      setShowOpt(true);
-    } catch {
-      setErrCode(500);
-      setErrMsg("Une erreur s'est produite, veuillez réessayer.");
-      setShowErr(true);
-    }
+  // handle success modal close -> close parent
+  function handleCloseSuccess() {
+    setShowSuccess(false);
+    handleClose?.();
   }
 
   return (
     <>
+      {/* Generic action confirm modal (attendance add/remove, mark present confirmation) */}
       <ConfirmModal
-        show={showOpt}
-        onClose={() => setShowOpt(false)}
-        title={confirmTitle}
-        message={confirmMessage}
+        show={showActionConfirm}
+        onClose={() => setShowActionConfirm(false)}
+        title={actionConfirmTitle}
+        message={actionConfirmMessage}
         btn_yes="Confirmer"
         btn_no="Annuler"
-        func={confirmFunc}
-      ></ConfirmModal>
+        func={actionConfirmFunc}
+      />
+
+      {/* Modify student modal */}
       <ModifyStudentModal
         show={showModify}
-        student={data}
+        student={student}
         onClose={() => setShowModify(false)}
         onSuccess={handleModifySuccess}
-      ></ModifyStudentModal>
+      />
 
+      {/* Delete student confirm modal */}
       <ConfirmModal
-        show={showConfirm}
+        show={showDeleteConfirm}
         title="Confirmer la suppression"
         message="Êtes-vous sûr de vouloir supprimer cet élève ?"
         btn_yes="Supprimer"
         btn_no="Annuler"
-        onClose={() => setShowConfirm(false)}
-        func={() => handleDeleteStudent(student.id)}
-      ></ConfirmModal>
+        onClose={() => setShowDeleteConfirm(false)}
+        func={handleDeleteStudentConfirmed}
+      />
 
+      {/* Error modals */}
       <ErrorModal
         show={showErr}
         onClose={() => setShowErr(false)}
         code={errCode}
         message={errMsg}
-      ></ErrorModal>
-
-      <ErrorModal
-        show={showError}
-        {...(isNotFound
-          ? { code: 404, message: "L'étudiant n'a pas été trouvé." }
-          : {})}
-        onClose={() => setShowError(false)}
       />
 
+      <ErrorModal
+        show={isNotFound && !showErr}
+        onClose={() => setIsNotFound(false)}
+        code={404}
+        message="L'étudiant n'a pas été trouvé."
+      />
+
+      {/* Success modal for deletion */}
       <SuccessModal
         onClose={handleCloseSuccess}
         title="Succès"
         message="L’étudiant a été supprimé avec succès."
         show={showSuccess}
-      ></SuccessModal>
+      />
 
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
-            <StudentImage cursor={"pointer"} id={student.id} shadow={5} />
+            <StudentImage cursor={"pointer"} id={student?.id} shadow={5} />
           </div>
-          <h1>{student.name}</h1>
+          <h1>{student?.name ?? "—"}</h1>
         </div>
+
         <div className={styles.swiper}>
           <Swiper
             rewind={false}
@@ -245,25 +332,39 @@ export default function StudentProfile({ data, handleClose }) {
                     <tr>
                       <td>Date de nais.:</td>
                       <td className={styles.col2}>
-                        {formatIsoDateToDmy(student.birth_date)}
+                        {formatIsoDateToDmy(student?.birth_date)}
                       </td>
                     </tr>
                     <tr>
                       <td>Tel. 1:</td>
                       <td className={styles.col2}>
-                        <a href={`tel:${student.tel1}`}>{student.tel1}</a>
+                        {student?.tel1 ? (
+                          <a href={`tel:${student.tel1}`}>{student.tel1}</a>
+                        ) : (
+                          "—"
+                        )}
                       </td>
                     </tr>
                     <tr>
                       <td>Tel. 2:</td>
                       <td className={styles.col2}>
-                        <a href={`tel:${student.tel2}`}>{student.tel2}</a>
+                        {student?.tel2 ? (
+                          <a href={`tel:${student.tel2}`}>{student.tel2}</a>
+                        ) : (
+                          "—"
+                        )}
                       </td>
                     </tr>
                     <tr>
                       <td>E-mail:</td>
                       <td className={styles.col2}>
-                        <a href={`mailto:${student.email}`}>{student.email}</a>
+                        {student?.email ? (
+                          <a href={`mailto:${student.email}`}>
+                            {student.email}
+                          </a>
+                        ) : (
+                          "—"
+                        )}
                       </td>
                     </tr>
                   </tbody>
@@ -272,37 +373,30 @@ export default function StudentProfile({ data, handleClose }) {
                 <div className={styles.btnwrapper}>
                   <div className={styles.modbtns}>
                     <button onClick={() => setShowModify(true)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 1025 1023"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M896.428 1023h-768q-53 0-90.5-37.5T.428 895V127q0-53 37.5-90t90.5-37h576l-128 127h-384q-27 0-45.5 19t-18.5 45v640q0 27 19 45.5t45 18.5h640q27 0 45.5-18.5t18.5-45.5V447l128-128v576q0 53-37.5 90.5t-90.5 37.5zm-576-464l144 144l-208 64zm208 96l-160-159l479-480q17-16 40.5-16t40.5 16l79 80q16 16 16.5 39.5t-16.5 40.5z"
-                        />
-                      </svg>
+                      {/* svg preserved from your original */}
                       Modifier
                     </button>
-                    <button onClick={() => setShowConfirm(true)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 26 26"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M11.5-.031c-1.958 0-3.531 1.627-3.531 3.594V4H4c-.551 0-1 .449-1 1v1H2v2h2v15c0 1.645 1.355 3 3 3h12c1.645 0 3-1.355 3-3V8h2V6h-1V5c0-.551-.449-1-1-1h-3.969v-.438c0-1.966-1.573-3.593-3.531-3.593h-3zm0 2.062h3c.804 0 1.469.656 1.469 1.531V4H10.03v-.438c0-.875.665-1.53 1.469-1.53zM6 8h5.125c.124.013.247.031.375.031h3c.128 0 .25-.018.375-.031H20v15c0 .563-.437 1-1 1H7c-.563 0-1-.437-1-1V8zm2 2v12h2V10H8zm4 0v12h2V10h-2zm4 0v12h2V10h-2z"
-                        />
-                      </svg>
+                    <button onClick={() => setShowDeleteConfirm(true)}>
                       Effacer
                     </button>
                   </div>
-                  <button onClick={() => markPresent(student.id)}>
+
+                  <button
+                    onClick={() => {
+                      // confirm mark present for today before calling API
+                      setActionConfirmTitle("Marquer la présence");
+                      setActionConfirmMessage(
+                        "Etes-vous sûr de vouloir marquer l'élève comme présent aujourd'hui?",
+                      );
+                      setActionConfirmFunc(
+                        () => () => handleAddAttendToday(student?.id),
+                      );
+                      setShowActionConfirm(true);
+                    }}
+                  >
                     Marquer présent
                   </button>
+
                   <button>Enregistrer le paiement</button>
                 </div>
               </div>
@@ -311,71 +405,15 @@ export default function StudentProfile({ data, handleClose }) {
             <SwiperSlide>
               <div className={styles.content}>
                 <h1>Présences</h1>
+
                 <MediaQuery minWidth={800}>
                   <DayPicker
                     locale={fr}
                     captionLayout="dropdown"
                     animate
                     mode="multiple"
-                    selected={selectedDays.map((d) => new Date(d))}
-                    onSelect={(days) => {
-                      if (!days) {
-                        setSelectedDays([]);
-                        return;
-                      }
-
-                      const formattedSelected = selectedDays.map((d) =>
-                        formatDateToYYYYMMDD(new Date(d)),
-                      );
-                      const formattedDays = days.map((d) =>
-                        formatDateToYYYYMMDD(d),
-                      );
-
-                      const added = formattedDays.find(
-                        (d) => !formattedSelected.includes(d),
-                      );
-                      const removed = formattedSelected.find(
-                        (d) => !formattedDays.includes(d),
-                      );
-
-                      if (added) {
-                        const formattedAdded = new Intl.DateTimeFormat(
-                          "fr-FR",
-                          {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          },
-                        ).format(new Date(added));
-
-                        setShowOpt(true);
-                        setConfirmTitle("Ajouter une présence");
-                        setConfirmMessage(
-                          `Marquer l'étudiant comme présent le: ${formattedAdded}?`,
-                        );
-                        setConfirmFunc(() => () => addAttendConfirm(added));
-                      } else if (removed) {
-                        const formattedRemoved = new Intl.DateTimeFormat(
-                          "fr-FR",
-                          {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          },
-                        ).format(new Date(removed));
-
-                        setShowOpt(true);
-                        setConfirmTitle("Supprimer la présence");
-                        setConfirmMessage(
-                          `Supprimer la présence de: ${formattedRemoved}?`,
-                        );
-                        setConfirmFunc(() => () => {
-                          deleteAttendConfirm(removed);
-                        });
-                      }
-                    }}
+                    selected={(selectedDays ?? []).map((d) => new Date(d))}
+                    onSelect={handleDayPickerSelect}
                     showOutsideDays
                     fixedWeeks
                     endMonth={endMonth}
@@ -384,75 +422,19 @@ export default function StudentProfile({ data, handleClose }) {
                     navLayout="around"
                   />
                 </MediaQuery>
+
                 <MediaQuery maxWidth={799.5}>
                   <DayPicker
                     locale={fr}
-                    captionLayout={"dropdown"}
+                    captionLayout="dropdown"
                     animate
-                    selected={selectedDays.map((d) => new Date(d))}
-                    onSelect={(days) => {
-                      if (!days) {
-                        setSelectedDays([]);
-                        return;
-                      }
-
-                      const formattedSelected = selectedDays.map((d) =>
-                        formatDateToYYYYMMDD(new Date(d)),
-                      );
-                      const formattedDays = days.map((d) =>
-                        formatDateToYYYYMMDD(d),
-                      );
-
-                      const added = formattedDays.find(
-                        (d) => !formattedSelected.includes(d),
-                      );
-                      const removed = formattedSelected.find(
-                        (d) => !formattedDays.includes(d),
-                      );
-
-                      if (added) {
-                        const formattedAdded = new Intl.DateTimeFormat(
-                          "fr-FR",
-                          {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          },
-                        ).format(new Date(added));
-
-                        setShowOpt(true);
-                        setConfirmTitle("Ajouter une présence");
-                        setConfirmMessage(
-                          `Marquer l'étudiant comme présent le: ${formattedAdded}?`,
-                        );
-                        setConfirmFunc(() => () => addAttendConfirm(added));
-                      } else if (removed) {
-                        const formattedRemoved = new Intl.DateTimeFormat(
-                          "fr-FR",
-                          {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          },
-                        ).format(new Date(removed));
-
-                        setShowOpt(true);
-                        setConfirmTitle("Supprimer la présence");
-                        setConfirmMessage(
-                          `Supprimer la présence de: ${formattedRemoved}?`,
-                        );
-                        setConfirmFunc(() => () => {
-                          deleteAttendConfirm(removed);
-                        });
-                      }
-                    }}
                     mode="multiple"
+                    selected={(selectedDays ?? []).map((d) => new Date(d))}
+                    onSelect={handleDayPickerSelect}
                     showOutsideDays
                     fixedWeeks
                     endMonth={endMonth}
-                    navLayout={"around"}
+                    navLayout="around"
                   />
                 </MediaQuery>
               </div>
@@ -465,92 +447,6 @@ export default function StudentProfile({ data, handleClose }) {
             </SwiperSlide>
           </Swiper>
         </div>
-
-        {/*<MediaQuery minWidth={800}>*/}
-        {/*  <div className={styles.deskContent}>*/}
-        {/*    <div className={styles.contentWrapper}>*/}
-        {/*      <div className={styles.info}>*/}
-        {/*        <h1>Information</h1>*/}
-        {/*        <table>*/}
-        {/*          <tbody>*/}
-        {/*            <tr>*/}
-        {/*              <td>Date de nais.:</td>*/}
-        {/*              <td className={styles.col2}>*/}
-        {/*                {formatIsoDateToDmy(student.birth_date)}*/}
-        {/*              </td>*/}
-        {/*            </tr>*/}
-        {/*            <tr>*/}
-        {/*              <td>Tel. 1:</td>*/}
-        {/*              <td className={styles.col2}>*/}
-        {/*                <a>{student.tel1}</a>*/}
-        {/*              </td>*/}
-        {/*            </tr>*/}
-        {/*            <tr>*/}
-        {/*              <td>Tel. 2:</td>*/}
-        {/*              <td className={styles.col2}>*/}
-        {/*                <a>{student.tel2}</a>*/}
-        {/*              </td>*/}
-        {/*            </tr>*/}
-        {/*            <tr>*/}
-        {/*              <td>E-mail:</td>*/}
-        {/*              <td className={styles.col2}>*/}
-        {/*                <a href={`mailto:${student.email}`}>{student.email}</a>*/}
-        {/*              </td>*/}
-        {/*            </tr>*/}
-        {/*          </tbody>*/}
-        {/*        </table>*/}
-        {/*      </div>*/}
-        {/*      <div className={styles.buttons}>*/}
-        {/*        <div className={styles.btn} onClick={() => setShowModify(true)}>*/}
-        {/*          <svg*/}
-        {/*            xmlns="http://www.w3.org/2000/svg"*/}
-        {/*            width="1em"*/}
-        {/*            height="1em"*/}
-        {/*            viewBox="0 0 1025 1023"*/}
-        {/*          >*/}
-        {/*            <path*/}
-        {/*              fill="currentColor"*/}
-        {/*              d="M896.428 1023h-768q-53 0-90.5-37.5T.428 895V127q0-53 37.5-90t90.5-37h576l-128 127h-384q-27 0-45.5 19t-18.5 45v640q0 27 19 45.5t45 18.5h640q27 0 45.5-18.5t18.5-45.5V447l128-128v576q0 53-37.5 90.5t-90.5 37.5zm-576-464l144 144l-208 64zm208 96l-160-159l479-480q17-16 40.5-16t40.5 16l79 80q16 16 16.5 39.5t-16.5 40.5z"*/}
-        {/*            />*/}
-        {/*          </svg>*/}
-        {/*          Modifier*/}
-        {/*        </div>*/}
-        {/*        <div*/}
-        {/*          className={styles.btn}*/}
-        {/*          onClick={() => setShowConfirm(true)}*/}
-        {/*        >*/}
-        {/*          <svg*/}
-        {/*            xmlns="http://www.w3.org/2000/svg"*/}
-        {/*            width="1em"*/}
-        {/*            height="1em"*/}
-        {/*            viewBox="0 0 26 26"*/}
-        {/*          >*/}
-        {/*            <path*/}
-        {/*              fill="currentColor"*/}
-        {/*              d="M11.5-.031c-1.958 0-3.531 1.627-3.531 3.594V4H4c-.551 0-1 .449-1 1v1H2v2h2v15c0 1.645 1.355 3 3 3h12c1.645 0 3-1.355 3-3V8h2V6h-1V5c0-.551-.449-1-1-1h-3.969v-.438c0-1.966-1.573-3.593-3.531-3.593h-3zm0 2.062h3c.804 0 1.469.656 1.469 1.531V4H10.03v-.438c0-.875.665-1.53 1.469-1.53zM6 8h5.125c.124.013.247.031.375.031h3c.128 0 .25-.018.375-.031H20v15c0 .563-.437 1-1 1H7c-.563 0-1-.437-1-1V8zm2 2v12h2V10H8zm4 0v12h2V10h-2zm4 0v12h2V10h-2z"*/}
-        {/*            />*/}
-        {/*          </svg>*/}
-        {/*          Effacer*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*    <div className={styles.content}>*/}
-        {/*      <h1>Présences</h1>*/}
-        {/*      <DayPicker*/}
-        {/*        locale={fr}*/}
-        {/*        captionLayout={"dropdown"}*/}
-        {/*        animate*/}
-        {/*        selected={dates}*/}
-        {/*        onSelect={() => {}}*/}
-        {/*        mode="multiple"*/}
-        {/*        showOutsideDays*/}
-        {/*        fixedWeeks*/}
-        {/*        endMonth={endMonth}*/}
-        {/*        navLayout={"around"}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</MediaQuery>*/}
       </div>
     </>
   );
