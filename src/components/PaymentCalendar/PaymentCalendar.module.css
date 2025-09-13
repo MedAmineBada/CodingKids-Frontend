@@ -1,61 +1,199 @@
+:root {
+  --bg-card: #ffffff;
+  --surface: #f3f4f6;
+  --muted: #6b7280;
+  --accent: #fd9f09;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --shadow: 0 6px 18px rgba(15, 23, 36, 0.06);
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family:
+    Inter,
+    Quicksand,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.selectContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.iconBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.yearSelect {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.legendItem {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badgeSmall {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
 .container {
   display: grid;
-  gap: 5px;
-  padding: 10px 0;
+  gap: 12px;
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent);
+  border: 1px solid rgba(15, 23, 36, 0.04);
+  box-shadow: var(--shadow);
+  align-items: stretch;
 }
 
-.container .month {
-  display: grid;
-  grid-template-columns: 1fr;
+.month {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border-radius: 10px;
-  font-family: Quicksand, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333333;
-  background: #ececec;
-  transition: 200ms;
-  aspect-ratio: 1/1;
-}
-.month:hover {
-  background: #c2c2c2;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #111827;
+  background: var(--bg-card);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+  border: 1px solid rgba(15, 23, 36, 0.04);
+  min-height: 120px;
+  width: 100%;
   cursor: pointer;
 }
+.month:focus,
+.month:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(15, 23, 36, 0.08);
+  outline: none;
+}
 
-.unpaid {
-  color: #dc3545;
-  font-weight: bolder;
-}
-.selectContainer {
-  font-family: Quicksand, sans-serif;
-  font-weight: bold;
-  font-size: 24px;
-  padding: 10px;
-}
-.selectContainer select {
-  font-weight: bolder;
-  font-family: Quicksand, sans-serif;
-  color: #fd9f09;
-  background: transparent;
-  border: none;
-  text-align: right;
-}
-.selectContainer option {
-  font-size: 20px;
-  font-weight: bold;
+.monthTop {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
 .monthlabel {
-  font-size: 21px;
-  font-weight: bold;
-  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.monthMeta {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(15, 23, 36, 0.04);
+}
+
+.paid {
+  color: white;
+  background: linear-gradient(180deg, var(--success), #0ea05a);
+}
+
+.unpaid {
+  color: white;
+  background: linear-gradient(180deg, var(--danger), #e11d48);
+}
+
+.attendance {
+  margin-top: 8px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.monthFooter {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.footerHint {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .containerEmpty {
   font-family: Quicksand, sans-serif;
-  height: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(243, 244, 246, 0.6), transparent);
+  border-radius: 12px;
+  border: 1px dashed rgba(15, 23, 36, 0.04);
 }
 
 .aucune {
@@ -64,10 +202,19 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  font-size: 26px;
-  height: 72%;
+  font-size: 18px;
+  color: var(--muted);
 }
-.topcont {
-  aspect-ratio: 1;
-  width: 100%;
+
+@media (max-width: 520px) {
+  .month {
+    min-height: 110px;
+    padding: 10px;
+  }
+  .monthlabel {
+    font-size: 16px;
+  }
+  .yearSelect {
+    font-size: 14px;
+  }
 }

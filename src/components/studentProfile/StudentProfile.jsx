@@ -393,15 +393,22 @@ export default function StudentProfile({ data = {}, handleClose }) {
 
                 <div className={styles.btnwrapper}>
                   <div className={styles.modbtns}>
-                    <button onClick={() => setShowModify(true)}>
+                    <button
+                      className={styles.swiperbtns}
+                      onClick={() => setShowModify(true)}
+                    >
                       Modifier
                     </button>
-                    <button onClick={() => setShowDeleteConfirm(true)}>
+                    <button
+                      className={styles.swiperbtns}
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
                       Effacer
                     </button>
                   </div>
 
                   <button
+                    className={styles.swiperbtns}
                     onClick={() => {
                       // confirm mark present for today before calling API
                       setActionConfirmTitle("Marquer la présence");
@@ -417,7 +424,9 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     Marquer présent
                   </button>
 
-                  <button>Enregistrer le paiement</button>
+                  <button className={styles.swiperbtns}>
+                    Enregistrer le paiement
+                  </button>
                 </div>
               </div>
             </SwiperSlide>
