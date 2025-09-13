@@ -115,10 +115,11 @@
   font-weight: 500;
   text-transform: lowercase;
 }
-.swiper button:hover {
+
+.swiper .swiperbtns:hover {
   background-color: #c7c7c7;
 }
-.modbtns button:nth-child(2):hover {
+.modbtns .swiperbtns:nth-child(2):hover {
   background-color: #c9323f;
 }
 
