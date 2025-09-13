@@ -117,15 +117,6 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
             </button>
           </div>
         </div>
-
-        <div className={styles.legend}>
-          <div className={styles.legendItem}>
-            <span className={`${styles.badgeSmall} ${styles.paid}`} /> Payé
-          </div>
-          <div className={styles.legendItem}>
-            <span className={`${styles.badgeSmall} ${styles.unpaid}`} /> Impayé
-          </div>
-        </div>
       </header>
 
       <div
