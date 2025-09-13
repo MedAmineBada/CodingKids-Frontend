@@ -94,6 +94,9 @@ export async function verifyTel(string) {
 }
 
 export async function verifyMail(string) {
+  if (removeAllSpaces(string) === "") {
+    return true;
+  }
   return (
     removeAllSpaces(string) !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(string)
   );

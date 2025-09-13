@@ -21,6 +21,8 @@ import {
 } from "@/services/AttendanceService.js";
 import { fr } from "date-fns/locale";
 import { formatDateToYYYYMMDD } from "@/services/utils.js";
+import PaymentCalendar from "@/components/PaymentCalendar/PaymentCalendar.jsx";
+import { getPaymentStatus } from "@/services/PaymentService.js";
 
 /* Helper to display YYYY-MM-DD -> DD/MM/YYYY */
 function formatIsoDateToDmy(inputDate) {
@@ -80,9 +82,28 @@ export default function StudentProfile({ data = {}, handleClose }) {
     [setDates, setSelectedDays],
   );
 
+  const [payStatus, setPayStatus] = useState([]);
+  async function handleGetPaymentStatus(student_id) {
+    try {
+      const res = await getPaymentStatus(student_id);
+
+      const records = Array.isArray(res)
+        ? res
+        : Array.isArray(res.data)
+          ? res.data
+          : [];
+
+      setPayStatus(records);
+    } catch (err) {
+      setPayStatus([]);
+    }
+  }
   // run on mount and when student.id changes
   useEffect(() => {
-    if (student?.id) getAttendanceDates(student.id);
+    if (student?.id) {
+      getAttendanceDates(student.id);
+      handleGetPaymentStatus(student.id);
+    }
   }, [student?.id, getAttendanceDates]);
 
   // Generic safe helper to show error
@@ -373,7 +394,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                 <div className={styles.btnwrapper}>
                   <div className={styles.modbtns}>
                     <button onClick={() => setShowModify(true)}>
-                      {/* svg preserved from your original */}
                       Modifier
                     </button>
                     <button onClick={() => setShowDeleteConfirm(true)}>
@@ -443,6 +463,9 @@ export default function StudentProfile({ data = {}, handleClose }) {
             <SwiperSlide>
               <div className={styles.content}>
                 <h1>Paiements</h1>
+                <div>
+                  <PaymentCalendar records={payStatus}></PaymentCalendar>
+                </div>
               </div>
             </SwiperSlide>
           </Swiper>
