@@ -51,12 +51,34 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
   }, [records, selectedYear]);
 
   const total = monthsForSelectedYear.length;
-  const MAX_COLS = 4;
+
+  const [MAX_COLS, setMaxCols] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth >= 991 ? 4 : 1,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === "undefined") return;
+      setMaxCols(window.innerWidth > 991 ? 4 : 1);
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
   const cols = total <= MAX_COLS ? Math.max(1, total) : MAX_COLS;
 
   const containerStyle = {
     gridTemplateColumns: `repeat(${cols}, minmax(120px, 1fr))`,
     justifyContent: total <= MAX_COLS ? "center" : undefined,
+    ["--calendar-max-height"]: "36vh",
   };
 
   function handlePrevYear() {
@@ -168,12 +190,6 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
                     Présences: {record.attended_days}
                   </div>
                 )}
-
-                <div className={styles.monthFooter}>
-                  <small className={styles.footerHint}>
-                    Cliquez pour détails
-                  </small>
-                </div>
               </button>
             );
           })

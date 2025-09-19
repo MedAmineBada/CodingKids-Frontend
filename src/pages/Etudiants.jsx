@@ -216,6 +216,27 @@ function Etudiants() {
     setShowProfile(true);
   }
 
+  const [FSModal, setFSModal] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth >= 992 ? false : true,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === "undefined") return;
+      setFSModal(window.innerWidth >= 992 ? false : true);
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
   return (
     <>
       <Modal
@@ -226,6 +247,7 @@ function Etudiants() {
           fetchStudents();
         }}
         size="lg"
+        fullscreen={FSModal}
       >
         <Modal.Header className={styles.modalheader} closeButton></Modal.Header>
         <Modal.Body>

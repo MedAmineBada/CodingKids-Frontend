@@ -6,6 +6,9 @@
   --success: #16a34a;
   --danger: #ef4444;
   --shadow: 0 6px 18px rgba(15, 23, 36, 0.06);
+
+  --calendar-max-height: clamp(240px, 44vh, 50vh);
+  --calendar-empty-height: 180px;
 }
 
 .wrapper {
@@ -73,20 +76,6 @@
   border-radius: 8px;
 }
 
-.legend {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.legendItem {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
 .badgeSmall {
   width: 12px;
   height: 12px;
@@ -97,14 +86,23 @@
 
 .container {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   margin-top: 6px;
-  padding: 8px;
+  padding: 12px;
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent);
   border: 1px solid rgba(15, 23, 36, 0.04);
   box-shadow: var(--shadow);
-  align-items: stretch;
+  grid-auto-rows: minmax(140px, auto);
+
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  align-items: start;
+  align-content: start;
+  justify-items: stretch;
 }
 
 .month {
@@ -112,7 +110,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 16px;
   border-radius: 12px;
   font-size: 16px;
   color: #111827;
@@ -121,14 +119,19 @@
     transform 180ms ease,
     box-shadow 180ms ease;
   border: 1px solid rgba(15, 23, 36, 0.04);
-  min-height: 120px;
+
+  min-height: 140px;
+  flex: 0 0 auto;
+  align-self: start;
   width: 100%;
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 .month:focus,
 .month:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(15, 23, 36, 0.08);
+  box-shadow: 0 12px 36px rgba(15, 23, 36, 0.1);
   outline: none;
 }
 
@@ -138,21 +141,22 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .monthlabel {
   font-size: 18px;
   font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
 .monthMeta {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .badge {
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 999px;
   font-weight: 700;
   font-size: 14px;
@@ -170,16 +174,20 @@
 }
 
 .attendance {
-  margin-top: 8px;
+  margin-top: 10px;
   color: var(--muted);
   font-weight: 600;
+}
+
+.month div {
+  user-select: none;
 }
 
 .monthFooter {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .footerHint {
@@ -189,13 +197,16 @@
 
 .containerEmpty {
   font-family: Quicksand, sans-serif;
-  height: 160px;
+  height: var(--calendar-empty-height);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, rgba(243, 244, 246, 0.6), transparent);
+  background: transparent;
   border-radius: 12px;
   border: 1px dashed rgba(15, 23, 36, 0.04);
+
+  max-height: 50vh;
+  overflow: hidden;
 }
 
 .aucune {
@@ -208,10 +219,31 @@
   color: var(--muted);
 }
 
-@media (max-width: 520px) {
-  .month {
-    min-height: 110px;
+@media (max-width: 900px) {
+  .container {
+    column-gap: 16px;
+    row-gap: 14px;
+    gap: 14px;
     padding: 10px;
+    grid-auto-rows: minmax(130px, auto);
+  }
+  .month {
+    min-height: 130px;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    column-gap: 12px;
+    row-gap: 12px;
+    gap: 12px;
+    padding: 8px;
+    grid-auto-rows: minmax(120px, auto);
+  }
+  .month {
+    min-height: 120px;
+    padding: 12px;
   }
   .monthlabel {
     font-size: 16px;

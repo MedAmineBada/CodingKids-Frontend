@@ -23,8 +23,8 @@ import { fr } from "date-fns/locale";
 import { formatDateToYYYYMMDD } from "@/services/utils.js";
 import PaymentCalendar from "@/components/PaymentCalendar/PaymentCalendar.jsx";
 import { getPaymentStatus } from "@/services/PaymentService.js";
+import PaymentForm from "@/components/PaymentForm/PaymentForm.jsx";
 
-/* Helper to display YYYY-MM-DD -> DD/MM/YYYY */
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
   const parts = inputDate.split("-");
@@ -34,16 +34,16 @@ function formatIsoDateToDmy(inputDate) {
 }
 
 export default function StudentProfile({ data = {}, handleClose }) {
-  // Student
   const [student, setStudent] = useState(data);
 
-  // UI modals
   const [showModify, setShowModify] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showActionConfirm, setShowActionConfirm] = useState(false); // generic confirm for actions (attendance add/remove / mark present)
   const [actionConfirmTitle, setActionConfirmTitle] = useState("");
   const [actionConfirmMessage, setActionConfirmMessage] = useState("");
   const [actionConfirmFunc, setActionConfirmFunc] = useState(null);
+
+  const [showPayModal, setShowPayModal] = useState(false);
 
   const [showErr, setShowErr] = useState(false);
   const [errCode, setErrCode] = useState(null);
@@ -52,26 +52,21 @@ export default function StudentProfile({ data = {}, handleClose }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
 
-  // Attendance state
   const [dates, setDates] = useState([]); // raw string dates from API (YYYY-MM-DD)
   const [selectedDays, setSelectedDays] = useState([]); // normalized to array of YYYY-MM-DD strings
 
-  // calendar limits
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 1, 11, 31);
 
-  // Fetch attendances for a student id; normalize result.dates -> []
   const getAttendanceDates = useCallback(
     async (id) => {
       if (!id) return;
       try {
         const result = await getAttendances(id);
-        // Some backends return null instead of [], so normalize
         const datesArr = Array.isArray(result?.dates) ? result.dates : [];
         setDates(datesArr);
         setSelectedDays(datesArr);
       } catch (err) {
-        console.error("getAttendances failed:", err);
         setDates([]);
         setSelectedDays([]);
         setErrCode(500);
@@ -113,29 +108,24 @@ export default function StudentProfile({ data = {}, handleClose }) {
     setShowErr(true);
   }
 
-  // Add attendance for today (used by "Marquer présent" button)
   async function handleAddAttendToday(id) {
     if (!id) return showError(400, "ID étudiant manquant.");
     try {
       const today = new Date().toISOString().split("T")[0];
       const { status } = await addAttendance(id, today);
       if (status !== 201) {
-        // handle known API responses
         if (status === 409)
           showError(status, "L'étudiant était déjà présent à cette date.");
         else if (status === 404) showError(status, "L'étudiant n'existe pas.");
         else showError(status);
         return;
       }
-      // success -> refresh data and local state
       await getAttendanceDates(id);
     } catch (err) {
-      console.error(err);
       showError(500, "Une erreur s'est produite, veuillez réessayer.");
     }
   }
 
-  // Called when user confirms adding a specific day
   async function addAttendConfirm(dayYmd) {
     if (!student?.id) return showError(400, "ID étudiant manquant.");
     try {
@@ -148,7 +138,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
         setShowActionConfirm(false);
         return;
       }
-      // update selectedDays safely
+      await handleGetPaymentStatus(student.id);
       setSelectedDays((prev) => {
         const prevArr = Array.isArray(prev) ? prev : [];
         if (prevArr.includes(dayYmd)) return prevArr;
@@ -156,13 +146,11 @@ export default function StudentProfile({ data = {}, handleClose }) {
       });
       setShowActionConfirm(false);
     } catch (err) {
-      console.error(err);
       setShowActionConfirm(false);
       showError(500, "Une erreur s'est produite, veuillez réessayer.");
     }
   }
 
-  // Called when user confirms removing a specific day
   async function deleteAttendConfirm(dayYmd) {
     if (!student?.id) return showError(400, "ID étudiant manquant.");
     try {
@@ -184,14 +172,11 @@ export default function StudentProfile({ data = {}, handleClose }) {
     }
   }
 
-  // Unified DayPicker selection handler (works for both desktop/mobile variants)
   function handleDayPickerSelect(days) {
-    // days can be undefined/null (cleared) or an array of Dates when mode="multiple"
     if (!days) {
       setSelectedDays([]);
       return;
     }
-    // convert current selectedDays (strings) to formatted for comparison
     const formattedSelected = (selectedDays ?? []).map((d) =>
       formatDateToYYYYMMDD(new Date(d)),
     );
@@ -203,7 +188,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
     const removed = formattedSelected.find((d) => !formattedDays.includes(d));
 
     if (added) {
-      // show confirmation modal for add
       const formattedAddedHuman = new Intl.DateTimeFormat("fr-FR", {
         weekday: "long",
         day: "numeric",
@@ -232,12 +216,10 @@ export default function StudentProfile({ data = {}, handleClose }) {
       setActionConfirmFunc(() => () => deleteAttendConfirm(removed));
       setShowActionConfirm(true);
     } else {
-      // No single add/remove detected (maybe multiple changes). For safety, just sync local selectedDays
       setSelectedDays(formattedDays);
     }
   }
 
-  // Delete student handler (for delete confirm)
   async function handleDeleteStudentConfirmed() {
     if (!student?.id) return showError(400, "ID étudiant manquant.");
     try {
@@ -262,14 +244,12 @@ export default function StudentProfile({ data = {}, handleClose }) {
     }
   }
 
-  // Called after successful modification (from ModifyStudentModal)
   function handleModifySuccess(updatedStudent) {
     localStorage.setItem("scanResult", JSON.stringify(updatedStudent));
     setStudent(updatedStudent);
     setShowModify(false);
   }
 
-  // handle success modal close -> close parent
   function handleCloseSuccess() {
     setShowSuccess(false);
     handleClose?.();
@@ -277,7 +257,12 @@ export default function StudentProfile({ data = {}, handleClose }) {
 
   return (
     <>
-      {/* Generic action confirm modal (attendance add/remove, mark present confirmation) */}
+      <PaymentForm
+        id={student.id}
+        show={showPayModal}
+        onClose={() => setShowPayModal(false)}
+        onSave={async () => handleGetPaymentStatus(student.id)}
+      />
       <ConfirmModal
         show={showActionConfirm}
         onClose={() => setShowActionConfirm(false)}
@@ -288,7 +273,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
         func={actionConfirmFunc}
       />
 
-      {/* Modify student modal */}
       <ModifyStudentModal
         show={showModify}
         student={student}
@@ -296,7 +280,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
         onSuccess={handleModifySuccess}
       />
 
-      {/* Delete student confirm modal */}
       <ConfirmModal
         show={showDeleteConfirm}
         title="Confirmer la suppression"
@@ -307,7 +290,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
         func={handleDeleteStudentConfirmed}
       />
 
-      {/* Error modals */}
       <ErrorModal
         show={showErr}
         onClose={() => setShowErr(false)}
@@ -322,7 +304,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
         message="L'étudiant n'a pas été trouvé."
       />
 
-      {/* Success modal for deletion */}
       <SuccessModal
         onClose={handleCloseSuccess}
         title="Succès"
@@ -410,7 +391,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                   <button
                     className={styles.swiperbtns}
                     onClick={() => {
-                      // confirm mark present for today before calling API
                       setActionConfirmTitle("Marquer la présence");
                       setActionConfirmMessage(
                         "Etes-vous sûr de vouloir marquer l'élève comme présent aujourd'hui?",
@@ -424,8 +404,13 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     Marquer présent
                   </button>
 
-                  <button className={styles.swiperbtns}>
-                    Enregistrer le paiement
+                  <button
+                    className={styles.swiperbtns}
+                    onClick={() => {
+                      setShowPayModal(true);
+                    }}
+                  >
+                    Enregistrer un paiement
                   </button>
                 </div>
               </div>
