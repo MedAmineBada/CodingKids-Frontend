@@ -28,9 +28,13 @@ function getUniqueYears(records) {
   return Array.from(yearSet).sort((a, b) => b - a);
 }
 
-export default function PaymentCalendar({ records = [], onMonthClick }) {
+export default function PaymentCalendar({
+  id,
+  records = [],
+  onMonthClick,
+  onPayEdit,
+}) {
   const yearsList = useMemo(() => getUniqueYears(records), [records]);
-
   const initialYear =
     yearsList.length > 0 ? yearsList[0] : new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(Number(initialYear));
@@ -95,14 +99,20 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
   const [selectedPaymentData, setSelectedPaymentData] = useState(null);
 
   function handleMonthClick(record) {
-    const paymentDate =
-      record.payment_date ?? record.paid_date ?? record.date ?? null;
+    const student_id = id;
+    const month = record.month;
+    const year = record.year;
+
+    const paymentDate = record.payment_date ?? record.paid_date ?? null;
     const amount =
       typeof record.amount === "number"
         ? record.amount
         : (record.amount ?? null);
 
     const payload = {
+      student_id: student_id,
+      month: month,
+      year: year,
       payment_date: paymentDate,
       amount: amount,
     };
@@ -113,7 +123,9 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
     if (typeof onMonthClick === "function") {
       try {
         onMonthClick(payload);
-      } catch {}
+      } catch {
+        console.log("Something went wrong while composing payload.");
+      }
     }
   }
 
@@ -123,6 +135,7 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
         show={showInfo}
         onHide={() => setShowInfo(false)}
         data={selectedPaymentData}
+        onEdit={onPayEdit}
       />
 
       <section className={styles.wrapper}>

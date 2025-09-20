@@ -437,7 +437,11 @@ export default function StudentProfile({ data = {}, handleClose }) {
               <div className={styles.content}>
                 <h1>Paiements</h1>
                 <div>
-                  <PaymentCalendar records={payStatus}></PaymentCalendar>
+                  <PaymentCalendar
+                    id={student.id}
+                    records={payStatus}
+                    onPayEdit={() => handleGetPaymentStatus(student.id)}
+                  ></PaymentCalendar>
                 </div>
               </div>
             </SwiperSlide>

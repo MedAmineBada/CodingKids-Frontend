@@ -37,3 +37,30 @@ export async function addPayment(
     return { status: response.status, data: null };
   }
 }
+
+export async function editPayment(
+  student_id,
+  month,
+  year,
+  payment_date,
+  amount,
+) {
+  const url = `${import.meta.env.VITE_API_URL}/payments/edit`;
+  const payload = {
+    student_id: student_id,
+    month: month,
+    year: year,
+    payment_date: payment_date,
+    amount: amount,
+  };
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return response.status;
+}
