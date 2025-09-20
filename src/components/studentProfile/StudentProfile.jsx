@@ -1,4 +1,3 @@
-// StudentProfile.jsx
 import { useCallback, useEffect, useState } from "react";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
@@ -44,6 +43,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
   const [actionConfirmFunc, setActionConfirmFunc] = useState(null);
 
   const [showPayModal, setShowPayModal] = useState(false);
+  const [showPayInfoModal, setShowPayInfoModal] = useState(false);
 
   const [showErr, setShowErr] = useState(false);
   const [errCode, setErrCode] = useState(null);
@@ -87,7 +87,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
         : Array.isArray(res.data)
           ? res.data
           : [];
-
       setPayStatus(records);
     } catch (err) {
       setPayStatus([]);

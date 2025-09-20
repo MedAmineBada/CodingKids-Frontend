@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./PaymentCalendar.module.css";
+import PaymentInfo from "@/components/PaymentInfo/PaymentInfo.jsx";
 
 const MONTH_NAMES = [
   "Janvier",
@@ -90,111 +91,157 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
     if (idx > 0) setSelectedYear(yearsList[idx - 1]);
   }
 
+  const [showInfo, setShowInfo] = useState(false);
+  // selectedPaymentData will only contain paymentDate and amount (or null if missing)
+  const [selectedPaymentData, setSelectedPaymentData] = useState(null);
+
+  function handleMonthClick(record) {
+    // try common field names: payment_date, paid_date, date
+    const paymentDate =
+      record.payment_date ?? record.paid_date ?? record.date ?? null;
+    const amount =
+      typeof record.amount === "number"
+        ? record.amount
+        : (record.amount ?? null);
+
+    const payload = {
+      payment_date: paymentDate,
+      amount: amount,
+    };
+
+    setSelectedPaymentData(payload);
+    setShowInfo(true);
+
+    if (typeof onMonthClick === "function") {
+      try {
+        onMonthClick(payload);
+      } catch {
+        // swallow: don't break the UI if parent handler fails
+        // console.error(e);
+      }
+    }
+  }
+
   return (
-    <section className={styles.wrapper}>
-      <header className={styles.headerRow}>
-        <div className={styles.selectContainer}>
-          <label htmlFor="year-select" className={styles.label}>
-            Année
-          </label>
+    <>
+      <PaymentInfo
+        show={showInfo}
+        onHide={() => setShowInfo(false)}
+        data={selectedPaymentData}
+      />
 
-          <div className={styles.controlsRow}>
-            <button
-              className={styles.iconBtn}
-              onClick={handlePrevYear}
-              disabled={
-                yearsList.length === 0 ||
-                yearsList.indexOf(Number(selectedYear)) === yearsList.length - 1
-              }
-            >
-              ◀
-            </button>
+      <section className={styles.wrapper}>
+        <header className={styles.headerRow}>
+          <div className={styles.selectContainer}>
+            <label htmlFor="year-select" className={styles.label}>
+              Année
+            </label>
 
-            <select
-              id="year-select"
-              className={styles.yearSelect}
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-            >
-              {yearsList.length === 0 ? (
-                <option value={selectedYear}>{selectedYear}</option>
-              ) : (
-                yearsList.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))
-              )}
-            </select>
-
-            <button
-              className={styles.iconBtn}
-              onClick={handleNextYear}
-              disabled={
-                yearsList.length === 0 ||
-                yearsList.indexOf(Number(selectedYear)) <= 0
-              }
-            >
-              ▶
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div
-        className={
-          monthsForSelectedYear.length === 0
-            ? styles.containerEmpty
-            : styles.container
-        }
-        style={monthsForSelectedYear.length === 0 ? undefined : containerStyle}
-      >
-        {monthsForSelectedYear.length === 0 ? (
-          <div className={styles.aucune}>Aucun Paiement ni Présence.</div>
-        ) : (
-          monthsForSelectedYear.map((record) => {
-            const isPaid = Boolean(record.paid);
-            const monthLabel = getMonthName(record.month);
-            const key = `${record.year}-${record.month}`;
-
-            return (
+            <div className={styles.controlsRow}>
               <button
-                key={key}
-                className={styles.month}
-                onClick={() => onMonthClick && onMonthClick(record)}
-                title={
-                  isPaid
-                    ? typeof record.amount === "number"
-                      ? `Payé: ${record.amount.toFixed(2)}DT`
-                      : "Payé"
-                    : "Impayé"
+                className={styles.iconBtn}
+                onClick={handlePrevYear}
+                disabled={
+                  yearsList.length === 0 ||
+                  yearsList.indexOf(Number(selectedYear)) ===
+                    yearsList.length - 1
                 }
               >
-                <div className={styles.monthTop}>
-                  <div className={styles.monthlabel}>{monthLabel}</div>
-                  <div className={styles.monthMeta}>
-                    <span
-                      className={`${isPaid ? styles.paid : styles.unpaid} ${styles.badge}`}
-                    >
-                      {isPaid
-                        ? typeof record.amount === "number"
-                          ? `${record.amount.toFixed(2)}DT`
-                          : "Payé"
-                        : "Impayé"}
-                    </span>
-                  </div>
-                </div>
-
-                {typeof record.attended_days === "number" && (
-                  <div className={styles.attendance}>
-                    Présences: {record.attended_days}
-                  </div>
-                )}
+                ◀
               </button>
-            );
-          })
-        )}
-      </div>
-    </section>
+
+              <select
+                id="year-select"
+                className={styles.yearSelect}
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+              >
+                {yearsList.length === 0 ? (
+                  <option value={selectedYear}>{selectedYear}</option>
+                ) : (
+                  yearsList.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))
+                )}
+              </select>
+
+              <button
+                className={styles.iconBtn}
+                onClick={handleNextYear}
+                disabled={
+                  yearsList.length === 0 ||
+                  yearsList.indexOf(Number(selectedYear)) <= 0
+                }
+              >
+                ▶
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div
+          className={
+            monthsForSelectedYear.length === 0
+              ? styles.containerEmpty
+              : styles.container
+          }
+          style={
+            monthsForSelectedYear.length === 0 ? undefined : containerStyle
+          }
+        >
+          {monthsForSelectedYear.length === 0 ? (
+            <div className={styles.aucune}>Aucun Paiement ni Présence.</div>
+          ) : (
+            monthsForSelectedYear.map((record) => {
+              const isPaid = Boolean(record.paid);
+              const monthLabel = getMonthName(record.month);
+              const key = `${record.year}-${record.month}`;
+
+              return (
+                <button
+                  key={key}
+                  className={styles.month}
+                  onClick={() => {
+                    if (record.paid) {
+                      handleMonthClick(record);
+                    }
+                  }}
+                  title={
+                    isPaid
+                      ? typeof record.amount === "number"
+                        ? `Payé: ${record.amount.toFixed(2)}DT`
+                        : "Payé"
+                      : "Impayé"
+                  }
+                >
+                  <div className={styles.monthTop}>
+                    <div className={styles.monthlabel}>{monthLabel}</div>
+                    <div className={styles.monthMeta}>
+                      <span
+                        className={`${isPaid ? styles.paid : styles.unpaid} ${styles.badge}`}
+                      >
+                        {isPaid
+                          ? typeof record.amount === "number"
+                            ? `${record.amount.toFixed(2)}DT`
+                            : "Payé"
+                          : "Impayé"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {typeof record.attended_days === "number" && (
+                    <div className={styles.attendance}>
+                      Présences: {record.attended_days}
+                    </div>
+                  )}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </section>
+    </>
   );
 }

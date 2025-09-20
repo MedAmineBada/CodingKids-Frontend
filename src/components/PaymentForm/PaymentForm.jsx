@@ -196,7 +196,7 @@ function PaymentForm({ show, onClose, id, onSave }) {
                   }
                   className={styles.select}
                 >
-                  <option value="">Mois</option>
+                  <option value="">Mois/Année</option>
                   {Array.from({ length: 12 }, (_, i) => {
                     const m = (i + 1).toString().padStart(2, "0");
                     return (
@@ -244,7 +244,7 @@ function PaymentForm({ show, onClose, id, onSave }) {
               </strong>
             </div>
             <div className={styles.previewRow}>
-              <span className={styles.previewKey}>Mois</span>
+              <span className={styles.previewKey}>Mois/Année</span>
               <span className={styles.previewValue}>
                 {formatMonthDisplay(month)}
               </span>
