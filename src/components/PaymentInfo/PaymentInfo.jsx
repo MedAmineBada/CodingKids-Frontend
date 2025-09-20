@@ -1,11 +1,7 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "./PaymentInfo.module.css";
 
-/**
- * Format amount using Intl.NumberFormat for grouping and decimals.
- * Returns an object with sign, integer (grouped), decimals (2 digits) and full formatted string.
- */
 function formatAmountParts(amount, locale = "fr-FR", currencyLabel = "DT") {
   if (amount === null || amount === undefined || amount === "") return null;
   const num = Number(amount);
@@ -21,37 +17,97 @@ function formatAmountParts(amount, locale = "fr-FR", currencyLabel = "DT") {
     .toString()
     .padStart(2, "0");
 
-  const full = `${sign}${integer}${decimals ? "," + decimals : ""} ${currencyLabel}`;
-  return { sign, integer, decimals, full };
+  return {
+    sign,
+    integer,
+    decimals,
+    full: `${sign}${integer},${decimals} ${currencyLabel}`,
+  };
 }
 
-function formatDate(dateString, locale = "fr-FR") {
-  if (!dateString) return "-";
+function toLocalDateValue(dateString) {
+  if (!dateString) return "";
   const d = new Date(dateString);
-  if (Number.isNaN(d.getTime())) return dateString;
-  return d.toLocaleString(locale, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function fromLocalDateValueToISO(localValue) {
+  if (!localValue) return "";
+  const d = new Date(localValue + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return localValue;
+  return d.toISOString();
 }
 
 function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
-  // defensive: if caller passed null explicitly, normalize to {}
   const safeData = data ?? {};
+  const [editing, setEditing] = useState(false);
+
+  const initialFormState = useMemo(() => {
+    const s = {};
+    Object.keys(safeData).forEach((k) => {
+      if (k === "payment_date") {
+        s[k] = toLocalDateValue(safeData[k]);
+      } else if (k === "amount") {
+        s[k] =
+          safeData[k] === null || safeData[k] === undefined
+            ? ""
+            : String(safeData[k]);
+      } else {
+        s[k] = safeData[k] ?? "";
+      }
+    });
+    return s;
+  }, [JSON.stringify(safeData)]);
+
+  const [form, setForm] = useState(initialFormState);
+
+  useEffect(() => {
+    if (!editing) setForm(initialFormState);
+  }, [initialFormState, editing]);
 
   const amtParts = formatAmountParts(safeData.amount);
   const formattedDate = safeData.payment_date
-    ? formatDate(safeData.payment_date)
+    ? new Date(safeData.payment_date).toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
     : "-";
+
   const isNegative = Number(safeData.amount) < 0;
+
+  function handleChange(key, value) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function handleSaveClick() {
+    const updated = { ...safeData };
+    Object.keys(form).forEach((k) => {
+      if (k === "payment_date") {
+        updated[k] = form[k] ? fromLocalDateValueToISO(form[k]) : "";
+      } else if (k === "amount") {
+        const raw = form[k];
+        const n = raw === "" ? null : Number(raw);
+        updated[k] = raw === "" ? null : Number.isNaN(n) ? raw : n;
+      } else {
+        updated[k] = form[k];
+      }
+    });
+    if (typeof onEdit === "function") onEdit(updated);
+    setEditing(false);
+  }
+
+  function handleClose() {
+    setEditing(false);
+    if (typeof onHide === "function") onHide();
+  }
 
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={handleClose}
       centered
       dialogClassName={styles.dialog}
       contentClassName={styles.content}
@@ -72,11 +128,19 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
           </div>
         ) : (
           <dl className={styles.grid}>
-            {/* Date */}
             <div className={styles.row}>
               <dt className={styles.label}>Date</dt>
               <dd className={styles.value}>
-                {safeData.payment_date ? (
+                {editing && "payment_date" in form ? (
+                  <input
+                    type="date"
+                    value={form.payment_date || ""}
+                    onChange={(e) =>
+                      handleChange("payment_date", e.target.value)
+                    }
+                    className={styles.input}
+                  />
+                ) : safeData.payment_date ? (
                   <time dateTime={safeData.payment_date}>{formattedDate}</time>
                 ) : (
                   <span className={styles.empty}>-</span>
@@ -84,14 +148,20 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
               </dd>
             </div>
 
-            {/* Amount */}
             <div className={styles.row}>
               <dt className={styles.label}>Montant</dt>
               <dd className={styles.value}>
-                {amtParts ? (
+                {editing && "amount" in form ? (
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={form.amount ?? ""}
+                    onChange={(e) => handleChange("amount", e.target.value)}
+                    className={styles.input}
+                  />
+                ) : amtParts ? (
                   <div
                     className={`${styles.amount} ${isNegative ? styles.negative : ""}`}
-                    aria-label={`Montant ${amtParts.sign}${amtParts.integer} DT ${amtParts.decimals}`}
                   >
                     <div className={styles.amountMain}>
                       <span className={styles.amountInt}>
@@ -110,41 +180,89 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
               </dd>
             </div>
 
-            {/* Optional fields */}
-            {safeData.payer ? (
+            {"payer" in safeData && (
               <div className={styles.row}>
                 <dt className={styles.label}>Payé par</dt>
                 <dd className={styles.value}>
-                  <span>{safeData.payer}</span>
+                  {editing ? (
+                    <input
+                      type="text"
+                      value={form.payer ?? ""}
+                      onChange={(e) => handleChange("payer", e.target.value)}
+                      className={styles.input}
+                    />
+                  ) : (
+                    <span>
+                      {safeData.payer || (
+                        <span className={styles.empty}>-</span>
+                      )}
+                    </span>
+                  )}
                 </dd>
               </div>
-            ) : null}
+            )}
 
-            {safeData.method ? (
+            {"method" in safeData && (
               <div className={styles.row}>
                 <dt className={styles.label}>Méthode</dt>
-                <dd className={styles.value}>{safeData.method}</dd>
+                <dd className={styles.value}>
+                  {editing ? (
+                    <input
+                      type="text"
+                      value={form.method ?? ""}
+                      onChange={(e) => handleChange("method", e.target.value)}
+                      className={styles.input}
+                    />
+                  ) : (
+                    <span>
+                      {safeData.method || (
+                        <span className={styles.empty}>-</span>
+                      )}
+                    </span>
+                  )}
+                </dd>
               </div>
-            ) : null}
+            )}
 
-            {safeData.id ? (
+            {"id" in safeData && (
               <div className={styles.row}>
                 <dt className={styles.label}>Référence</dt>
                 <dd className={styles.value}>
-                  <span className={styles.mono}>{safeData.id}</span>
+                  {editing ? (
+                    <input
+                      type="text"
+                      value={form.id ?? ""}
+                      onChange={(e) => handleChange("id", e.target.value)}
+                      className={`${styles.input} ${styles.mono}`}
+                    />
+                  ) : (
+                    <span className={styles.mono}>
+                      {safeData.id || <span className={styles.empty}>-</span>}
+                    </span>
+                  )}
                 </dd>
               </div>
-            ) : null}
+            )}
 
-            {/* Note */}
-            {safeData.note ? (
+            {"note" in safeData && (
               <div className={styles.row}>
                 <dt className={styles.label}>Note</dt>
                 <dd className={styles.value}>
-                  <div className={styles.note}>{safeData.note}</div>
+                  {editing ? (
+                    <textarea
+                      value={form.note ?? ""}
+                      onChange={(e) => handleChange("note", e.target.value)}
+                      rows={3}
+                      className={styles.textarea}
+                    />
+                  ) : (
+                    <div className={styles.note}>
+                      {safeData.note || <span className={styles.empty}>-</span>}
+                    </div>
+                  )}
                 </dd>
               </div>
-            ) : null}
+            )}
           </dl>
         )}
       </Modal.Body>
@@ -153,18 +271,28 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
         <button
           type="button"
           className={`${styles.btn} ${styles.btnSecondary}`}
-          onClick={onHide}
+          onClick={handleClose}
         >
           Fermer
         </button>
 
-        <button
-          type="button"
-          className={`${styles.btn} ${styles.btnPrimary}`}
-          onClick={() => (typeof onEdit === "function" ? onEdit() : onHide())}
-        >
-          Modifier
-        </button>
+        {editing ? (
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={handleSaveClick}
+          >
+            Enregistrer
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={() => setEditing(true)}
+          >
+            Modifier
+          </button>
+        )}
       </Modal.Footer>
     </Modal>
   );

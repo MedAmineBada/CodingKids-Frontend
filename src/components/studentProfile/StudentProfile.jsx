@@ -12,7 +12,6 @@ import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
 import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx";
 import { DayPicker } from "react-day-picker";
 import styles from "./StudentProfile.module.css";
-
 import {
   addAttendance,
   deleteAttendance,
@@ -34,26 +33,21 @@ function formatIsoDateToDmy(inputDate) {
 
 export default function StudentProfile({ data = {}, handleClose }) {
   const [student, setStudent] = useState(data);
-
   const [showModify, setShowModify] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [showActionConfirm, setShowActionConfirm] = useState(false); // generic confirm for actions (attendance add/remove / mark present)
+  const [showActionConfirm, setShowActionConfirm] = useState(false);
   const [actionConfirmTitle, setActionConfirmTitle] = useState("");
   const [actionConfirmMessage, setActionConfirmMessage] = useState("");
   const [actionConfirmFunc, setActionConfirmFunc] = useState(null);
-
   const [showPayModal, setShowPayModal] = useState(false);
   const [showPayInfoModal, setShowPayInfoModal] = useState(false);
-
   const [showErr, setShowErr] = useState(false);
   const [errCode, setErrCode] = useState(null);
   const [errMsg, setErrMsg] = useState("");
-
   const [showSuccess, setShowSuccess] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
-
-  const [dates, setDates] = useState([]); // raw string dates from API (YYYY-MM-DD)
-  const [selectedDays, setSelectedDays] = useState([]); // normalized to array of YYYY-MM-DD strings
+  const [dates, setDates] = useState([]);
+  const [selectedDays, setSelectedDays] = useState([]);
 
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 1, 11, 31);
@@ -81,7 +75,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
   async function handleGetPaymentStatus(student_id) {
     try {
       const res = await getPaymentStatus(student_id);
-
       const records = Array.isArray(res)
         ? res
         : Array.isArray(res.data)
@@ -92,7 +85,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
       setPayStatus([]);
     }
   }
-  // run on mount and when student.id changes
+
   useEffect(() => {
     if (student?.id) {
       getAttendanceDates(student.id);
@@ -100,7 +93,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
     }
   }, [student?.id, getAttendanceDates]);
 
-  // Generic safe helper to show error
   function showError(code = 500, message = "Une erreur s'est produite") {
     setErrCode(code);
     setErrMsg(message);
@@ -141,7 +133,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
       setSelectedDays((prev) => {
         const prevArr = Array.isArray(prev) ? prev : [];
         if (prevArr.includes(dayYmd)) return prevArr;
-        return [...prevArr, dayYmd].sort(); // keep sorted optional
+        return [...prevArr, dayYmd].sort();
       });
       setShowActionConfirm(false);
     } catch (err) {
@@ -271,14 +263,12 @@ export default function StudentProfile({ data = {}, handleClose }) {
         btn_no="Annuler"
         func={actionConfirmFunc}
       />
-
       <ModifyStudentModal
         show={showModify}
         student={student}
         onClose={() => setShowModify(false)}
         onSuccess={handleModifySuccess}
       />
-
       <ConfirmModal
         show={showDeleteConfirm}
         title="Confirmer la suppression"
@@ -288,28 +278,24 @@ export default function StudentProfile({ data = {}, handleClose }) {
         onClose={() => setShowDeleteConfirm(false)}
         func={handleDeleteStudentConfirmed}
       />
-
       <ErrorModal
         show={showErr}
         onClose={() => setShowErr(false)}
         code={errCode}
         message={errMsg}
       />
-
       <ErrorModal
         show={isNotFound && !showErr}
         onClose={() => setIsNotFound(false)}
         code={404}
         message="L'étudiant n'a pas été trouvé."
       />
-
       <SuccessModal
         onClose={handleCloseSuccess}
         title="Succès"
         message="L’étudiant a été supprimé avec succès."
         show={showSuccess}
       />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
@@ -317,7 +303,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
           </div>
           <h1>{student?.name ?? "—"}</h1>
         </div>
-
         <div className={styles.swiper}>
           <Swiper
             rewind={false}
@@ -370,7 +355,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     </tr>
                   </tbody>
                 </table>
-
                 <div className={styles.btnwrapper}>
                   <div className={styles.modbtns}>
                     <button
@@ -386,7 +370,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                       Effacer
                     </button>
                   </div>
-
                   <button
                     className={styles.swiperbtns}
                     onClick={() => {
@@ -402,7 +385,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                   >
                     Marquer présent
                   </button>
-
                   <button
                     className={styles.swiperbtns}
                     onClick={() => {
@@ -418,7 +400,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
             <SwiperSlide>
               <div className={styles.content}>
                 <h1>Présences</h1>
-
                 <MediaQuery minWidth={800}>
                   <DayPicker
                     locale={fr}
@@ -435,7 +416,6 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     navLayout="around"
                   />
                 </MediaQuery>
-
                 <MediaQuery maxWidth={799.5}>
                   <DayPicker
                     locale={fr}

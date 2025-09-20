@@ -92,11 +92,9 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
   }
 
   const [showInfo, setShowInfo] = useState(false);
-  // selectedPaymentData will only contain paymentDate and amount (or null if missing)
   const [selectedPaymentData, setSelectedPaymentData] = useState(null);
 
   function handleMonthClick(record) {
-    // try common field names: payment_date, paid_date, date
     const paymentDate =
       record.payment_date ?? record.paid_date ?? record.date ?? null;
     const amount =
@@ -115,10 +113,7 @@ export default function PaymentCalendar({ records = [], onMonthClick }) {
     if (typeof onMonthClick === "function") {
       try {
         onMonthClick(payload);
-      } catch {
-        // swallow: don't break the UI if parent handler fails
-        // console.error(e);
-      }
+      } catch {}
     }
   }
 

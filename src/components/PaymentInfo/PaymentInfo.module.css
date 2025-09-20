@@ -15,7 +15,6 @@
     Arial;
 }
 
-/* Modal content wrapper improvements */
 .dialog {
   max-width: 640px;
 }
@@ -27,7 +26,6 @@
   background: var(--bg);
 }
 
-/* header */
 .head {
   padding: 16px 20px;
   border-bottom: none;
@@ -42,14 +40,12 @@
   letter-spacing: 0.6px;
 }
 
-/* body */
 .body {
   padding: 18px;
   display: block;
   background: var(--bg);
 }
 
-/* semantic grid using dl/dt/dd */
 .grid {
   display: grid;
   gap: 14px;
@@ -61,11 +57,10 @@
   gap: 12px;
   width: 100%;
 }
-/* increased non-header text sizes */
 .label {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 17px; /* bumped from 15px */
+  font-size: 17px;
   color: #283042;
   padding-left: 8px;
   position: relative;
@@ -83,10 +78,9 @@
   opacity: 0.95;
 }
 
-/* values: bumped size */
 .value {
   font-family: var(--font-body);
-  font-size: 17px; /* bumped from 15px */
+  font-size: 17px;
   color: #111827;
   text-align: right;
 }
@@ -97,7 +91,6 @@
   justify-content: flex-end;
 }
 
-/* amount block */
 .amount {
   display: flex;
   gap: 12px;
@@ -120,10 +113,9 @@
   align-items: baseline;
   gap: 6px;
 }
-/* larger amount text */
 .amountInt {
   font-weight: 900;
-  font-size: 22px; /* slightly larger */
+  font-size: 22px;
   font-family: var(--font-body);
   color: #111827;
 }
@@ -134,36 +126,57 @@
 }
 .amountDec {
   font-weight: 700;
-  font-size: 15px; /* slightly larger */
+  font-size: 15px;
   color: var(--muted);
   margin-left: 4px;
 }
 
-/* negative amount */
+.input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.textarea {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 .negative .amountInt {
   color: #c53030;
 }
 
-/* small monospaced id */
 .mono {
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New",
     monospace;
-  font-size: 14px; /* slight bump */
+  font-size: 14px;
   color: #374151;
 }
 
-/* note style */
 .note {
   background: linear-gradient(180deg, #fff9f0, #fff3e0);
   border: 1px solid rgba(234, 148, 11, 0.06);
   padding: 8px 12px;
   border-radius: 8px;
   color: #4b5563;
-  font-size: 15px; /* bumped */
+  font-size: 15px;
 }
 
-/* buttons */
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -172,7 +185,7 @@
   border-top: none;
 }
 .btn {
-  font-size: 16px; /* slightly larger */
+  font-size: 16px;
   padding: 8px 18px;
   font-weight: 700;
   font-family: var(--font-body);
@@ -194,20 +207,18 @@
   transform: translateY(1px);
 }
 
-/* empty placeholder */
 .empty {
   color: var(--muted);
   font-style: italic;
 }
 
-/* skeleton loading */
 .skeletonWrap {
   display: grid;
   gap: 10px;
 }
 .skeletonRow,
 .skeletonRowShort {
-  height: 18px; /* slightly taller */
+  height: 18px;
   background: linear-gradient(90deg, #f3f3f3 25%, #ececec 50%, #f3f3f3 75%);
   background-size: 200% 100%;
   border-radius: 8px;
@@ -220,7 +231,6 @@
   width: 60%;
 }
 
-/* animation/keyframes */
 @keyframes shimmer {
   0% {
     background-position: 200% 0;
@@ -240,7 +250,6 @@
   }
 }
 
-/* responsive changes */
 @media (max-width: 520px) {
   .dialog {
     max-width: 92vw;
