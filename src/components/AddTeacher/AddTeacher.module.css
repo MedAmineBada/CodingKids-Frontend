@@ -1,0 +1,151 @@
+/* AddTeacher.module.css */
+
+:root {
+  --accent: #fd9f09;
+  --main: #333333;
+  --muted: #7a7a7a;
+  --bg: #ffffff;
+  --surface: #fbfbfb;
+  --danger: #d9534f;
+  --radius: 10px;
+  --shadow: 0 8px 24px rgba(51, 51, 51, 0.08);
+}
+
+.header {
+  border-bottom: none;
+  padding: 1.25rem 1.5rem 0.5rem 1.5rem;
+  background: transparent;
+}
+
+.title {
+  margin: 0;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+  font-weight: 700;
+  color: var(--main);
+  font-size: 1.25rem;
+}
+
+.body {
+  background: var(--surface);
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.label {
+  font-family: Quicksand, sans-serif;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  background: var(--bg);
+  font-family: Quicksand, sans-serif;
+  font-size: 0.95rem;
+  color: var(--main);
+  box-shadow: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 80ms ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(253, 159, 9, 0.12);
+  transform: translateY(-1px);
+}
+
+.invalid {
+  border-color: var(--danger) !important;
+}
+
+.errorText {
+  grid-column: 2 / 3;
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.feedback {
+  grid-column: 1 / -1;
+  padding: 0.6rem 0.8rem;
+  background: rgba(253, 159, 9, 0.08);
+  border: 1px solid rgba(253, 159, 9, 0.12);
+  color: var(--main);
+  border-radius: 8px;
+  font-family: Quicksand, sans-serif;
+  font-size: 0.95rem;
+}
+
+.footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn {
+  min-width: 110px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-family: Quicksand, sans-serif;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.btnPrimary {
+  background: linear-gradient(180deg, var(--accent) 0%, #e78a00 100%);
+  color: white;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--main);
+  border: 1px solid #e9e9e9;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* small responsive tweak */
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .label {
+    margin-bottom: 0.1rem;
+  }
+  .footer {
+    justify-content: space-between;
+  }
+}

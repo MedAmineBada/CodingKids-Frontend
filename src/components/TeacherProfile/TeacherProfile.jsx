@@ -4,16 +4,13 @@ import styles from "./TeacherProfile.module.css";
 import MediaQuery from "react-responsive";
 
 function TeacherProfile({ data = {} }) {
-  const { name, cin, tel, email, avatarUrl, role } = data;
+  const { name, cin, tel, email, role } = data;
 
   const words = (name || "").split(" ").filter(Boolean);
   const initials =
     words.length === 0
       ? "—"
-      : words.length === 1
-        ? words[0][0].toUpperCase()
-        : (words[0][0] + words[words.length - 1][0]).toUpperCase();
-
+      : words.map((word) => word[0].toUpperCase()).join("");
   async function copyToClipboard(value) {
     if (!value) return;
     try {
@@ -40,20 +37,6 @@ function TeacherProfile({ data = {} }) {
           aria-label={`Profil de ${name || "enseignant"}`}
         >
           <header className={styles.header}>
-            <div className={styles.avatarWrap}>
-              {avatarUrl ? (
-                <img
-                  className={styles.avatar}
-                  src={avatarUrl}
-                  alt={`Photo de ${name}`}
-                />
-              ) : (
-                <div className={styles.initials} aria-hidden="true">
-                  {initials || "—"}
-                </div>
-              )}
-            </div>
-
             <div className={styles.title}>
               <h1 className={styles.name}>{name ?? "—"}</h1>
               {role && <p className={styles.role}>{role}</p>}
@@ -178,20 +161,6 @@ function TeacherProfile({ data = {} }) {
           aria-label={`Profil de ${name || "enseignant"}`}
         >
           <header className={styles.header}>
-            <div className={styles.avatarWrap}>
-              {avatarUrl ? (
-                <img
-                  className={styles.avatar}
-                  src={avatarUrl}
-                  alt={`Photo de ${name}`}
-                />
-              ) : (
-                <div className={styles.initials} aria-hidden="true">
-                  {initials || "—"}
-                </div>
-              )}
-            </div>
-
             <div className={styles.title}>
               <h1 className={styles.name}>{name ?? "—"}</h1>
               {role && <p className={styles.role}>{role}</p>}
@@ -223,7 +192,6 @@ function TeacherProfile({ data = {} }) {
                 {tel ? (
                   <a
                     className={styles.link}
-                    href={`tel:${tel}`}
                     aria-label={`Appeler ${name ?? "l’enseignant"}`}
                   >
                     <span className={styles.textVal}>{tel}</span>
@@ -301,7 +269,6 @@ TeacherProfile.propTypes = {
     cin: PropTypes.string,
     tel: PropTypes.string,
     email: PropTypes.string,
-    avatarUrl: PropTypes.string,
     role: PropTypes.string,
   }),
 };

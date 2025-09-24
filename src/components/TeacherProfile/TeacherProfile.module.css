@@ -27,7 +27,8 @@
   max-width: 740px;
   background: var(--card);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 0;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,9 +38,12 @@
 }
 
 .header {
+  text-align: center;
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 16px;
 }
 
 .avatarWrap {
@@ -64,7 +68,7 @@
 }
 
 .initials {
-  width: 90px;
+  padding: 0 10px;
   height: 90px;
   display: grid;
   place-items: center;
@@ -75,6 +79,11 @@
 
 .title {
   flex: 1;
+}
+.title h1 {
+  font-weight: 700;
+  font-size: 28px;
+  text-transform: capitalize;
 }
 .name {
   margin: 0;
@@ -174,7 +183,7 @@
 
 @media (max-width: 720px) {
   .card {
-    padding: 18px;
+    padding: 0;
   }
   .avatarWrap,
   .avatar,

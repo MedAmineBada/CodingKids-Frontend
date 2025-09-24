@@ -1,7 +1,14 @@
 import styles from "./Enseignants.module.css";
 import { deleteTeacher, getAllTeachers } from "@/services/TeacherServices.js";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Dropdown, Form, InputGroup, Spinner } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  Dropdown,
+  Form,
+  InputGroup,
+  Spinner,
+} from "react-bootstrap";
 import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import Modal from "react-bootstrap/Modal";
@@ -268,11 +275,14 @@ function Enseignants() {
               <Dropdown>
                 <Dropdown.Toggle variant="secondary">Trier par</Dropdown.Toggle>
                 <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleFilter("cin")}>
+                    CIN
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleFilter("name")}>
                     Ordre Alphabétique
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleFilter("id")}>
-                    Date d'inscription
+                    Date d'ajout
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -353,7 +363,10 @@ function Enseignants() {
                         className={styles.namecol}
                         onClick={() => handleTeacherClick(teacher)}
                       >
-                        {teacher.name}
+                        {teacher.name}{" "}
+                        <Badge bg="light" className={styles.badge}>
+                          CIN:{teacher.cin}
+                        </Badge>
                       </td>
                       <td>
                         <button
@@ -362,8 +375,8 @@ function Enseignants() {
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="1.4em"
-                            height="1.4em"
+                            width="1.3em"
+                            height="1.3em"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                           >
@@ -389,15 +402,12 @@ function Enseignants() {
                         </button>
                       </td>
 
-                      <td>
-                        <button
-                          className={styles.editbtn}
-                          onClick={() => handleEditClick(teacher)}
-                        >
+                      <td onClick={() => handleEditClick(teacher)}>
+                        <button className={styles.editbtn}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="1.15em"
-                            height="1.15em"
+                            width="1.05em"
+                            height="1.05em"
                             viewBox="0 0 384 384"
                           >
                             <path
@@ -408,15 +418,12 @@ function Enseignants() {
                         </button>
                       </td>
 
-                      <td>
-                        <button
-                          className={styles.delbtn}
-                          onClick={() => handleDelClick(teacher.id)}
-                        >
+                      <td onClick={() => handleDelClick(teacher.id)}>
+                        <button className={styles.delbtn}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="1.1em"
-                            height="1.1em"
+                            width="1.2em"
+                            height="1.2em"
                             viewBox="0 0 26 26"
                           >
                             <path
