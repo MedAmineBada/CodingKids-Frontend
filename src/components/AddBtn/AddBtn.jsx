@@ -2,7 +2,7 @@ import styles from "./addBtn.module.css";
 
 function AddBtn({ func }) {
   return (
-    <div className={styles.container} onClick={() => (location.href = route)}>
+    <div className={styles.container} onClick={func}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1.6em"

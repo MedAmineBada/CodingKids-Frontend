@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
 import TeacherProfile from "@/components/TeacherProfile/TeacherProfile.jsx";
 import AddBtn from "@/components/AddBtn/AddBtn.jsx";
+import AddTeacher from "@/components/AddTeacher/AddTeacher.jsx";
 
 function Enseignants() {
   const PAGE_SIZE = 12;
@@ -210,10 +211,18 @@ function Enseignants() {
       }
     };
   }, []);
-
+  const [showAdd, setShowAdd] = useState(false);
   return (
     <>
-      <AddBtn></AddBtn>
+      <AddBtn func={() => setShowAdd(true)}></AddBtn>
+      <AddTeacher
+        show={showAdd}
+        onHide={() => setShowAdd(false)}
+        onSuccess={() => {
+          setShowAdd(false);
+          fetchTeachers();
+        }}
+      ></AddTeacher>
       <Modal
         show={showProfile}
         centered={true}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
 import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -30,8 +30,31 @@ function formatIsoDateToDmy(inputDate) {
   const [year, month, day] = parts;
   return `${day}/${month}/${year}`;
 }
+function useComponentWidth() {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
 
+  useEffect(() => {
+    if (!ref.current) return;
+
+    // Create a ResizeObserver instance
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(ref.current);
+
+    // Cleanup
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, width];
+}
 export default function StudentProfile({ data = {}, handleClose }) {
+  const [ref, width] = useComponentWidth();
+
   const [student, setStudent] = useState(data);
   const [showModify, setShowModify] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -296,7 +319,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
         message="L’étudiant a été supprimé avec succès."
         show={showSuccess}
       />
-      <div className={styles.container}>
+      <div className={styles.container} ref={ref}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
             <StudentImage cursor={"pointer"} id={student?.id} shadow={5} />
@@ -400,7 +423,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
             <SwiperSlide>
               <div className={styles.content}>
                 <h1>Présences</h1>
-                <MediaQuery minWidth={800}>
+                <MediaQuery minWidth={760}>
                   <DayPicker
                     locale={fr}
                     captionLayout="dropdown"
@@ -411,12 +434,12 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     showOutsideDays
                     fixedWeeks
                     endMonth={endMonth}
-                    numberOfMonths={2}
+                    numberOfMonths={Math.round(width / 480)}
                     pagedNavigation
                     navLayout="around"
                   />
                 </MediaQuery>
-                <MediaQuery maxWidth={799.5}>
+                <MediaQuery maxWidth={759.5}>
                   <DayPicker
                     locale={fr}
                     captionLayout="dropdown"

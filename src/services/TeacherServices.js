@@ -3,10 +3,11 @@ import { removeAllSpaces } from "@/services/utils.js";
 export async function getAllTeachers(order = "", search = "") {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/teachers/?order_by=${order}&name_search=${search}`,
+      `${import.meta.env.VITE_API_URL}/teachers/?order_by=${order}&search=${search}`,
     );
     if (response.status === 200) {
       const responseData = await response.json();
+
       return { status: response.status, teachers: responseData };
     } else {
       return { status: response.status, teachers: null };
@@ -44,9 +45,8 @@ export async function addTeacher(data) {
 
   const payload = {
     name: data.name,
-    birth_date: data.birth_date,
-    tel1: data.tel1,
-    tel2: data.tel2,
+    cin: data.cin,
+    tel: data.tel,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 
