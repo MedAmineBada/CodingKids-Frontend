@@ -7,6 +7,7 @@ import {
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Etudiants from "@/pages/Etudiants.jsx";
+import Enseignants from "@/pages/Enseignants.jsx";
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/etudiants" element={<Etudiants />} />
+        <Route path="/enseignants" element={<Enseignants />} />
       </Routes>
     </Router>
   );
