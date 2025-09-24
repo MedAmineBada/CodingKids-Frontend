@@ -1,20 +1,19 @@
 import styles from "./Enseignants.module.css";
+import { deleteTeacher, getAllTeachers } from "@/services/TeacherServices.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dropdown, Form, InputGroup, Spinner } from "react-bootstrap";
 import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
-import ModifyStudentModal from "@/components/modals/ModifyStudentModal.jsx"; // TODO: replace with teacher modify modal when available
-import QRModal from "@/components/modals/QRModal/QRModal.jsx";
 import ErrorModal from "@/components/modals/ErrorModal.jsx";
-import StudentProfile from "@/components/studentProfile/StudentProfile.jsx"; // TODO: replace with TeacherProfile when available
 import Modal from "react-bootstrap/Modal";
 import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
+import TeacherProfile from "@/components/TeacherProfile/TeacherProfile.jsx";
+import AddBtn from "@/components/AddBtn/AddBtn.jsx";
 
 function Enseignants() {
   const PAGE_SIZE = 12;
   const DEBOUNCE_MS = 100;
 
-  // ---- state (renamed for teachers) ----
-  const [enseignants, setEnseignants] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState("id");
   const [search, setSearch] = useState("");
@@ -40,28 +39,22 @@ function Enseignants() {
     };
   }, []);
 
-  // ---- fetch teachers (student service call commented out) ----
   async function fetchTeachers() {
     setShowLoading(true);
     const thisRequestId = ++requestIdRef.current;
 
     try {
-      // NOTE: original student fetch call commented out below.
-      // TODO: Replace the commented call with your teacher service call, e.g.:
-      // const { status, teachers } = await getAllTeachers(sortDir + order, search);
+      const { status, teachers } = await getAllTeachers(
+        sortDir + order,
+        search,
+      );
 
-      // const { status, students } = await getAllStudents(sortDir + order, search);
-      // if (thisRequestId !== requestIdRef.current) return;
-      // if (status === 200) { setEnseignants(students ?? []); } else { ... }
-
-      // Placeholder while implementing teacher service:
       if (thisRequestId !== requestIdRef.current) return;
-      const status = 200;
-      const teachers = []; // <-- replace with real teacher list from your service
+
       if (status === 200) {
-        setEnseignants(teachers ?? []);
+        setTeachers(teachers ?? []);
       } else {
-        setEnseignants([]);
+        setTeachers([]);
         setErrMsg(
           "Un problème est survenu lors du chargement des enseignants, Veuillez réessayez.",
         );
@@ -71,7 +64,7 @@ function Enseignants() {
     } catch {
       if (thisRequestId !== requestIdRef.current) return;
 
-      setEnseignants([]);
+      setTeachers([]);
       setErrMsg(
         "Une erreur s’est produite lors du chargement des enseignants, veuillez réessayer plus tard.",
       );
@@ -86,16 +79,16 @@ function Enseignants() {
     fetchTeachers();
   }, [order, sortDir, search]);
 
-  const totalPages = Math.max(1, Math.ceil(enseignants.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(teachers.length / PAGE_SIZE));
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
-  }, [enseignants.length, totalPages, page]);
+  }, [teachers.length, totalPages, page]);
 
   const pageData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return enseignants.slice(start, start + PAGE_SIZE);
-  }, [enseignants, page]);
+    return teachers.slice(start, start + PAGE_SIZE);
+  }, [teachers, page]);
 
   const goToPage = (p) => {
     const next = Math.min(Math.max(1, p), totalPages);
@@ -160,20 +153,14 @@ function Enseignants() {
   }
 
   async function handleDelClick(id) {
-    setConfirmTitle("Supprimer un enseignant");
+    setConfirmTitle("Supprimer un Enseignant");
     setConfirmMsg("Êtes-vous sûr de vouloir supprimer cet enseignant?");
-    // setConfirmFunc(() => () => handleDelete(id));
-    // Instead of directly wiring to deleteStudent, we comment out the call for now:
     setConfirmFunc(() => () => handleDelete(id));
     setShowConfirmDel(true);
   }
 
   async function handleDelete(id) {
-    // Original student delete call commented out for you to replace:
-    // await deleteStudent(id);
-    // TODO: Replace the above with teacher delete service call, e.g. await deleteTeacher(id);
-
-    // Placeholder: re-fetch list after deletion (no-op until you implement deletion).
+    await deleteTeacher(id);
     await fetchTeachers();
   }
 
@@ -181,8 +168,8 @@ function Enseignants() {
   const [confirmMsg, setConfirmMsg] = useState("");
   const [confirmFunc, setConfirmFunc] = useState(null);
 
-  async function handleEditClick(tchr) {
-    setTeacher(tchr);
+  async function handleEditClick(teacher) {
+    setTeachers(teacher);
     setShowModify(true);
   }
 
@@ -191,29 +178,6 @@ function Enseignants() {
     await fetchTeachers();
   }
 
-  async function handleShowQr(id) {
-    try {
-      // Original QR retrieval commented out:
-      // const { status, blob } = await getQR(id);
-      // if (status === 200) {
-      //   setQrSrc(URL.createObjectURL(blob));
-      // } else { ... }
-
-      // TODO: If teacher QR endpoint differs, replace the commented call above with teacher QR service.
-
-      // Placeholder behavior (no actual QR until you implement):
-      setQrSrc(null);
-    } catch {
-      setErrMsg(
-        "Une erreur s’est produite lors de la récupération du code QR de l’enseignant. Veuillez réessayer.",
-      );
-    }
-    setShowQR(true);
-  }
-
-  const [showQR, setShowQR] = useState(false);
-  const [qrSrc, setQrSrc] = useState(false);
-
   const [showError, setShowError] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [errCode, setErrCode] = useState("");
@@ -221,13 +185,13 @@ function Enseignants() {
   const [showProfile, setShowProfile] = useState(false);
   const [teacherData, setTeacherData] = useState({});
 
-  function handleTeachClick(data) {
+  function handleTeacherClick(data) {
     setTeacherData(data);
     setShowProfile(true);
   }
 
-  const [FSModal, setFSModal] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth >= 992 ? false : true,
+  const [FSModal, setFSModal] = useState(
+    () => !(typeof window !== "undefined" && window.innerWidth >= 992),
   );
 
   useEffect(() => {
@@ -249,6 +213,7 @@ function Enseignants() {
 
   return (
     <>
+      <AddBtn></AddBtn>
       <Modal
         show={showProfile}
         centered={true}
@@ -256,26 +221,19 @@ function Enseignants() {
           setShowProfile(false);
           fetchTeachers();
         }}
-        size="lg"
-        fullscreen={FSModal}
+        size="m"
       >
         <Modal.Header className={styles.modalheader} closeButton></Modal.Header>
         <Modal.Body>
-          {/* TODO: replace StudentProfile with TeacherProfile when you add it */}
-          <StudentProfile data={teacherData}></StudentProfile>
+          <TeacherProfile data={teacherData}></TeacherProfile>
         </Modal.Body>
+        <Modal.Footer style={{ border: "none" }}></Modal.Footer>
       </Modal>
       <ErrorModal
         show={showError}
         onClose={() => setShowError(false)}
         code={errCode}
         message={errMsg}
-      />
-      <QRModal
-        show={showQR}
-        onClose={() => setShowQR(false)}
-        title="Code QR"
-        src={qrSrc}
       />
       <ConfirmModal
         show={showConfirmDel}
@@ -286,12 +244,12 @@ function Enseignants() {
         title={confirmTitle}
         func={confirmFunc}
       />
-      <ModifyStudentModal
-        show={showModify}
-        student={teacher} // TODO: replace ModifyStudentModal with ModifyTeacherModal
-        onClose={() => setShowModify(false)}
-        onSuccess={() => finishModify()}
-      />
+      {/*<ModifyStudentModal*/}
+      {/*  show={showModify}*/}
+      {/*  student={teacher}*/}
+      {/*  onClose={() => setShowModify(false)}*/}
+      {/*  onSuccess={() => finishModify()}*/}
+      {/*/>*/}
       <ReturnBtn route="/dashboard"></ReturnBtn>
       <div className={styles.page}>
         <h1>Enseignants</h1>
@@ -380,41 +338,44 @@ function Enseignants() {
             <>
               <table className={styles.table}>
                 <tbody>
-                  {pageData.map((tchr) => (
-                    <tr key={tchr.id}>
+                  {pageData.map((teacher) => (
+                    <tr key={teacher.id}>
                       <td
                         className={styles.namecol}
-                        onClick={() => handleTeachClick(tchr)}
+                        onClick={() => handleTeacherClick(teacher)}
                       >
-                        {tchr.name}
+                        {teacher.name}
                       </td>
                       <td>
                         <button
                           className={styles.qrbtn}
-                          onClick={() => handleShowQr(tchr.id)}
+                          // onClick={() => handleShowQr(teacher.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="1.4em"
                             height="1.4em"
-                            viewBox="0 0 32 32"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
                           >
-                            <path
-                              fill="currentColor"
-                              d="M24 28v-2h2v2zm-6-4v-2h2v2zm0 6h4v-2h-2v-2h-2v4zm8-4v-4h2v4zm2 0h2v4h-4v-2h2v-2zm-2-6v-2h4v4h-2v-2h-2zm-2 0h-2v4h-2v2h4v-6zm-6 0v-2h4v2zM6 22h4v4H6z"
-                            />
-                            <path
-                              fill="currentColor"
-                              d="M14 30H2V18h12zM4 28h8v-8H4zM22 6h4v4h-4z"
-                            />
-                            <path
-                              fill="currentColor"
-                              d="M30 14H18V2h12zm-10-2h8V4h-8zM6 6h4v4H6z"
-                            />
-                            <path
-                              fill="currentColor"
-                              d="M14 14H2V2h12ZM4 12h8V4H4Z"
-                            />
+                            <g fill="currentColor">
+                              <path d="M7.8 6.35c.56 0 1.01-.45 1.01-1.01S8.36 4.33 7.8 4.33s-1.01.45-1.01 1.01s.45 1.01 1.01 1.01Z" />
+                              <path
+                                fill-rule="evenodd"
+                                d="M9.83 8.55c0-1.08-.91-1.86-2.03-1.86c-1.12 0-2.03.78-2.03 1.86v.51c0 .09.04.18.1.24c.06.06.15.1.24.1h3.38c.09 0 .18-.04.24-.1c.06-.06.1-.15.1-.24v-.51ZM5.75 11.5a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm0 3a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Z"
+                                clip-rule="evenodd"
+                              />
+                              <path
+                                fill-rule="evenodd"
+                                d="M2.5 2.5c0-1.102.898-2 2-2h6.69c.562 0 1.092.238 1.465.631l.006.007l4.312 4.702c.359.383.527.884.527 1.36v10.3c0 1.102-.898 2-2 2h-11c-1.102 0-2-.898-2-2v-15Zm8.689 0H4.5v15h11V7.192l-4.296-4.685l-.003-.001a.041.041 0 0 0-.012-.006Z"
+                                clip-rule="evenodd"
+                              />
+                              <path
+                                fill-rule="evenodd"
+                                d="M11.19.5a1 1 0 0 1 1 1v4.7h4.31a1 1 0 1 1 0 2h-5.31a1 1 0 0 1-1-1V1.5a1 1 0 0 1 1-1Z"
+                                clip-rule="evenodd"
+                              />
+                            </g>
                           </svg>
                         </button>
                       </td>
@@ -422,7 +383,7 @@ function Enseignants() {
                       <td>
                         <button
                           className={styles.editbtn}
-                          onClick={() => handleEditClick(tchr)}
+                          onClick={() => handleEditClick(teacher)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -441,7 +402,7 @@ function Enseignants() {
                       <td>
                         <button
                           className={styles.delbtn}
-                          onClick={() => handleDelClick(tchr.id)}
+                          onClick={() => handleDelClick(teacher.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
