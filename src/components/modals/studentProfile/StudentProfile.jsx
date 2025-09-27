@@ -9,7 +9,7 @@ import MediaQuery from "react-responsive";
 import { deleteStudent } from "@/services/StudentServices.js";
 import SuccessModal from "@/components/modals/GenericModals/SuccessModal.jsx";
 import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
-import ModifyStudentModal from "@/components/modals/ModifyTeacher/ModifyStudentModal.jsx";
+import ModifyStudentModal from "@/components/modals/ModifyStudent/ModifyStudentModal.jsx";
 import { DayPicker } from "react-day-picker";
 import styles from "./StudentProfile.module.css";
 import {

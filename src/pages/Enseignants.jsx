@@ -16,6 +16,7 @@ import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
 import TeacherProfile from "@/components/modals/TeacherProfile/TeacherProfile.jsx";
 import AddBtn from "@/components/AddBtn/AddBtn.jsx";
 import AddTeacher from "@/components/modals/AddTeacher/AddTeacher.jsx";
+import ModifyTeacherModal from "@/components/modals/ModifyTeacher/ModifyTeacher.jsx";
 
 function Enseignants() {
   const PAGE_SIZE = 12;
@@ -177,7 +178,7 @@ function Enseignants() {
   const [confirmFunc, setConfirmFunc] = useState(null);
 
   async function handleEditClick(teacher) {
-    setTeachers(teacher);
+    setTeacher(teacher);
     setShowModify(true);
   }
 
@@ -260,12 +261,12 @@ function Enseignants() {
         title={confirmTitle}
         func={confirmFunc}
       />
-      {/*<ModifyStudentModal*/}
-      {/*  show={showModify}*/}
-      {/*  student={teacher}*/}
-      {/*  onClose={() => setShowModify(false)}*/}
-      {/*  onSuccess={() => finishModify()}*/}
-      {/*/>*/}
+      <ModifyTeacherModal
+        show={showModify}
+        teacher={teacher}
+        onClose={() => setShowModify(false)}
+        onSuccess={() => finishModify()}
+      />
       <ReturnBtn route="/dashboard"></ReturnBtn>
       <div className={styles.page}>
         <h1>Enseignants</h1>

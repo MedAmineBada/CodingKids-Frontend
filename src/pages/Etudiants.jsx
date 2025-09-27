@@ -3,7 +3,7 @@ import { deleteStudent, getAllStudents } from "@/services/StudentServices.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dropdown, Form, InputGroup, Spinner } from "react-bootstrap";
 import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
-import ModifyStudentModal from "@/components/modals/ModifyTeacher/ModifyStudentModal.jsx";
+import ModifyStudentModal from "@/components/modals/ModifyStudent/ModifyStudentModal.jsx";
 import QRModal from "@/components/modals/QRModal/QRModal.jsx";
 import { getQR } from "@/services/QRServices.js";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
