@@ -9,7 +9,7 @@ export async function deleteStudent(id) {
 }
 
 export async function updateStudent(id, data) {
-  const url = `${import.meta.env.VITE_API_URL}/teachers/${id}/update`;
+  const url = `${import.meta.env.VITE_API_URL}/teachers/update/${id}`;
 
   const payload = {
     name: data.name,
