@@ -275,14 +275,14 @@ function Enseignants() {
               <Dropdown>
                 <Dropdown.Toggle variant="secondary">Trier par</Dropdown.Toggle>
                 <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleFilter("id")}>
+                    Date d'ajout
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleFilter("cin")}>
                     CIN
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleFilter("name")}>
                     Ordre Alphabétique
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleFilter("id")}>
-                    Date d'ajout
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

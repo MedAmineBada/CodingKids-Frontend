@@ -1,113 +1,190 @@
-.body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
+:root {
+  --accent: #fd9f09;
+  --accent-2: #e8930c;
+  --bg: #f7f7f8;
+  --card: #ffffff;
+  --muted: #6b6b6b;
+  --radius: 14px;
 }
-.header {
-  font-family: Inter, sans-serif;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 26px;
-  font-weight: 700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fd9f09;
-}
-.field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 70%;
-  font-family: Inter, sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-}
-.field input {
-  background-color: #eaeaea;
-  width: 100%;
-  text-align: center;
-  padding: 8px 4px;
-  border-radius: 10px;
-  border: none;
-  font-family: Quicksand, sans-serif;
-  font-size: 16px;
-  text-transform: capitalize;
-}
-.field input[type="date"] {
-  color: #333333;
-  font-family: Quicksand, sans-serif;
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-}
-.field input[type="number"] {
-  letter-spacing: 2px;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-}
+
 .container {
   backdrop-filter: brightness(40%);
 }
+
+.headerWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 18px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 24px;
+  padding-right: 18px;
+}
+
+.titleBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.titleBlock h3 {
+  user-select: none;
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 28px;
+  color: var(--accent);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.body {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(250, 250, 250, 0.95)
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 24px 6px 24px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  width: 100%;
+  align-items: start;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldSmall {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.label {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.input {
+  background-color: var(--card);
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 6px 18px rgba(17, 17, 17, 0.03);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 120ms ease;
+}
+
+.input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(17, 17, 17, 0.06);
+  border-color: rgba(253, 159, 9, 0.9);
+}
+
+.hintRow {
+  padding-left: 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 30px;
+  padding-bottom: 18px;
 }
+
 .btns {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   width: 100%;
-  gap: 8px;
 }
+
 .btns button {
-  padding: 10px 20px;
+  padding: 9px 18px;
+  border-radius: 10px;
   font-family: Quicksand, sans-serif;
   font-weight: 700;
   font-size: 16px;
 }
+
 .btns button:last-child {
-  background-color: #fd9f09;
-  border-color: #fd9f09;
+  background-color: var(--accent);
+  border-color: var(--accent);
 }
+
 .btns button:last-child:hover {
-  background-color: #e8930c;
+  background-color: var(--accent-2);
 }
-@media screen and (min-width: 1000px) {
-  .body {
-    gap: 12px;
+
+@media screen and (min-width: 900px) {
+  .titleBlock h3 {
+    font-size: 32px;
   }
-  .header {
-    font-size: 36px;
+  .subtitle {
+    font-size: 14px;
+  }
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
   }
   .field {
-    width: 70%;
-    font-family: Inter, sans-serif;
-    font-size: 21px;
-    font-weight: 500;
+    grid-column: 1 / -1;
   }
-  .field input {
-    padding: 10px 4px;
-    font-size: 20px;
+  .row {
+    grid-column: 1 / -1;
   }
-  .field input[type="date"] {
-    font-size: 20px;
-  }
-  .btns {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .fieldSmall {
     width: 100%;
-    gap: 8px;
   }
-  .btns button {
-    font-weight: 600;
-    letter-spacing: 1px;
-    font-size: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input {
+    transition: none;
   }
 }
