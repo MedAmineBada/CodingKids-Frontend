@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import AddImage from "@/components/modals/Inscription/AddImage.jsx";
 import CropImg from "@/components/modals/CropModal/CropImg.jsx";
 import QRModal from "@/components/modals/QRModal/QRModal.jsx";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import LoadSpinner from "@/components/Spinner/Spinner.jsx";
 
 import styles from "./Inscription.module.css";

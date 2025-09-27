@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "./MobileCard.module.css";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import { scanStudent } from "@/services/QRServices.js";
 
 function MobileCard({

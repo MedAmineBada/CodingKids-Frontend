@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import styles from "./PaymentForm.module.css";
 import { addPayment } from "@/services/PaymentService.js";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 
 function PaymentForm({ show, onClose, id, onSave }) {
   const [amount, setAmount] = useState("");

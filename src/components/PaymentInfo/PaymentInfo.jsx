@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "./PaymentInfo.module.css";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import { removeAllSpaces } from "@/services/utils.js";
 import { editPayment } from "@/services/PaymentService.js";
 

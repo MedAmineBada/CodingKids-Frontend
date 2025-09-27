@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import CropImg from "@/components/modals/CropModal/CropImg.jsx";
 import { getCroppedImg } from "@/services/utils.js";
 import { deleteImage, uploadImage } from "@/services/ImageServices.js";
-import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
+import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
 
 function ImageModal({ id, show, onClose, url, cursor, func, delfunc }) {
   const fileInputRef = useRef(null);

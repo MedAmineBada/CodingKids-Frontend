@@ -9,8 +9,8 @@ import {
   InputGroup,
   Spinner,
 } from "react-bootstrap";
-import ConfirmModal from "@/components/modals/ConfirmModal.jsx";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import Modal from "react-bootstrap/Modal";
 import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
 import TeacherProfile from "@/components/TeacherProfile/TeacherProfile.jsx";

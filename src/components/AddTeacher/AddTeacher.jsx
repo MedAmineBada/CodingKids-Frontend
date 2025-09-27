@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "./AddTeacher.module.css";
 import { addTeacher } from "@/services/TeacherServices.js";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 
 export default function AddTeacher({ show, onHide, onSuccess }) {
   const CINRef = useRef(null);

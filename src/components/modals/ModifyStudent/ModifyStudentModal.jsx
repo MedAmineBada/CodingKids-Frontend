@@ -1,11 +1,10 @@
-// File: ModifyStudentModal.jsx
 import Modal from "react-bootstrap/Modal";
 import styles from "./ModifyStudentModal.module.css";
 import "@fontsource/quicksand/600";
 import { Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { updateStudent } from "@/services/StudentServices.js";
-import ErrorModal from "@/components/modals/ErrorModal.jsx";
+import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import {
   capitalizeWords,
   cleanSpaces,
@@ -19,13 +18,11 @@ export default function ModifyStudentModal({
   onSuccess,
 }) {
   const [showError, setShowError] = useState(false);
-
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [tel1, setTel1] = useState("");
   const [tel2, setTel2] = useState("");
   const [email, setEmail] = useState("");
-
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -46,7 +43,6 @@ export default function ModifyStudentModal({
   const handleTel2Change = (e) => setTel2(removeAllSpaces(e.target.value));
   const handleEmailChange = (e) => setEmail(removeAllSpaces(e.target.value));
 
-  // simple client-side validation to give immediate feedback
   function validate() {
     const trimmedName = cleanSpaces(name || "");
     if (!trimmedName) return "Le nom ne peut pas être vide.";
@@ -54,7 +50,6 @@ export default function ModifyStudentModal({
       return "Le nom ne doit contenir que des lettres et des espaces.";
 
     if (email) {
-      // simple email regex
       const em = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
       if (!em.test(email)) return "L'adresse e-mail est invalide.";
     }
@@ -67,7 +62,6 @@ export default function ModifyStudentModal({
     if (tel1 && tel2 && tel1 === tel2)
       return "Tel. 1 et Tel. 2 doivent être différents.";
 
-    // date can be optional; if present check format YYYY-MM-DD
     if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date))
       return "Date de naissance invalide.";
 
