@@ -9,12 +9,13 @@ export async function deleteStudent(id) {
 }
 
 export async function updateStudent(id, data) {
-  const url = `${import.meta.env.VITE_API_URL}/teachers/${id}/update`;
+  const url = `${import.meta.env.VITE_API_URL}/students/${id}/update`;
 
   const payload = {
     name: data.name,
-    cin: data.cin,
-    tel: data.tel,
+    birth_date: data.birth_date,
+    tel1: data.tel1,
+    tel2: data.tel2,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 
