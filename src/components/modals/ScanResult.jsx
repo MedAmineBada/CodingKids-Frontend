@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import ModalLoading from "@/components/loading/ModalLoading.jsx";
-import StudentProfile from "@/components/studentProfile/StudentProfile.jsx";
+import StudentProfile from "@/components/modals/studentProfile/StudentProfile.jsx";
 import { clearStudentLocalStorage } from "@/services/utils.js";
 
 function ScanResultModal({ show, handleClose }) {

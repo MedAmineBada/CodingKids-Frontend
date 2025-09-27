@@ -3,11 +3,11 @@ import { deleteStudent, getAllStudents } from "@/services/StudentServices.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dropdown, Form, InputGroup, Spinner } from "react-bootstrap";
 import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
-import ModifyStudentModal from "@/components/modals/ModifyStudent/ModifyStudentModal.jsx";
+import ModifyStudentModal from "@/components/modals/ModifyTeacher/ModifyStudentModal.jsx";
 import QRModal from "@/components/modals/QRModal/QRModal.jsx";
 import { getQR } from "@/services/QRServices.js";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
-import StudentProfile from "@/components/studentProfile/StudentProfile.jsx";
+import StudentProfile from "@/components/modals/studentProfile/StudentProfile.jsx";
 import Modal from "react-bootstrap/Modal";
 import ReturnBtn from "@/components/Return/ReturnBtn.jsx";
 

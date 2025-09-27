@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
-import StudentImage from "@/components/studentProfile/ProfileImage.jsx";
+import StudentImage from "@/components/modals/studentProfile/ProfileImage.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import MediaQuery from "react-responsive";
-import { deleteStudent } from "@/services/StudentServices";
+import { deleteStudent } from "@/services/StudentServices.js";
 import SuccessModal from "@/components/modals/GenericModals/SuccessModal.jsx";
 import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
-import ModifyStudentModal from "@/components/modals/ModifyStudent/ModifyStudentModal.jsx";
+import ModifyStudentModal from "@/components/modals/ModifyTeacher/ModifyStudentModal.jsx";
 import { DayPicker } from "react-day-picker";
 import styles from "./StudentProfile.module.css";
 import {
