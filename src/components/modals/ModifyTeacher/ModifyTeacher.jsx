@@ -3,7 +3,7 @@ import styles from "./ModifyTeacher.module.css";
 import "@fontsource/quicksand/600";
 import { Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { updateStudent } from "@/services/StudentServices.js";
+import { updateTeacher } from "@/services/TeacherServices.js";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 import {
   capitalizeWords,
@@ -78,7 +78,7 @@ export default function ModifyTeacherModal({
     };
 
     try {
-      const result = await updateStudent(teacher.id, newData);
+      const result = await updateTeacher(teacher.id, newData);
       let msg = null;
       let code = null;
 
