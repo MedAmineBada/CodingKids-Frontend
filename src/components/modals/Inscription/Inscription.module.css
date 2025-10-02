@@ -90,12 +90,14 @@
 .splitRow {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .col {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .label {
@@ -110,6 +112,9 @@
 }
 
 .input {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d1d5db;
