@@ -1,0 +1,9 @@
+.body {
+  padding: 0;
+  margin: 0;
+  height: 80vh;
+}
+.header {
+  background: #fd9f09;
+  border: none;
+}

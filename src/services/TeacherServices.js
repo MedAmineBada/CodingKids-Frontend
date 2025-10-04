@@ -70,3 +70,43 @@ export async function deleteTeacher(id) {
     })
   ).status;
 }
+
+export async function getCV(id) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/teachers/${id}/cv`,
+    );
+    const status = response.status;
+
+    if (status === 200) {
+      const blob = await response.blob();
+
+      if (blob.type === "application/pdf") {
+        return { status: response.status, data: blob };
+      } else {
+        return { status: response.status, data: null };
+      }
+    } else {
+      return { status: response.status, data: null };
+    }
+  } catch {
+    return { status: 500, data: null };
+  }
+}
+
+export async function addCV(id, file) {
+  try {
+    const uploadUrl = `${import.meta.env.VITE_API_URL}/teachers/${id}/cv/upload`;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    return response.status;
+  } catch {
+    return 500;
+  }
+}

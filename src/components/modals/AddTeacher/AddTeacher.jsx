@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "./AddTeacher.module.css";
-import { addTeacher } from "@/services/TeacherServices.js";
+import { addCV, addTeacher } from "@/services/TeacherServices.js";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 
 export default function AddTeacher({ show, onHide, onSuccess }) {
@@ -9,6 +9,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
   const NameRef = useRef(null);
   const TelRef = useRef(null);
   const EmailRef = useRef(null);
+  const CVRef = useRef(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -25,6 +26,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
     const name = NameRef.current?.value?.trim() ?? "";
     const tel = TelRef.current?.value?.trim() ?? "";
     const email = EmailRef.current?.value?.trim() ?? "";
+    const cv = CVRef.current?.files[0] ?? null;
 
     if (!/^\d{8}$/.test(cin)) {
       setErrors({ cin: true });
@@ -63,9 +65,24 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
     setIsSubmitting(true);
     setErrors({});
     try {
-      const { status } = await addTeacher(payload);
-
+      const response = await addTeacher(payload);
+      const status = response.status;
+      const id = response.id;
       if (status === 201) {
+        if (cv !== null) {
+          const cvadd = await addCV(id, cv);
+          if (cvadd === 422) {
+            setErrcode(422);
+            setErrmsg(
+              "L’enseignant a été ajouté, mais l’ajout du CV a échoué : le fichier doit être au format PDF.",
+            );
+            setShowError(true);
+          } else {
+            setErrcode(cvadd);
+            setErrmsg("Une erreur est survenue. Veuillez réessayer plus tard.");
+            setShowError(true);
+          }
+        }
         if (typeof onSuccess === "function") onSuccess();
         onHide();
         return;
@@ -136,7 +153,16 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
           >
             <div className={styles.row}>
               <label htmlFor="cin" className={styles.label}>
-                CIN
+                CIN{" "}
+                <span
+                  style={{
+                    color: "#fd9f09",
+                    fontSize: "21px",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  *
+                </span>
               </label>
               <input
                 id="cin"
@@ -151,7 +177,16 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
 
             <div className={styles.row}>
               <label htmlFor="name" className={styles.label}>
-                Nom complet
+                Nom complet{" "}
+                <span
+                  style={{
+                    color: "#fd9f09",
+                    fontSize: "21px",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  *
+                </span>
               </label>
               <input
                 id="name"
@@ -165,7 +200,16 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
 
             <div className={styles.row}>
               <label htmlFor="tel" className={styles.label}>
-                Tel.
+                Tel.{" "}
+                <span
+                  style={{
+                    color: "#fd9f09",
+                    fontSize: "21px",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  *
+                </span>
               </label>
               <input
                 id="tel"
@@ -180,7 +224,16 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
 
             <div className={styles.row}>
               <label htmlFor="email" className={styles.label}>
-                Email
+                Email{" "}
+                <span
+                  style={{
+                    color: "#fd9f09",
+                    fontSize: "21px",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  *
+                </span>
               </label>
               <input
                 id="email"
@@ -189,6 +242,19 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
                 ref={EmailRef}
                 className={`${styles.input} ${errors.email ? styles.invalid : ""}`}
                 aria-invalid={!!errors.email}
+              />
+            </div>
+
+            <div className={styles.row}>
+              <label htmlFor="cv" className={styles.label}>
+                Fichier CV
+              </label>
+              <input
+                id="cv"
+                name="cv"
+                type="file"
+                ref={CVRef}
+                className={`${styles.input} `}
               />
             </div>
 

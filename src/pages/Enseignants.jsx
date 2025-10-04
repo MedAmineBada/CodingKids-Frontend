@@ -1,5 +1,9 @@
 import styles from "./Enseignants.module.css";
-import { deleteTeacher, getAllTeachers } from "@/services/TeacherServices.js";
+import {
+  deleteTeacher,
+  getAllTeachers,
+  getCV,
+} from "@/services/TeacherServices.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
@@ -17,6 +21,7 @@ import TeacherProfile from "@/components/modals/TeacherProfile/TeacherProfile.js
 import AddBtn from "@/components/AddBtn/AddBtn.jsx";
 import AddTeacher from "@/components/modals/AddTeacher/AddTeacher.jsx";
 import ModifyTeacherModal from "@/components/modals/ModifyTeacher/ModifyTeacher.jsx";
+import PDFReader from "@/components/modals/PDFReader/PDFReader.jsx";
 
 function Enseignants() {
   const PAGE_SIZE = 12;
@@ -220,8 +225,32 @@ function Enseignants() {
     };
   }, []);
   const [showAdd, setShowAdd] = useState(false);
+
+  const [showcv, setshowcv] = useState(false);
+  const [cv, setcv] = useState(null);
+  async function handleShowCV(id) {
+    const result = await getCV(id);
+    if (result.status === 200) {
+      if (result.data !== null) {
+        setcv(URL.createObjectURL(result.data));
+        setshowcv(true);
+      } else {
+        setErrCode(404);
+        setErrMsg("Cet enseignant n’a pas de CV.");
+      }
+    } else {
+      setErrCode(result.status);
+      setErrMsg("Une erreur s’est produite, veuillez réessayer plus tard.");
+    }
+  }
+
   return (
     <>
+      <PDFReader
+        show={showcv}
+        onClose={() => setshowcv(false)}
+        url={cv}
+      ></PDFReader>
       <AddBtn func={() => setShowAdd(true)}></AddBtn>
       <AddTeacher
         show={showAdd}
@@ -372,7 +401,12 @@ function Enseignants() {
                       <td>
                         <button
                           className={styles.qrbtn}
-                          // onClick={() => handleShowQr(teacher.id)}
+                          onClick={
+                            teacher.cv !== null
+                              ? () => handleShowCV(teacher.id)
+                              : {}
+                          }
+                          style={teacher.cv === null ? { color: "gray" } : {}}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
