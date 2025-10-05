@@ -295,6 +295,7 @@ function Enseignants() {
         teacher={teacher}
         onClose={() => setShowModify(false)}
         onSuccess={() => finishModify()}
+        onCVDelete={() => fetchTeachers()}
       />
       <ReturnBtn route="/dashboard"></ReturnBtn>
       <div className={styles.page}>

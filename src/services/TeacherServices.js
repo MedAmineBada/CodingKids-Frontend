@@ -110,3 +110,16 @@ export async function addCV(id, file) {
     return 500;
   }
 }
+
+export async function deleteCV(id) {
+  try {
+    const uploadUrl = `${import.meta.env.VITE_API_URL}/teachers/${id}/cv/delete`;
+
+    const response = await fetch(uploadUrl, { method: "DELETE" });
+    const status = response.status;
+
+    return status;
+  } catch {
+    return { status: 500, data: null };
+  }
+}

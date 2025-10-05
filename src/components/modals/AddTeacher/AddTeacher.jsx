@@ -253,6 +253,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
                 id="cv"
                 name="cv"
                 type="file"
+                accept="application/pdf"
                 ref={CVRef}
                 className={`${styles.input} `}
               />

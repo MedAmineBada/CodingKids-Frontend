@@ -102,11 +102,50 @@
   margin-bottom: 6px;
 }
 
+.inputfile {
+  display: flex;
+}
+.inputfile button {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fd9f09;
+  border-radius: 0 10px 10px 0;
+  transition-duration: 200ms;
+}
+.inputfile svg {
+  color: #fff;
+  font-size: 18px;
+  transition-duration: 200ms;
+}
+.inputfile button:hover {
+  background-color: #e8e8e8;
+  svg {
+    color: red;
+  }
+}
 .input {
   background-color: var(--card);
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 6px 18px rgba(17, 17, 17, 0.03);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 120ms ease;
+}
+
+.inputfile .input {
+  background-color: var(--card);
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px 0 0 10px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   font-family: Quicksand, sans-serif;
   font-size: 16px;
