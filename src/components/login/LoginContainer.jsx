@@ -1,9 +1,9 @@
 import { Container } from "react-bootstrap";
 
-import styles from "./loginContainer.module.css";
+import styles from "./LoginContainer.module.css";
 import horse from "../../assets/images/icons/horse.svg";
 
-import Logo from "../logo/logo.jsx";
+import Logo from "../logo/Logo.jsx";
 import LoginForm from "./LoginForm.jsx";
 
 import "@fontsource/inter/700";
