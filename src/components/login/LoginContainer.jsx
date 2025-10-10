@@ -15,10 +15,12 @@ import "@fontsource/quicksand/700.css";
 
 import MediaQuery from "react-responsive";
 import HorseIcon from "./horse/HorseIcon.jsx";
+import FirstLogin from "@/components/FistLogin/FirstLogin.jsx";
 
 function LoginContainer() {
   return (
     <>
+      <FirstLogin initialShow={true}></FirstLogin>
       <MediaQuery minWidth={1199}>
         <Container fluid className={styles.loginContainer}>
           <Container fluid className={styles.rowContainer}>
