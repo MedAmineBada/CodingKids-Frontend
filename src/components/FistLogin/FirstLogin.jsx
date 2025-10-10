@@ -3,8 +3,7 @@ import { Button, Container, Form, Modal } from "react-bootstrap";
 import styles from "./fistlogin.module.css";
 import EyeToggle from "@/components/login/PasswordEye.jsx";
 
-export default function FirstLogin({ initialShow, onSubmit }) {
-  const [show, setShow] = useState(Boolean(initialShow));
+export default function FirstLogin({ show, onSubmit, onClose }) {
   const [showPwd, setShowPwd] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +27,6 @@ export default function FirstLogin({ initialShow, onSubmit }) {
     setPassword(e.target.value);
     if (passwordError) setPasswordError("");
   };
-
-  const handleHide = () => setShow(false);
 
   const submitForm = (e) => {
     // allow calling directly (from footer button) without an event
@@ -71,7 +68,7 @@ export default function FirstLogin({ initialShow, onSubmit }) {
       });
     }
 
-    setShow(false);
+    onClose;
   };
 
   // unique id for remember-me to avoid collisions
@@ -81,13 +78,13 @@ export default function FirstLogin({ initialShow, onSubmit }) {
     <Modal
       show={show}
       size="lg"
-      onHide={handleHide}
+      onHide={onClose}
       centered
       contentClassName={styles.modalContent}
       dialogClassName={styles.modalDialog}
     >
       {/* header: no "A" logo mark anymore */}
-      <Modal.Header closeButton className={styles.modalHeader}>
+      <Modal.Header className={styles.modalHeader}>
         <div className={styles.headerTitle}>
           <div>
             <div className={styles.titleMain}>Créer un administrateur</div>
@@ -107,12 +104,12 @@ export default function FirstLogin({ initialShow, onSubmit }) {
             onSubmit={(e) => e.preventDefault()}
           >
             <Form.Group>
-              {usernameError && (
-                <p className={styles.errorMsg}>{usernameError}</p>
-              )}
               <Form.Label className={styles.labels} column>
                 Nom d'Administrateur
               </Form.Label>
+              {usernameError && (
+                <p className={styles.errorMsg}>{usernameError}</p>
+              )}
               <Form.Control
                 className={styles.inputs}
                 type="text"
@@ -125,15 +122,15 @@ export default function FirstLogin({ initialShow, onSubmit }) {
             </Form.Group>
 
             <Form.Group>
-              {passwordError && (
-                <p className={styles.errorMsg}>{passwordError}</p>
-              )}
               <Form.Label className={styles.labels} column>
                 Mot de Passe
                 <span className={styles.eyeWrap}>
                   <EyeToggle onChange={setShowPwd} />
                 </span>
               </Form.Label>
+              {passwordError && (
+                <p className={styles.errorMsg}>{passwordError}</p>
+              )}
               <Form.Control
                 className={styles.inputs}
                 type={showPwd ? "text" : "password"}
@@ -171,11 +168,7 @@ export default function FirstLogin({ initialShow, onSubmit }) {
       </Modal.Body>
 
       <Modal.Footer className={styles.modalFooter}>
-        <Button
-          variant="light"
-          className={styles.ghostBtn}
-          onClick={handleHide}
-        >
+        <Button variant="light" className={styles.ghostBtn} onClick={onClose}>
           Annuler
         </Button>
 
