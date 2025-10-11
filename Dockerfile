@@ -2,7 +2,7 @@
 FROM node:22.17-alpine AS builder
 WORKDIR /app
 
-ENV VITE_API_URL=http://192.168.1.34:80/api/v1
+ENV VITE_API_URL=/api/v1
 
 COPY package*.json ./
 RUN npm ci
