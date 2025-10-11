@@ -38,6 +38,7 @@ function LoginContainer() {
         setshowerror(true);
       }
     }
+    sessionStorage.removeItem("access_token");
     check();
   }, []);
 

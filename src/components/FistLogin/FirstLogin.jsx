@@ -174,7 +174,7 @@ export default function FirstLogin({ show, onSubmit, onClose }) {
 
         {/* Footer button is the only submit trigger now */}
         <Button className={styles.primaryBtn} onClick={submitForm}>
-          Se connecter
+          Confirmer
         </Button>
       </Modal.Footer>
     </Modal>

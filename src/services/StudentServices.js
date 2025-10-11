@@ -1,14 +1,20 @@
 import { removeAllSpaces } from "@/services/utils.js";
 
 export async function deleteStudent(id) {
+  const token = sessionStorage.getItem("access_token");
+
   return (
     await fetch(`${import.meta.env.VITE_API_URL}/students/${id}/delete`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
   ).status;
 }
 
 export async function updateStudent(id, data) {
+  const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/students/${id}/update`;
 
   const payload = {
@@ -24,6 +30,7 @@ export async function updateStudent(id, data) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
   });
@@ -32,6 +39,7 @@ export async function updateStudent(id, data) {
 }
 
 export async function addStudent(data) {
+  const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/students/add`;
 
   const payload = {
@@ -47,6 +55,7 @@ export async function addStudent(data) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
   });
@@ -58,8 +67,16 @@ export async function addStudent(data) {
 
 export async function getAllStudents(order = "", search = "") {
   try {
+    const token = sessionStorage.getItem("access_token");
+
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/students/?order_by=${order}&name_search=${search}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     if (response.status === 200) {
       const responseData = await response.json();

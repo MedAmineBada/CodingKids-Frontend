@@ -1,7 +1,14 @@
 export const getImage = async (id) => {
+  const token = sessionStorage.getItem("access_token");
+
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/students/${id}/image`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
 
     if (!response.ok) {
@@ -17,6 +24,8 @@ export const getImage = async (id) => {
 };
 
 export async function uploadImage(id, file) {
+  const token = sessionStorage.getItem("access_token");
+
   const formData = new FormData();
   formData.append("image", file);
 
@@ -24,6 +33,9 @@ export async function uploadImage(id, file) {
 
   const response = await fetch(uploadUrl, {
     method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: formData,
   });
 
@@ -31,10 +43,17 @@ export async function uploadImage(id, file) {
 }
 
 export async function deleteImage(id) {
+  const token = sessionStorage.getItem("access_token");
+
   try {
     const url = `${import.meta.env.VITE_API_URL}/students/${id}/image/delete`;
 
-    const response = await fetch(url, { method: "DELETE" });
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return response.status;
   } catch {

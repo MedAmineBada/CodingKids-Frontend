@@ -1,9 +1,15 @@
 export async function scanStudent(file) {
+  const token = sessionStorage.getItem("access_token");
+
   const formData = new FormData();
   formData.append("qr", file);
   const uploadUrl = import.meta.env.VITE_API_URL + "/scan";
+
   const response = await fetch(uploadUrl, {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: formData,
   });
 
@@ -31,9 +37,16 @@ export async function scanStudent(file) {
 }
 
 export async function getQR(id) {
+  const token = sessionStorage.getItem("access_token");
+
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/students/${id}/code`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
 
     if (!response.ok) {

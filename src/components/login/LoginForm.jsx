@@ -4,27 +4,55 @@ import styles from "./LoginForm.module.css";
 import EyeToggle from "./PasswordEye.jsx";
 import LoginButton from "./button/LoginButton.jsx";
 import MediaQuery from "react-responsive";
+import { login } from "@/services/AuthServices.js";
 
 export default function LoginForm() {
   const [showPwd, setShowPwd] = useState(false);
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
     if (usernameError) setUsernameError("");
   };
 
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (passwordError) setPasswordError("");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    let valid = true;
+
     if (username.replaceAll(" ", "") === "") {
       setUsernameError("Veuillez entrer un nom d'administrateur.");
-      return false;
+      valid = false;
     }
 
-    // success path: you can call API here or forward upwards
-    return true;
+    if (password.replaceAll(" ", "") === "") {
+      setPasswordError("Veuillez entrer un mot de passe.");
+      valid = false;
+    }
+
+    return valid;
   };
+
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    const isValid = handleSubmit(e);
+    if (!isValid) return;
+
+    const user = { username: username, password: password };
+    const result = await login(user);
+
+    if (result === 200) {
+      window.location.href = "/dashboard";
+    }
+  }
 
   return (
     <>
@@ -35,7 +63,7 @@ export default function LoginForm() {
 
         <MediaQuery minWidth={576} maxWidth={899.5}>
           <Container className={styles.topContainer} fluid>
-            <Form className={styles.form} onSubmit={handleSubmit}>
+            <Form className={styles.form} onSubmit={handleLogin}>
               <MediaQuery minWidth={900} maxWidth={1199}>
                 <h1 className={styles.formTitleLaptop}>Se Connecter</h1>
               </MediaQuery>
@@ -58,6 +86,9 @@ export default function LoginForm() {
               </Form.Group>
 
               <Form.Group>
+                {passwordError && (
+                  <p className={styles.errorMsg}>{passwordError}</p>
+                )}
                 <Form.Label className={styles.labels} column={true}>
                   Mot de passe
                   <EyeToggle onChange={setShowPwd} />
@@ -66,11 +97,13 @@ export default function LoginForm() {
                   className={styles.inputs}
                   type={showPwd ? "text" : "password"}
                   placeholder="Entrez votre mot de passe"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </Form.Group>
 
               <Form.Group>
-                <LoginButton></LoginButton>
+                <LoginButton onClick={handleLogin}></LoginButton>
               </Form.Group>
 
               <Form.Group className={styles.extras}>
@@ -100,7 +133,7 @@ export default function LoginForm() {
 
         <MediaQuery minWidth={900}>
           <Container className={styles.topContainer} fluid>
-            <Form className={styles.form} onSubmit={handleSubmit}>
+            <Form className={styles.form} onSubmit={handleLogin}>
               <MediaQuery minWidth={900} maxWidth={1199}>
                 <h1 className={styles.formTitleLaptop}>Se Connecter</h1>
               </MediaQuery>
@@ -123,6 +156,9 @@ export default function LoginForm() {
               </Form.Group>
 
               <Form.Group>
+                {passwordError && (
+                  <p className={styles.errorMsg}>{passwordError}</p>
+                )}
                 <Form.Label className={styles.labels} column={true}>
                   Mot de passe
                   <EyeToggle onChange={setShowPwd} />
@@ -131,11 +167,13 @@ export default function LoginForm() {
                   className={styles.inputs}
                   type={showPwd ? "text" : "password"}
                   placeholder="Entrez votre mot de passe"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </Form.Group>
 
               <Form.Group>
-                <LoginButton></LoginButton>
+                <LoginButton onClick={handleLogin}></LoginButton>
               </Form.Group>
 
               <Form.Group className={styles.extras}>
@@ -167,7 +205,7 @@ export default function LoginForm() {
           <h1>Se Connecter</h1>
 
           <Container fluid className={styles.top}>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleLogin}>
               <Form.Group className={styles.fields}>
                 {usernameError && (
                   <p className={styles.errorMsg}>{usernameError}</p>
@@ -183,6 +221,9 @@ export default function LoginForm() {
               </Form.Group>
 
               <Form.Group className={styles.fields}>
+                {passwordError && (
+                  <p className={styles.errorMsg}>{passwordError}</p>
+                )}
                 <Form.Label column={true}>
                   Mot de passe
                   <EyeToggle onChange={setShowPwd} />
@@ -190,6 +231,8 @@ export default function LoginForm() {
                 <Form.Control
                   type={showPwd ? "text" : "password"}
                   placeholder="Entrez votre mot de passe"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </Form.Group>
 
@@ -211,7 +254,7 @@ export default function LoginForm() {
               </Form.Group>
 
               <Form.Group className={styles.fields}>
-                <LoginButton></LoginButton>
+                <LoginButton onClick={handleLogin}></LoginButton>
               </Form.Group>
             </Form>
           </Container>

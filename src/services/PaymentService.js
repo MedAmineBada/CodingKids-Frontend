@@ -1,7 +1,15 @@
 export async function getPaymentStatus(student_id) {
+  const token = sessionStorage.getItem("access_token");
+
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/payments/status/${student_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
+
   if (response.status === 200) {
     const responseData = await response.json();
     return { status: response.status, data: responseData };
@@ -9,6 +17,7 @@ export async function getPaymentStatus(student_id) {
     return { status: response.status, data: null };
   }
 }
+
 export async function addPayment(
   student_id,
   month,
@@ -16,10 +25,13 @@ export async function addPayment(
   payment_date,
   amount,
 ) {
+  const token = sessionStorage.getItem("access_token");
+
   const response = await fetch(`${import.meta.env.VITE_API_URL}/payments/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       student_id: student_id,
@@ -45,6 +57,7 @@ export async function editPayment(
   payment_date,
   amount,
 ) {
+  const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/payments/edit`;
   const payload = {
     student_id: student_id,
@@ -53,11 +66,13 @@ export async function editPayment(
     payment_date: payment_date,
     amount: amount,
   };
+
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
   });
