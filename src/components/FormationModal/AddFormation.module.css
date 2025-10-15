@@ -1,0 +1,144 @@
+:root {
+  --accent-1: #fd9f09; /* couleur marque */
+  --accent-2: #ffb347;
+  --muted: #7f7f7f;
+  --bg: #ffffff;
+  --text: #111827;
+  --radius: 12px;
+}
+
+/* Ligne pleine, empilable verticalement — texte agrandi */
+.card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 20px 18px;
+  gap: 18px;
+  margin-bottom: 14px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 250, 244, 1) 0%,
+    rgba(255, 247, 236, 1) 100%
+  );
+  border-radius: var(--radius);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms;
+  text-align: left;
+}
+
+/* Variante pointillée (si tu veux l'effet vide/dashed) */
+.dashed {
+  background: transparent;
+  border: 2px dashed #e8e8e8;
+  box-shadow: none;
+  color: var(--muted);
+}
+
+/* Variante compacte (si utile) */
+.compact {
+  padding: 14px 12px;
+  gap: 12px;
+}
+
+/* Hover / active */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.09);
+}
+.card:active {
+  transform: translateY(-1px) scale(0.998);
+}
+
+/* Focus clavier accessible */
+.card:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 5px rgba(253, 159, 9, 0.12),
+    0 14px 30px rgba(15, 23, 42, 0.06);
+  border-color: rgba(253, 159, 9, 0.5);
+}
+
+/* Icône à gauche — agrandie */
+.icon {
+  display: grid;
+  place-items: center;
+  min-width: 72px;
+  min-height: 72px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: white;
+  box-shadow: 0 10px 28px rgba(253, 159, 9, 0.14);
+  flex-shrink: 0;
+}
+
+/* Icône pour la variante dashed */
+.dashed .icon {
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Colonne de texte — taille plus grande */
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.label {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 20px; /* PLUS GRAND */
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hint {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-size: 14px; /* PLUS GRAND */
+  color: #4f4f4f;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chevron droit — plus visible */
+.chev {
+  color: rgba(0, 0, 0, 0.22);
+  font-size: 22px;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* Responsive — garde tout lisible sur mobile */
+@media (max-width: 480px) {
+  .icon {
+    min-width: 60px;
+    min-height: 60px;
+  }
+  .label {
+    font-size: 18px;
+  }
+  .hint {
+    font-size: 13px;
+  }
+  .card {
+    padding: 16px 12px;
+    margin-bottom: 12px;
+  }
+}

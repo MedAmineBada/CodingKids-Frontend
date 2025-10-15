@@ -19,6 +19,7 @@ import DesktopCard from "@/components/cards/DesktopCard.jsx";
 import { useState } from "react";
 import ScanResultModal from "@/components/modals/ScanResult.jsx";
 import Inscription from "@/components/modals/Inscription/Inscription.jsx";
+import Formation from "@/components/FormationModal/Formation.jsx";
 
 function Dashboard() {
   if (localStorage.getItem("scanResult") !== null) {
@@ -27,6 +28,7 @@ function Dashboard() {
   const [showRes, setShowRes] = useState(false);
   const handleShowRes = () => setShowRes(true);
   const [showInscription, setShowInscription] = useState(false);
+  const [showFormation, setShowFormation] = useState(false);
 
   function handleCloseRes() {
     localStorage.removeItem("scanResult");
@@ -35,6 +37,10 @@ function Dashboard() {
 
   return (
     <>
+      <Formation
+        show={showFormation}
+        onclose={() => setShowFormation(false)}
+      ></Formation>
       <ScanResultModal show={showRes} handleClose={handleCloseRes} />
       <Inscription
         show={showInscription}
@@ -76,7 +82,7 @@ function Dashboard() {
               image={SubjectIcon}
               title="Formations"
               text="Gérer les formations."
-              route="/formations"
+              clickfunc={() => setShowFormation(true)}
             ></MobileCard>
             <MobileCard
               image={DisconnectIcon}
@@ -117,7 +123,7 @@ function Dashboard() {
               image={SubjectIcon}
               title="Formations"
               text="Gérer les formations."
-              route="/formations"
+              clickfunc={() => setShowFormation(true)}
             ></DesktopCard>
             <DesktopCard
               image={DisconnectIcon}

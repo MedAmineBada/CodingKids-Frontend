@@ -9,6 +9,7 @@
   border: 2px solid transparent;
   width: 65%;
   border-radius: 40px;
+  transition-duration: 200ms;
 }
 .connectButton:hover {
   background: #ffffff;

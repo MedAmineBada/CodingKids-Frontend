@@ -79,7 +79,7 @@ export default function LoginForm() {
                   className={styles.inputs}
                   type="text"
                   id="username"
-                  placeholder="Entrez votre nom d'administrateur"
+                  placeholder="Entrez votre nom d'admin"
                   value={username}
                   onChange={handleUsernameChange}
                 />
@@ -149,7 +149,7 @@ export default function LoginForm() {
                   className={styles.inputs}
                   type="text"
                   id="username"
-                  placeholder="Entrez votre nom d'administrateur"
+                  placeholder="Entrez votre nom d'admin"
                   value={username}
                   onChange={handleUsernameChange}
                 />
@@ -214,7 +214,7 @@ export default function LoginForm() {
                 <Form.Control
                   type="text"
                   id="username"
-                  placeholder="Entrez votre nom d'administrateur"
+                  placeholder="Entrez votre nom d'admin"
                   value={username}
                   onChange={handleUsernameChange}
                 />
