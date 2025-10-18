@@ -1,0 +1,223 @@
+:root {
+  --accent: #fd9f09;
+  --bg: #ffffff;
+  --muted: #7f7f7f;
+  --radius: 14px;
+  --text: #111827;
+  --gap: 12px;
+  --control-height: 48px;
+}
+.modal {
+  backdrop-filter: brightness(40%);
+}
+/* Header */
+.header {
+  border: none;
+}
+.title {
+  font-family: Inter, sans-serif;
+  font-size: 34px;
+  margin: 0;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Body / form container */
+.body {
+  padding: 10px 20px 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  font-family: "Quicksand", sans-serif;
+}
+
+/* Labels */
+.label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Select + plus in same row */
+.selectRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* select — styled to match cards: white, subtle border, hover lift on parent .card-like */
+.select {
+  flex: 1 1 auto;
+  height: var(--control-height);
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #f1f1f1;
+  background: #fffdf9;
+  font-size: 18px;
+  color: var(--text);
+  transition:
+    transform 0.18s ease,
+    border 0.18s ease,
+    background 0.18s ease;
+  appearance: none;
+  cursor: pointer; /* <-- make pointer on hover/click */
+}
+
+/* Improve keyboard focus visibility */
+.select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(253, 159, 9, 0.08);
+  border-color: var(--accent);
+}
+
+/* Style option spacing and pointer (browser support varies) */
+.select option {
+  /* Many browsers ignore option padding, but line-height and font-size help spacing */
+  line-height: 2; /* more vertical space between items */
+  font-size: 16px;
+  padding: 6px 8px; /* best-effort; might be ignored in some UA */
+  cursor: pointer; /* make pointer when hovering options where supported */
+}
+
+/* plus button next to select — centered plus */
+.plusBtn {
+  width: 64px;
+  height: var(--control-height);
+  min-width: 64px;
+  border-radius: 12px;
+  border: 2px solid #f1f1f1;
+  background: var(--bg);
+  display: inline-grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+/* mimic card hover for whole row: when plusBtn:hover or select:hover, we apply the same visual */
+.plusBtn:hover,
+.select:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: #fffaf3;
+}
+
+/* Explicit button hover states for visual polish */
+.plusBtn:hover {
+  background: #fffaf3;
+}
+
+.cancelBtn {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border 0.18s ease,
+    color 0.18s ease;
+}
+
+.cancelBtn:hover {
+  transform: translateY(-2px);
+  background: #fffaf3;
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.saveBtn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.saveBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+  opacity: 0.98;
+}
+
+/* Date input */
+.input {
+  height: var(--control-height);
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  font-size: 18px;
+  color: var(--text);
+  transition:
+    box-shadow 0.12s ease,
+    border 0.12s ease;
+  cursor: pointer;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(253, 159, 9, 0.06);
+  border-color: var(--accent);
+}
+
+/* Error message */
+.error {
+  color: crimson;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .selectRow {
+    gap: 8px;
+  }
+  .plusBtn {
+    width: 56px;
+    font-size: 22px;
+    min-width: 56px;
+  }
+
+  .input,
+  .select {
+    height: 44px;
+    font-size: 16px;
+  }
+  .title {
+    font-size: 24px;
+  }
+  .label {
+    font-size: 16px;
+  }
+  .input {
+    font-size: 16px;
+  }
+}
