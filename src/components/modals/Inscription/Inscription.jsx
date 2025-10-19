@@ -301,7 +301,7 @@ export default function Inscription({ show, close }) {
       />
 
       <Modal show={show} onHide={close} centered size={modalSize}>
-        <Modal.Header className={styles.modalHeader}>
+        <Modal.Header className={styles.modalHeader} closeButton>
           <h2 className={styles.title}>Inscrire un étudiant</h2>
         </Modal.Header>
 

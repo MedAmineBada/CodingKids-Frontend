@@ -105,28 +105,6 @@ export default function LoginForm() {
               <Form.Group>
                 <LoginButton onClick={handleLogin}></LoginButton>
               </Form.Group>
-
-              <Form.Group className={styles.extras}>
-                <div className={styles.extrasContainer}>
-                  <div className={styles.check}>
-                    <input id="rememberMe" type="checkbox" />
-                    <label
-                      htmlFor="rememberMe"
-                      style={{ userSelect: "none", cursor: "pointer" }}
-                    >
-                      &nbsp;Rester connecté?
-                    </label>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      style={{ userSelect: "none", cursor: "pointer" }}
-                    >
-                      Mot de passe oublié?
-                    </a>
-                  </div>
-                </div>
-              </Form.Group>
             </Form>
           </Container>
         </MediaQuery>
@@ -175,28 +153,6 @@ export default function LoginForm() {
               <Form.Group>
                 <LoginButton onClick={handleLogin}></LoginButton>
               </Form.Group>
-
-              <Form.Group className={styles.extras}>
-                <div className={styles.extrasContainer}>
-                  <div className={styles.check}>
-                    <input id="rememberMe" type="checkbox" />
-                    <label
-                      htmlFor="rememberMe"
-                      style={{ userSelect: "none", cursor: "pointer" }}
-                    >
-                      &nbsp;Rester connecté?
-                    </label>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      style={{ userSelect: "none", cursor: "pointer" }}
-                    >
-                      Mot de passe oublié?
-                    </a>
-                  </div>
-                </div>
-              </Form.Group>
             </Form>
           </Container>
         </MediaQuery>
@@ -234,23 +190,6 @@ export default function LoginForm() {
                   value={password}
                   onChange={handlePasswordChange}
                 />
-              </Form.Group>
-
-              <Form.Group className={styles.extraField}>
-                <Container className={styles.rememberMeContainer}>
-                  <input id="rememberMe" type="checkbox" />
-                  <label
-                    htmlFor="rememberMe"
-                    style={{ userSelect: "none", cursor: "pointer" }}
-                  >
-                    &nbsp;Rester connecté?
-                  </label>
-                </Container>
-                <Container className={styles.forgottenContainer}>
-                  <a href="#" style={{ userSelect: "none", cursor: "pointer" }}>
-                    Mot de passe oublié?
-                  </a>
-                </Container>
               </Form.Group>
 
               <Form.Group className={styles.fields}>

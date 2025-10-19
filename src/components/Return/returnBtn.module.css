@@ -12,6 +12,7 @@
   border: solid #fd9f09 3px;
   margin: 10px;
   transition-duration: 400ms;
+  z-index: 999;
 }
 .container svg {
   font-size: 30px;

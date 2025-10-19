@@ -144,25 +144,6 @@ export default function FirstLogin({ show, onSubmit, onClose }) {
                 <code>/ # ! @ $ %</code>
               </div>
             </Form.Group>
-
-            <Form.Group className={styles.extras}>
-              <div className={styles.extrasContainer}>
-                <div className={styles.check}>
-                  <input id={rememberMeId} type="checkbox" />
-                  <label
-                    htmlFor={rememberMeId}
-                    style={{ userSelect: "none", cursor: "pointer" }}
-                  >
-                    &nbsp;Rester connecté?
-                  </label>
-                </div>
-                <div>
-                  <a href="#" style={{ userSelect: "none", cursor: "pointer" }}>
-                    Mot de passe oublié?
-                  </a>
-                </div>
-              </div>
-            </Form.Group>
           </Form>
         </Container>
       </Modal.Body>

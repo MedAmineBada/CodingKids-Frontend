@@ -23,6 +23,19 @@ import PaymentCalendar from "@/components/PaymentCalendar/PaymentCalendar.jsx";
 import { getPaymentStatus } from "@/services/PaymentService.js";
 import PaymentForm from "@/components/PaymentForm/PaymentForm.jsx";
 
+import "@fontsource/inter/500";
+import "@fontsource/inter/600";
+import "@fontsource/inter/700";
+import "@fontsource/inter/900";
+
+import {
+  enroll,
+  get_available_enrollments,
+  get_enrollments,
+  remove_enrollment,
+} from "@/services/FormationServices.js";
+import Modal from "react-bootstrap/Modal";
+
 function formatIsoDateToDmy(inputDate) {
   if (!inputDate) return "";
   const parts = inputDate.split("-");
@@ -37,7 +50,6 @@ function useComponentWidth() {
   useEffect(() => {
     if (!ref.current) return;
 
-    // Create a ResizeObserver instance
     const observer = new ResizeObserver((entries) => {
       for (let entry of entries) {
         setWidth(entry.contentRect.width);
@@ -45,13 +57,12 @@ function useComponentWidth() {
     });
 
     observer.observe(ref.current);
-
-    // Cleanup
     return () => observer.disconnect();
   }, []);
 
   return [ref, width];
 }
+
 export default function StudentProfile({ data = {}, handleClose }) {
   const [ref, width] = useComponentWidth();
 
@@ -63,14 +74,35 @@ export default function StudentProfile({ data = {}, handleClose }) {
   const [actionConfirmMessage, setActionConfirmMessage] = useState("");
   const [actionConfirmFunc, setActionConfirmFunc] = useState(null);
   const [showPayModal, setShowPayModal] = useState(false);
-  const [showPayInfoModal, setShowPayInfoModal] = useState(false);
+
+  // errors & success
   const [showErr, setShowErr] = useState(false);
   const [errCode, setErrCode] = useState(null);
   const [errMsg, setErrMsg] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // enroll success modal
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successTitle, setSuccessTitle] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const [isNotFound, setIsNotFound] = useState(false);
   const [dates, setDates] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
+
+  // enrollments
+  const [enrollments, setEnrollments] = useState([]);
+  const [enrollLoading, setEnrollLoading] = useState(false);
+  const [enrollError, setEnrollError] = useState(null);
+  const enrollRequestIdRef = useRef(0);
+
+  // assign modal
+  const [showAssignModal, setShowAssignModal] = useState(false);
+
+  // remove enrollment confirm
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
+  const [removeTarget, setRemoveTarget] = useState(null);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 1, 11, 31);
@@ -109,12 +141,52 @@ export default function StudentProfile({ data = {}, handleClose }) {
     }
   }
 
+  // load enrollments with request id guard (prevents race/spam)
+  const loadEnrollments = useCallback(async (sid) => {
+    if (!sid) {
+      setEnrollments([]);
+      return;
+    }
+    const thisReq = ++enrollRequestIdRef.current;
+    setEnrollLoading(true);
+    setEnrollError(null);
+    try {
+      const res = await get_enrollments(sid);
+      // ignore stale responses
+      if (thisReq !== enrollRequestIdRef.current) return;
+      let items = [];
+      if (Array.isArray(res)) items = res;
+      else if (res?.enrollments && Array.isArray(res.enrollments))
+        items = res.enrollments;
+      else if (res && typeof res === "object") {
+        const maybe = Object.values(res).find((v) => Array.isArray(v));
+        if (Array.isArray(maybe)) items = maybe;
+      }
+      setEnrollments(items);
+    } catch (err) {
+      console.error("get_enrollments error:", err);
+      setEnrollError("Impossible de charger les inscriptions.");
+      setEnrollments([]);
+    } finally {
+      // only clear loading if still the latest
+      if (thisReq === enrollRequestIdRef.current) setEnrollLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
+    // when student changes we fetch required resources once
     if (student?.id) {
       getAttendanceDates(student.id);
       handleGetPaymentStatus(student.id);
+      loadEnrollments(student.id);
+    } else {
+      setDates([]);
+      setSelectedDays([]);
+      setEnrollments([]);
     }
-  }, [student?.id, getAttendanceDates]);
+    // only run when student.id changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [student?.id]);
 
   function showError(code = 500, message = "Une erreur s'est produite") {
     setErrCode(code);
@@ -269,6 +341,171 @@ export default function StudentProfile({ data = {}, handleClose }) {
     handleClose?.();
   }
 
+  // --- AssignEnrollModal (shows available enrollments for this student)
+  function AssignEnrollModal({ show, onClose, onEnrolled }) {
+    const [avail, setAvail] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [enrollingId, setEnrollingId] = useState(null);
+
+    useEffect(() => {
+      if (!show) return;
+      let cancelled = false;
+      (async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const res = await get_available_enrollments(student.id);
+          let data = [];
+          if (Array.isArray(res)) data = res;
+          else if (res?.av_enrollments && Array.isArray(res.av_enrollments))
+            data = res.av_enrollments;
+          else if (res && typeof res === "object") {
+            const maybe = Object.values(res).find((v) => Array.isArray(v));
+            if (Array.isArray(maybe)) data = maybe;
+          }
+          if (!cancelled) setAvail(data);
+        } catch (err) {
+          console.error("get_available_enrollments error:", err);
+          if (!cancelled)
+            setError("Impossible de charger les inscriptions disponibles.");
+        } finally {
+          if (!cancelled) setLoading(false);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [show, student.id]);
+
+    async function handleEnroll(item) {
+      if (!student?.id || !item?.formation_id) {
+        setError("Données manquantes.");
+        return;
+      }
+      setEnrollingId(item.formation_id);
+      try {
+        const status = await enroll(student.id, item.formation_id);
+        if (status >= 200 && status < 300) {
+          setSuccessTitle("Inscription effectuée");
+          setSuccessMessage("L'étudiant a été inscrit avec succès.");
+          setSuccessOpen(true);
+
+          await loadEnrollments(student.id);
+          onEnrolled?.();
+          onClose?.();
+        } else if (status === 422) {
+          setErrCode(422);
+          setErrMsg("Erreur dans les données saisies.");
+          setShowErr(true);
+        } else {
+          setErrCode(status ?? 500);
+          setErrMsg("Une erreur est survenue lors de l'inscription.");
+          setShowErr(true);
+        }
+      } catch (err) {
+        console.error("enroll error:", err);
+        setErrCode(500);
+        setErrMsg("Une erreur est survenue lors de l'inscription.");
+        setShowErr(true);
+      } finally {
+        setEnrollingId(null);
+      }
+    }
+
+    return (
+      <Modal
+        show={show}
+        onHide={onClose}
+        size="m"
+        centered
+        scrollable
+        className={styles.modal}
+      >
+        <Modal.Header closeButton className={styles.header}>
+          <h2 style={{ fontWeight: "bold" }} className={styles.title}>
+            Inscrire l'élève
+          </h2>
+        </Modal.Header>
+
+        <Modal.Body className={styles.body}>
+          {error && <div className={styles.error}>{error}</div>}
+          {!loading && avail.length === 0 && !error && (
+            <div style={{ textAlign: "center" }} className={styles.message}>
+              Aucune formation disponible.
+            </div>
+          )}
+
+          <div className={styles.enrollList}>
+            {avail.map((a) => (
+              <div key={a.formation_id} className={styles.enrollRow}>
+                <div className={styles.enrollInfo}>
+                  <div className={styles.enrollLabel}>{a.formation_label}</div>
+                  <div className={styles.enrollMeta}>
+                    {a.teacher_name ? a.teacher_name : "—"} ·{" "}
+                    {a.start_date ? formatIsoDateToDmy(a.start_date) : "—"}
+                  </div>
+                </div>
+
+                <div className={styles.enrollActions}>
+                  <button
+                    type="button"
+                    className={styles.enrollBtn}
+                    onClick={() => handleEnroll(a)}
+                    disabled={enrollingId === a.formation_id}
+                  >
+                    {enrollingId === a.formation_id ? "…" : "Inscrire"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+  // remove enrollment
+  function handleRemoveClick(enrollment) {
+    setRemoveTarget(enrollment);
+    setRemoveConfirmOpen(true);
+  }
+
+  async function executeRemoveEnrollment() {
+    if (!removeTarget || !student?.id) {
+      setRemoveConfirmOpen(false);
+      return;
+    }
+    setIsRemoving(true);
+    try {
+      const status = await remove_enrollment(
+        student.id,
+        removeTarget.formation_id,
+      );
+      if (status >= 200 && status < 300) {
+        setSuccessTitle("Dissociation effectuée");
+        setSuccessMessage("L'inscription a été retirée.");
+        setSuccessOpen(true);
+        setRemoveConfirmOpen(false);
+        await loadEnrollments(student.id);
+      } else {
+        setErrCode(status ?? 500);
+        setErrMsg("Erreur lors de la dissociation.");
+        setShowErr(true);
+        setRemoveConfirmOpen(false);
+      }
+    } catch (err) {
+      console.error("remove_enrollment error:", err);
+      setErrCode(500);
+      setErrMsg("Une erreur est survenue lors de la dissociation.");
+      setShowErr(true);
+      setRemoveConfirmOpen(false);
+    } finally {
+      setIsRemoving(false);
+      setRemoveTarget(null);
+    }
+  }
+
   return (
     <>
       <PaymentForm
@@ -319,6 +556,28 @@ export default function StudentProfile({ data = {}, handleClose }) {
         message="L’étudiant a été supprimé avec succès."
         show={showSuccess}
       />
+
+      <SuccessModal
+        show={successOpen}
+        title={successTitle}
+        message={successMessage}
+        onClose={() => setSuccessOpen(false)}
+      />
+
+      <ConfirmModal
+        show={removeConfirmOpen}
+        onClose={() => setRemoveConfirmOpen(false)}
+        title="Confirmer la dissociation"
+        message={
+          removeTarget
+            ? `Retirer l'inscription "${removeTarget.formation_label}" ?`
+            : "Retirer cette inscription ?"
+        }
+        btn_yes="Retirer"
+        btn_no="Annuler"
+        func={executeRemoveEnrollment}
+      />
+
       <div className={styles.container} ref={ref}>
         <div className={styles.header}>
           <div className={styles.imgwrapper}>
@@ -326,6 +585,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
           </div>
           <h1>{student?.name ?? "—"}</h1>
         </div>
+
         <div className={styles.swiper}>
           <Swiper
             rewind={false}
@@ -333,9 +593,10 @@ export default function StudentProfile({ data = {}, handleClose }) {
             modules={[Navigation]}
             className="mySwiper"
           >
+            {/* Information slide */}
             <SwiperSlide>
               <div className={styles.content}>
-                <h1>Information</h1>
+                <h1 className={styles.slideTitle}>Information</h1>
                 <table>
                   <tbody>
                     <tr>
@@ -378,6 +639,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
                     </tr>
                   </tbody>
                 </table>
+
                 <div className={styles.btnwrapper}>
                   <div className={styles.modbtns}>
                     <button
@@ -410,9 +672,7 @@ export default function StudentProfile({ data = {}, handleClose }) {
                   </button>
                   <button
                     className={styles.swiperbtns}
-                    onClick={() => {
-                      setShowPayModal(true);
-                    }}
+                    onClick={() => setShowPayModal(true)}
                   >
                     Enregistrer un paiement
                   </button>
@@ -420,9 +680,10 @@ export default function StudentProfile({ data = {}, handleClose }) {
               </div>
             </SwiperSlide>
 
+            {/* Présences slide */}
             <SwiperSlide>
               <div className={styles.content}>
-                <h1>Présences</h1>
+                <h1 className={styles.slideTitle}>Présences</h1>
                 <MediaQuery minWidth={760}>
                   <DayPicker
                     locale={fr}
@@ -456,21 +717,123 @@ export default function StudentProfile({ data = {}, handleClose }) {
               </div>
             </SwiperSlide>
 
+            {/* FORMATIONS (penultimate) */}
             <SwiperSlide>
               <div className={styles.content}>
-                <h1>Paiements</h1>
+                <h1 className={styles.slideTitle}>Formations</h1>
+
+                {/* wide + card */}
+                <div
+                  className={styles.addEnrollmentCard}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setShowAssignModal(true)}
+                >
+                  <div className={styles.addCardInner}>
+                    <div className={styles.plusSign}>+</div>
+                    <div>
+                      <div style={{ fontWeight: 700 }}>
+                        Assigner une formation
+                      </div>
+                      <div className={styles.enrollMeta}>
+                        Choisir parmi les formations disponibles
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {enrollError && (
+                  <div className={styles.error}>{enrollError}</div>
+                )}
+
+                {/* <-- scrollable container that doesn't grow the parent --> */}
+                <div className={styles.enrollmentsScroll}>
+                  {enrollLoading && (
+                    <div className={styles.message}>Chargement…</div>
+                  )}
+                  {!enrollLoading &&
+                    enrollments.length === 0 &&
+                    !enrollError && (
+                      <div className={styles.empty}>
+                        Aucune formation trouvée.
+                      </div>
+                    )}
+
+                  <div className={styles.enrollmentsWrap}>
+                    {enrollments.map((e) => (
+                      <div
+                        key={
+                          String(e.formation_id) + "-" + (e.start_date ?? "")
+                        }
+                        className={styles.enrollRow}
+                      >
+                        <div className={styles.enrollInfo}>
+                          <div className={styles.enrollLabel}>
+                            {e.formation_label}
+                          </div>
+                          <div className={styles.enrollMeta}>
+                            Enseignant: {e.teacher_name ? e.teacher_name : "—"}{" "}
+                            · Début:{" "}
+                            {e.start_date
+                              ? formatIsoDateToDmy(e.start_date)
+                              : "—"}
+                          </div>
+                        </div>
+
+                        <div className={styles.enrollActions}>
+                          <button
+                            type="button"
+                            className={styles.removeEnrollBtn}
+                            onClick={() => handleRemoveClick(e)}
+                            aria-label="Retirer l'inscription"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M18 6L6 18M6 6l12 12"
+                                stroke="currentColor"
+                                strokeWidth="1.6"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            {/* Payments slide (last) */}
+            <SwiperSlide>
+              <div className={styles.content}>
+                <h1 className={styles.slideTitle}>Paiements</h1>
                 <div>
                   <PaymentCalendar
                     id={student.id}
                     records={payStatus}
                     onPayEdit={() => handleGetPaymentStatus(student.id)}
-                  ></PaymentCalendar>
+                  />
                 </div>
               </div>
             </SwiperSlide>
           </Swiper>
         </div>
       </div>
+
+      {/* Assign enroll modal at root level */}
+      <AssignEnrollModal
+        show={showAssignModal}
+        onClose={() => setShowAssignModal(false)}
+        onEnrolled={() => loadEnrollments(student.id)}
+      />
     </>
   );
 }

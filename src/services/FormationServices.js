@@ -186,3 +186,126 @@ export async function deleteType(id) {
     return 500;
   }
 }
+
+export async function getFormationsByTeacher(id) {
+  const token = sessionStorage.getItem("access_token");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/teachers/${id}/formations`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return { status: response.status, formations: responseData };
+  } else {
+    return { status: response.status, formations: null };
+  }
+}
+
+export async function unassignFormation(tid, fid) {
+  try {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/formations/unassign/${tid}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          formation_id: fid,
+        }),
+      },
+    );
+    return response.status;
+  } catch {
+    return 500;
+  }
+}
+
+export async function enroll(sid, fid) {
+  try {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/students/${sid}/enroll/${fid}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.status;
+  } catch {
+    return 500;
+  }
+}
+
+export async function get_enrollments(sid) {
+  const token = sessionStorage.getItem("access_token");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students/${sid}/enrollments`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return { status: response.status, enrollments: responseData };
+  } else {
+    return { status: response.status, enrollments: null };
+  }
+}
+
+export async function get_available_enrollments(sid) {
+  const token = sessionStorage.getItem("access_token");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/students/${sid}/enrollments/available`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return { status: response.status, av_enrollments: responseData };
+  } else {
+    return { status: response.status, av_enrollments: null };
+  }
+}
+
+export async function remove_enrollment(sid, fid) {
+  try {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/students/${sid}/enrollments/${fid}/remove`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.status;
+  } catch {
+    return 500;
+  }
+}

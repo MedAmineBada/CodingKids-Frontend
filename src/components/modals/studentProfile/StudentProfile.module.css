@@ -98,7 +98,7 @@
 .btnwrapper button svg {
   font-size: 24px;
 }
-.modbtns button:nth-child(2) {
+.modbtns .swiperbtns:nth-child(2) {
   background-color: #dc3545;
   color: #ffffff;
 }
@@ -123,13 +123,341 @@
   background-color: #c9323f;
 }
 
+/* ---------- Enrollment slide styles ---------- */
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.listHeader h1 {
+  margin: 0;
+  font-size: 28px;
+  text-transform: uppercase;
+  color: var(--accent, #fd9f09);
+  font-family: Inter, sans-serif;
+}
+.addBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #f1f1f1;
+  background: #fffdf9;
+  font-size: 22px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    transform 0.14s ease,
+    border-color 0.14s ease,
+    background 0.14s ease;
+}
+.addBtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent, #fd9f09);
+  background: #fffaf3;
+}
+
+/* enroll list */
+.enrollmentsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.enrollList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.enrollRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fffdf9;
+  border: 1px solid #f1f1f1;
+}
+.enrollInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+.enrollLabel {
+  font-weight: 700;
+  color: #111827;
+}
+.enrollMeta {
+  color: #6b6b6b;
+  font-size: 14px;
+}
+
+/* action buttons in modal */
+.enrollActions {
+  display: flex;
+  gap: 8px;
+}
+.enrollBtn {
+  background: var(--accent, #fd9f09);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.enrollBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+}
+
+/* message / empty / error */
+.message {
+  color: #666;
+  margin: 12px 0;
+}
+.error {
+  color: crimson;
+  margin: 12px 0;
+}
+.empty {
+  color: #666;
+  margin: 12px 0;
+}
+:root {
+  --swiper-navigation-color: #a4a4a4;
+  --swiper-navigation-size: 24px;
+  --accent: #fd9f09;
+  --card-bg: #fffdf9;
+  --card-border: #f1f1f1;
+}
+
+/* existing file content kept... (paste whole file earlier, merging) */
+
+/* ---------- Enrollment slide styles (enhanced) ---------- */
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.listHeader h1 {
+  margin: 0;
+  font-size: 28px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: Inter, sans-serif;
+}
+
+/* wide add card - separated from title (keeps layout tidy) */
+.addEnrollmentCard {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: linear-gradient(
+    180deg,
+    rgba(253, 159, 9, 0.06),
+    rgba(255, 255, 255, 0)
+  );
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  display: flex;
+  align-items: center;
+}
+.addEnrollmentCard:focus,
+.addEnrollmentCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+.addCardInner {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.plusSign {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent);
+}
+
+/* ---------- scroll container (prevents parent growth) ---------- */
+.enrollmentsScroll {
+  max-height: 300px; /* keeps the slide compact; adjust if needed */
+  overflow-y: auto;
+  padding-right: 6px; /* prevent content under scrollbar */
+  margin-top: 8px;
+}
+
+/* nicer webkit scrollbar (optional) */
+.enrollmentsScroll::-webkit-scrollbar {
+  width: 10px;
+}
+.enrollmentsScroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+.enrollmentsScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* enroll list + rows */
+.enrollmentsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.enrollList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.enrollRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  min-height: 56px; /* keep compact fixed-ish height */
+  gap: 12px;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms;
+}
+.enrollRow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+}
+
+/* info column */
+.enrollInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0; /* allow truncation if needed */
+}
+.enrollLabel {
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.enrollMeta {
+  color: #6b6b6b;
+  font-size: 14px;
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* action buttons */
+.enrollActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 12px;
+}
+.enrollBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease;
+}
+.enrollBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+}
+
+/* remove/unassign button style (compact, clear affordance) */
+.removeEnrollBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    transform 120ms ease;
+}
+.removeEnrollBtn svg {
+  display: block;
+}
+.removeEnrollBtn:hover {
+  background: rgba(220, 38, 55, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(220, 38, 55, 0.12);
+}
+.removeEnrollBtn:active {
+  transform: translateY(0);
+}
+
+/* message / empty / error */
+.message {
+  color: #666;
+  margin: 12px 0;
+}
+.error {
+  color: crimson;
+  margin: 12px 0;
+}
+.empty {
+  color: #666;
+  margin: 12px 0;
+}
+
+/* responsive tweaks */
+@media screen and (max-width: 480px) {
+  .enrollmentsScroll {
+    max-height: 220px;
+  }
+  .enrollRow {
+    padding: 10px;
+    min-height: 52px;
+  }
+}
+
+/* desktop tweaks kept from original file */
 @media screen and (min-width: 800px) {
   .container {
     justify-content: center;
     height: 100%;
   }
   .header {
-    margin-top: -2%;
     display: flex;
     gap: 0;
     flex-direction: column;
@@ -237,4 +565,14 @@
     color: #fd9f09;
     font-family: Inter, sans-serif;
   }
+}
+.modal .header {
+  display: flex;
+  flex-direction: row;
+  font-family: Inter, sans-serif;
+  color: #fd9f09;
+  text-transform: uppercase;
+  font-weight: 800;
+  border: none;
+  padding: 15px 15px 0;
 }
