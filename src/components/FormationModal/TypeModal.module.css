@@ -1,0 +1,178 @@
+:root {
+  --accent: #fd9f09;
+  --bg: #fffdf9;
+  --bg-plain: #ffffff;
+  --muted: #7f7f7f;
+  --text: #111827;
+  --radius: 12px;
+  --shadow-hover: 0 8px 20px rgba(15, 23, 42, 0.08);
+  --transition-fast: 0.14s;
+  --touch-size: 44px;
+}
+
+/* header */
+.header {
+  border: none;
+}
+.header h1 {
+  font-family: Inter, sans-serif;
+  font-size: 34px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* modal backdrop tweak */
+.modal {
+  backdrop-filter: brightness(40%);
+}
+
+/* body adjustments */
+.body {
+  padding-top: 0;
+}
+
+/* list container */
+.typeList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* each row looks like a subtle card */
+.typeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: var(--radius);
+  transition:
+    transform var(--transition-fast) ease,
+    box-shadow var(--transition-fast) ease,
+    border-color var(--transition-fast) ease,
+    background var(--transition-fast) ease;
+  cursor: pointer;
+  background: var(--bg);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  will-change: transform, box-shadow;
+}
+
+/* hover / pointer */
+.typeRow:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* selected state (useful after rename or programmatic selection) */
+.typeRow.selected {
+  background: #fffaf3;
+  border-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+}
+
+/* main button that shows the label — keep text readable and truncated if too long */
+.typeBtn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: var(--text);
+  flex: 1;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+/* icon button group */
+.iconButtons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* icon buttons (edit/delete) */
+.iconBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast) ease,
+    background var(--transition-fast) ease,
+    border-color var(--transition-fast) ease,
+    color var(--transition-fast) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* hover / active states */
+.iconBtn:hover,
+.iconBtn:focus {
+  background: #fffaf3;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  color: var(--accent);
+}
+
+/* pressed feedback */
+.iconBtn:active {
+  transform: translateY(0);
+  opacity: 0.95;
+}
+
+/* keyboard focus visible */
+.iconBtn:focus-visible,
+.typeBtn:focus-visible,
+.typeRow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(253, 159, 9, 0.08);
+  border-color: var(--accent);
+}
+
+/* small helper classes for messages/errors inside modal */
+.message {
+  color: #444;
+  font-size: 14px;
+  margin: 6px 0;
+}
+.error {
+  color: crimson;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+/* responsive / touch adjustments */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 32px;
+  }
+
+  .typeRow {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .typeBtn {
+    font-size: 15px;
+  }
+
+  .iconBtn {
+    width: var(--touch-size);
+    height: var(--touch-size);
+    min-width: var(--touch-size);
+    min-height: var(--touch-size);
+    border-radius: 10px;
+  }
+}

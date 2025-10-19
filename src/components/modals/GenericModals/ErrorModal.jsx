@@ -15,6 +15,7 @@ function ErrorModal({
       size="m"
       centered
       onHide={onClose}
+      style={{ zIndex: 999999 }}
     >
       <Modal.Header
         closeButton

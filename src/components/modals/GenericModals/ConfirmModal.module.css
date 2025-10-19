@@ -15,6 +15,9 @@
   font-weight: 600;
   font-size: 18px;
 }
+.container {
+  backdrop-filter: brightness(40%);
+}
 .btns {
   display: flex;
   justify-content: center;

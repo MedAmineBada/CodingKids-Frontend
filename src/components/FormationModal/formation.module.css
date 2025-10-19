@@ -30,6 +30,14 @@
   gap: 6px;
 }
 
+.empty {
+  text-align: center;
+  font-size: 18px;
+  font-family: Quicksand, sans-serif;
+  font-weight: 500;
+  padding-top: 20px;
+}
+
 .formationContainer {
   overflow: hidden;
   border-radius: 12px;
@@ -125,7 +133,7 @@
 }
 
 .fieldValue {
-  font-size: 15px;
+  font-size: 16px;
   color: #111827;
 }
 

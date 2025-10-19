@@ -1,38 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import styles from "./AddTypeModal.module.css";
+import styles from "./AddModal.module.css"; // reuse AddModal styles
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 
 /**
- * AddType modal component.
+ * EditTypeModal: small modal to return a new label via onSave(label)
  * Props:
  *  - show
  *  - onClose()
- *  - onSave(label)  // parent will call addType(...) and handle API
- *
- * Validation: forbids control chars and these characters: < > ` \ { } ;
- * Everything else (plus, minus, slash, punctuation, emoji, accents, etc.) allowed.
+ *  - initialLabel
+ *  - onSave(label)
  */
+// eslint-disable-next-line no-control-regex
 const SAFE_LABEL_REGEX = /^[^\x00-\x1F<>\\{};`]+$/u;
 
-function AddType({ show, onClose = () => {}, onSave = () => {} }) {
+function EditTypeModal({
+  show,
+  onClose = () => {},
+  initialLabel = "",
+  onSave = () => {},
+}) {
   const [label, setLabel] = useState("");
   const [localError, setLocalError] = useState(null);
 
-  // ErrorModal state (for API-level errors if we want to surface them here)
   const [errOpen, setErrOpen] = useState(false);
   const [errCode, setErrCode] = useState(null);
   const [errMessage, setErrMessage] = useState("");
 
   useEffect(() => {
     if (show) {
-      setLabel("");
+      setLabel(initialLabel ?? "");
       setLocalError(null);
       setErrOpen(false);
       setErrCode(null);
       setErrMessage("");
     }
-  }, [show]);
+  }, [show, initialLabel]);
 
   function showApiError(code, message) {
     setErrCode(code);
@@ -59,10 +62,9 @@ function AddType({ show, onClose = () => {}, onSave = () => {} }) {
     setLocalError(null);
 
     try {
-      onSave(label.trim()); // parent will call addType and handle response
-      onClose();
+      onSave(label.trim());
     } catch (err) {
-      console.error("AddType onSave error:", err);
+      console.error("EditTypeModal onSave error:", err);
       showApiError(500, "Une erreur est survenue.");
     }
   }
@@ -82,19 +84,20 @@ function AddType({ show, onClose = () => {}, onSave = () => {} }) {
         size="sm"
         centered
         className={styles.modal}
+        style={{ zIndex: 111111 }}
       >
         <Modal.Header closeButton className={styles.header}>
-          <h3 className={styles.title}>Nouveau type</h3>
+          <h3 className={styles.title2}>Modifier le type</h3>
         </Modal.Header>
 
         <Modal.Body className={styles.body}>
           <form onSubmit={handleSubmit} className={styles.form}>
-            <label className={styles.label} htmlFor="newTypeLabel">
+            <label className={styles.label} htmlFor="editTypeLabel">
               Libellé
             </label>
 
             <input
-              id="newTypeLabel"
+              id="editTypeLabel"
               className={styles.input}
               value={label}
               onChange={(e) => setLabel(e.target.value)}
@@ -112,7 +115,7 @@ function AddType({ show, onClose = () => {}, onSave = () => {} }) {
                 Annuler
               </button>
               <button type="submit" className={styles.saveBtn}>
-                Créer
+                Enregistrer
               </button>
             </div>
           </form>
@@ -122,4 +125,4 @@ function AddType({ show, onClose = () => {}, onSave = () => {} }) {
   );
 }
 
-export default AddType;
+export default EditTypeModal;

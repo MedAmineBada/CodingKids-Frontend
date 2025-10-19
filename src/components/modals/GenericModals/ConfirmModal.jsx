@@ -23,6 +23,7 @@ function ConfirmModal({
       size="lg"
       centered
       onHide={onClose}
+      style={{ zIndex: 99999 }}
     >
       <Modal.Header
         style={{
