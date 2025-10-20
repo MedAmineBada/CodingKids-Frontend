@@ -7,5 +7,4 @@ function Logo({ className }) {
     </div>
   );
 }
-
 export default Logo;
