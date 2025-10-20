@@ -1,4 +1,21 @@
+import {
+  check_access_token,
+  check_refresh_token,
+  refresh,
+} from "@/services/AuthServices.js";
+import { disconnect } from "@/services/utils.js";
+
 export async function getFormations() {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(`${import.meta.env.VITE_API_URL}/formations/`, {
@@ -16,6 +33,16 @@ export async function getFormations() {
 }
 
 export async function getTypes() {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -36,6 +63,16 @@ export async function getTypes() {
 }
 
 export async function addType(label) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -59,6 +96,16 @@ export async function addType(label) {
 }
 
 export async function addFormation(data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   // Accepts either { formation_type, start_date, teacher_id } OR { type_id, start_date, teacher_id }
   const token = sessionStorage.getItem("access_token");
 
@@ -90,6 +137,16 @@ export async function addFormation(data) {
 }
 
 export async function editFormation(id, data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   // Accepts either { formation_type, start_date, teacher_id } OR { type_id, start_date, teacher_id }
   try {
     const token = sessionStorage.getItem("access_token");
@@ -119,6 +176,16 @@ export async function editFormation(id, data) {
 }
 
 export async function deleteFormation(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 
@@ -141,6 +208,16 @@ export async function deleteFormation(id) {
 }
 
 export async function renameType(id, data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 
@@ -166,6 +243,16 @@ export async function renameType(id, data) {
 }
 
 export async function deleteType(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 
@@ -188,6 +275,16 @@ export async function deleteType(id) {
 }
 
 export async function getFormationsByTeacher(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -208,6 +305,16 @@ export async function getFormationsByTeacher(id) {
 }
 
 export async function unassignFormation(tid, fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 
@@ -231,6 +338,16 @@ export async function unassignFormation(tid, fid) {
 }
 
 export async function enroll(sid, fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 
@@ -251,6 +368,16 @@ export async function enroll(sid, fid) {
 }
 
 export async function get_enrollments(sid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -271,6 +398,16 @@ export async function get_enrollments(sid) {
 }
 
 export async function get_available_enrollments(sid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -291,6 +428,16 @@ export async function get_available_enrollments(sid) {
 }
 
 export async function remove_enrollment(sid, fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const token = sessionStorage.getItem("access_token");
 

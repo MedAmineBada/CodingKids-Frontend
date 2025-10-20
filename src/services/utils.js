@@ -138,3 +138,9 @@ export function ItemInArray(item, array) {
   }
   return false;
 }
+
+export function disconnect() {
+  sessionStorage.removeItem("access_token");
+  sessionStorage.removeItem("refresh_token");
+  location.href = "/";
+}

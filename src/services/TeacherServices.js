@@ -1,6 +1,21 @@
-import { removeAllSpaces } from "@/services/utils.js";
+import { disconnect, removeAllSpaces } from "@/services/utils.js";
+import {
+  check_access_token,
+  check_refresh_token,
+  refresh,
+} from "@/services/AuthServices.js";
 
 export async function getAllTeachers(order = "", search = "") {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   try {
@@ -24,6 +39,16 @@ export async function getAllTeachers(order = "", search = "") {
 }
 
 export async function updateTeacher(id, data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/teachers/update/${id}`;
 
@@ -48,6 +73,16 @@ export async function updateTeacher(id, data) {
 }
 
 export async function addTeacher(data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/teachers/add`;
 
@@ -74,6 +109,16 @@ export async function addTeacher(data) {
 }
 
 export async function deleteTeacher(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   return (
@@ -87,6 +132,16 @@ export async function deleteTeacher(id) {
 }
 
 export async function getCV(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   try {
@@ -116,6 +171,16 @@ export async function getCV(id) {
 }
 
 export async function addCV(id, file) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   try {
@@ -138,6 +203,16 @@ export async function addCV(id, file) {
 }
 
 export async function deleteCV(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   try {

@@ -1,4 +1,21 @@
+import {
+  check_access_token,
+  check_refresh_token,
+  refresh,
+} from "@/services/AuthServices.js";
+import { disconnect } from "@/services/utils.js";
+
 export async function getAttendances(id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -19,6 +36,16 @@ export async function getAttendances(id) {
 }
 
 export async function addAttendance(id, date) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -42,8 +69,17 @@ export async function addAttendance(id, date) {
 }
 
 export async function deleteAttendance(id, date) {
-  const token = sessionStorage.getItem("access_token");
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
 
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
+  const token = sessionStorage.getItem("access_token");
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/attendances/delete`,
     {

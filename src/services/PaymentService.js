@@ -1,4 +1,21 @@
+import {
+  check_access_token,
+  check_refresh_token,
+  refresh,
+} from "@/services/AuthServices.js";
+import { disconnect } from "@/services/utils.js";
+
 export async function getPaymentStatus(student_id) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(
@@ -25,6 +42,16 @@ export async function addPayment(
   payment_date,
   amount,
 ) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
 
   const response = await fetch(`${import.meta.env.VITE_API_URL}/payments/add`, {
@@ -57,6 +84,16 @@ export async function editPayment(
   payment_date,
   amount,
 ) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   const token = sessionStorage.getItem("access_token");
   const url = `${import.meta.env.VITE_API_URL}/payments/edit`;
   const payload = {

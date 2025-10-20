@@ -262,11 +262,7 @@
   width: 100%;
   border-radius: 12px;
   border: 1px solid var(--card-border);
-  background: linear-gradient(
-    180deg,
-    rgba(253, 159, 9, 0.06),
-    rgba(255, 255, 255, 0)
-  );
+  background: rgba(253, 159, 9, 0.13);
   padding: 10px;
   margin-bottom: 10px;
   cursor: pointer;
@@ -275,6 +271,7 @@
     box-shadow 160ms ease;
   display: flex;
   align-items: center;
+  text-align: left;
 }
 .addEnrollmentCard:focus,
 .addEnrollmentCard:hover {
@@ -284,7 +281,7 @@
 .addCardInner {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: start;
 }
 .plusSign {
   width: 44px;
@@ -449,6 +446,9 @@
     padding: 10px;
     min-height: 52px;
   }
+  .addEnrollmentCard {
+    width: 100%;
+  }
 }
 
 /* desktop tweaks kept from original file */
@@ -564,6 +564,9 @@
     font-weight: 700;
     color: #fd9f09;
     font-family: Inter, sans-serif;
+  }
+  .addEnrollmentCard {
+    width: 74%;
   }
 }
 .modal .header {

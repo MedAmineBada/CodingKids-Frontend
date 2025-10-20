@@ -20,6 +20,7 @@ import { useState } from "react";
 import ScanResultModal from "@/components/modals/ScanResult.jsx";
 import Inscription from "@/components/modals/Inscription/Inscription.jsx";
 import Formation from "@/components/FormationModal/Formation.jsx";
+import EditAcc from "@/components/EditAcc/editacc.jsx";
 
 function Dashboard() {
   if (localStorage.getItem("scanResult") !== null) {
@@ -37,6 +38,7 @@ function Dashboard() {
 
   return (
     <>
+      <EditAcc></EditAcc>
       <Formation
         show={showFormation}
         onclose={() => setShowFormation(false)}
