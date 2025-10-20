@@ -238,14 +238,20 @@ export default function Inscription({ show, close }) {
   }
 
   function handleImageClick() {
-    fileInputRef.current?.click();
+    if (!fileInputRef.current) return; // just in case
+    // Defer the click to ensure ref is attached
+    requestAnimationFrame(() => fileInputRef.current.click());
+    console.log("X");
   }
 
   function handleFileChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setImgSrc(URL.createObjectURL(file));
-    setShowCrop(true);
+
+    setTimeout(() => {
+      setImgSrc(URL.createObjectURL(file));
+      setShowCrop(true);
+    }, 0);
   }
 
   async function handleCropComplete(croppedAreaPixels) {
@@ -323,7 +329,13 @@ export default function Inscription({ show, close }) {
                     className={styles.previewImage}
                   />
                 ) : (
-                  <AddImage src={imgSrc} onClick={handleImageClick} />
+                  <AddImage
+                    src={imgSrc}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleImageClick();
+                    }}
+                  />
                 )}
               </div>
               <span className={styles.imageLabel}>Image (optionnelle)</span>

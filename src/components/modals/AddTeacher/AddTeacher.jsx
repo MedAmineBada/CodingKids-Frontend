@@ -77,7 +77,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
               "L’enseignant a été ajouté, mais l’ajout du CV a échoué : le fichier doit être au format PDF.",
             );
             setShowError(true);
-          } else {
+          } else if (cvadd !== 201) {
             setErrcode(cvadd);
             setErrmsg("Une erreur est survenue. Veuillez réessayer plus tard.");
             setShowError(true);
