@@ -120,6 +120,18 @@ export function saveQRToPDF(src) {
   doc.save("QREtudiant.pdf");
 }
 
+export function saveQRToPNG(src) {
+  // Create a temporary link element
+  const link = document.createElement("a");
+  link.href = src;
+  link.download = "QREtudiant.png";
+
+  // Trigger the download
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 export function formatDateToYYYYMMDD(date) {
   if (!(date instanceof Date) || isNaN(date)) {
     return null; // Handle invalid date

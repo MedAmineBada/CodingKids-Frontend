@@ -1,6 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import styles from "./QRModal.module.css";
-import { saveQRToPDF } from "@/services/utils.js";
+import { saveQRToPNG } from "@/services/utils.js";
 
 function QRModal({ show, onClose, src, title }) {
   function handlePrint() {
@@ -61,7 +61,7 @@ function QRModal({ show, onClose, src, title }) {
         </Modal.Body>
         <Modal.Footer className={styles.footer}>
           <button onClick={handlePrint}>Imprimer</button>
-          <button onClick={() => saveQRToPDF(src)}>Sauvegarder</button>
+          <button onClick={() => saveQRToPNG(src)}>Sauvegarder</button>
         </Modal.Footer>
       </Modal>
     </>
