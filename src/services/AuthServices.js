@@ -163,14 +163,13 @@ export async function refresh() {
 
     if (response.status === 200) {
       const response_data = await response.json();
-      const { access_token, refresh_token, token_type } = response_data;
+      const { access_token, token_type } = response_data;
 
-      if (!access_token || !refresh_token) {
+      if (!access_token) {
         return 500;
       }
 
       sessionStorage.setItem("access_token", access_token);
-      sessionStorage.setItem("refresh_token", refresh_token);
 
       return 200;
     } else {
@@ -196,7 +195,6 @@ export async function check_access_token() {
       },
       body: JSON.stringify({ token }),
     });
-
     if (response.status !== 200) return false;
 
     const result = await response.json();

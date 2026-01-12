@@ -136,23 +136,27 @@ export async function deletePayment(
   }
   const token = sessionStorage.getItem("access_token");
 
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/payments/delete`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/payments/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          student_id: student_id,
+          month: month,
+          year: year,
+          payment_date: payment_date,
+          amount: amount,
+        }),
       },
-      body: JSON.stringify({
-        student_id: student_id,
-        month: month,
-        year: year,
-        payment_date: payment_date,
-        amount: amount,
-      }),
-    },
-  );
+    );
 
-  return response.status;
+    return response.status;
+  } catch {
+    return 500;
+  }
 }
