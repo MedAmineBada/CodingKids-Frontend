@@ -12,7 +12,7 @@ function SuccessModal({ title, message, show = false, onClose }) {
     if (show && !isHovering) {
       timeoutId = setTimeout(() => {
         onClose();
-      }, 2000); // 1 second for success modal
+      }, 1000); // 1 second for success modal
     }
 
     return () => {
