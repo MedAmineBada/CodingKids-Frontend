@@ -1,9 +1,36 @@
 import { useState } from "react";
 import EditAccModal from "./editaccmodal.jsx";
 import styles from "./editacc.module.css";
+import {
+  check_access_token,
+  check_refresh_token,
+  refresh,
+} from "../../services/AuthServices.js";
 
 function EditAcc() {
   const [open, setOpen] = useState(false);
+
+  const disconnect = () => {
+    sessionStorage.removeItem("access_token");
+    sessionStorage.removeItem("refresh_token");
+    window.location.reload();
+  };
+
+  const handleOpen = async () => {
+    if (!(await check_access_token())) {
+      if (!(await check_refresh_token())) {
+        disconnect();
+        return;
+      }
+      await refresh();
+
+      if (!(await check_access_token())) {
+        disconnect();
+        return;
+      }
+    }
+    setOpen(true);
+  };
 
   return (
     <>
@@ -11,8 +38,8 @@ function EditAcc() {
         className={styles.btn}
         role="button"
         tabIndex={0}
-        onClick={() => setOpen(true)}
-        onKeyDown={(e) => e.key === "Enter" && setOpen(true)}
+        onClick={handleOpen}
+        onKeyDown={(e) => e.key === "Enter" && handleOpen()}
         aria-label="Modifier le compte administrateur"
         title="Modifier le compte administrateur"
       >

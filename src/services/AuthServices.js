@@ -1,4 +1,4 @@
-import { cleanSpaces } from "@/services/utils.js";
+import { cleanSpaces, disconnect } from "@/services/utils.js";
 
 export async function check_admins() {
   try {
@@ -70,6 +70,16 @@ export async function login(data) {
 }
 
 export async function update_recovery_code(new_code) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const url = `${import.meta.env.VITE_API_URL}/auth/recovery/modify`;
 
@@ -94,6 +104,16 @@ export async function update_recovery_code(new_code) {
 }
 
 export async function update_admin(data) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const url = `${import.meta.env.VITE_API_URL}/auth/account/update`;
 
@@ -119,6 +139,16 @@ export async function update_admin(data) {
 }
 
 export async function get_admin() {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
   try {
     const url = `${import.meta.env.VITE_API_URL}/auth/account`;
 
