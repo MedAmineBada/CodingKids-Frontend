@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./PaymentCalendar.module.css";
 import PaymentInfo from "@/components/PaymentInfo/PaymentInfo.jsx";
+import PaymentForm from "@/components/PaymentForm/PaymentForm.jsx";
 
 const MONTH_NAMES = [
   "Janvier",
@@ -98,6 +99,11 @@ export default function PaymentCalendar({
   const [showInfo, setShowInfo] = useState(false);
   const [selectedPaymentData, setSelectedPaymentData] = useState(null);
 
+  // PaymentForm state
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [formInitialMonth, setFormInitialMonth] = useState(null);
+  const [formInitialYear, setFormInitialYear] = useState(null);
+
   function handleMonthClick(record) {
     const student_id = id;
     const month = record.month;
@@ -136,6 +142,15 @@ export default function PaymentCalendar({
         onHide={() => setShowInfo(false)}
         data={selectedPaymentData}
         onEdit={onPayEdit}
+      />
+
+      <PaymentForm
+        show={showPaymentForm}
+        onClose={() => setShowPaymentForm(false)}
+        id={id}
+        onSave={onPayEdit}
+        initialMonth={formInitialMonth}
+        initialYear={formInitialYear}
       />
 
       <section className={styles.wrapper}>
@@ -214,6 +229,10 @@ export default function PaymentCalendar({
                   onClick={() => {
                     if (record.paid) {
                       handleMonthClick(record);
+                    } else {
+                      setFormInitialMonth(record.month);
+                      setFormInitialYear(record.year);
+                      setShowPaymentForm(true);
                     }
                   }}
                   title={
@@ -221,7 +240,7 @@ export default function PaymentCalendar({
                       ? typeof record.amount === "number"
                         ? `Payé: ${record.amount.toFixed(2)}DT`
                         : "Payé"
-                      : "Impayé"
+                      : "Impayé (Cliquez pour payer)"
                   }
                 >
                   <div className={styles.monthTop}>

@@ -5,7 +5,7 @@ import styles from "./PaymentForm.module.css";
 import { addPayment } from "@/services/PaymentService.js";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
 
-function PaymentForm({ show, onClose, id, onSave }) {
+function PaymentForm({ show, onClose, id, onSave, initialMonth, initialYear }) {
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState("");
   const [datep, setDatep] = useState("");
@@ -36,14 +36,20 @@ function PaymentForm({ show, onClose, id, onSave }) {
       setErrMsg("");
     } else {
       const today = new Date();
-      const year = today.getFullYear();
-      const month = (today.getMonth() + 1).toString().padStart(2, "0");
+      const currentYear = today.getFullYear();
+      const currentMonth = (today.getMonth() + 1).toString().padStart(2, "0");
       const day = today.getDate().toString().padStart(2, "0");
 
-      setDatep(`${year}-${month}-${day}`);
-      setMonth(`${year}-${month}`);
+      setDatep(`${currentYear}-${currentMonth}-${day}`);
+
+      if (initialMonth && initialYear) {
+        const m = initialMonth.toString().padStart(2, "0");
+        setMonth(`${initialYear}-${m}`);
+      } else {
+        setMonth(`${currentYear}-${currentMonth}`);
+      }
     }
-  }, [show]);
+  }, [show, initialMonth, initialYear]);
 
   const handleAmountChange = (e) => {
     setAmount(e.target.value.replace(/\./g, ","));
