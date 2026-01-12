@@ -116,3 +116,43 @@ export async function editPayment(
 
   return response.status;
 }
+
+export async function deletePayment(
+  student_id,
+  month,
+  year,
+  payment_date,
+  amount,
+) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
+  const token = sessionStorage.getItem("access_token");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/payments/delete`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        student_id: student_id,
+        month: month,
+        year: year,
+        payment_date: payment_date,
+        amount: amount,
+      }),
+    },
+  );
+
+  return response.status;
+}

@@ -2,8 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import styles from "./PaymentInfo.module.css";
 import ErrorModal from "@/components/modals/GenericModals/ErrorModal.jsx";
+import SuccessModal from "@/components/modals/GenericModals/SuccessModal.jsx";
+import ConfirmModal from "@/components/modals/GenericModals/ConfirmModal.jsx";
 import { removeAllSpaces } from "@/services/utils.js";
-import { editPayment } from "@/services/PaymentService.js";
+import { deletePayment, editPayment } from "@/services/PaymentService.js";
 
 function formatAmountParts(amount, locale = "fr-FR", currencyLabel = "DT") {
   if (amount === null || amount === undefined || amount === "") return null;
@@ -79,6 +81,31 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
   const [showErr, setShowErr] = useState(false);
   const [errCode, setErrCode] = useState(500);
   const [errMsg, setErrMsg] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  async function executeDelete() {
+    try {
+      const res = await deletePayment(
+        data.student_id,
+        data.month,
+        data.year,
+        toLocalDateValue(data.payment_date),
+        data.amount,
+      );
+      if (res === 200) {
+        setShowSuccess(true);
+      } else {
+        setErrCode(500);
+        setErrMsg("An error occurred");
+        setShowErr(true);
+      }
+    } catch (error) {
+      setErrCode(500);
+      setErrMsg("An error occurred");
+      setShowErr(true);
+    }
+  }
 
   async function handleSaveClick() {
     const rawAmount = form.amount;
@@ -195,6 +222,25 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
         code={errCode}
         message={errMsg}
       ></ErrorModal>
+      <SuccessModal
+        show={showSuccess}
+        onClose={() => {
+          setShowSuccess(false);
+          handleClose();
+          if (typeof onEdit === "function") onEdit();
+        }}
+        title="Succès"
+        message="Suppression réussie"
+      />
+      <ConfirmModal
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        title="Confirmation"
+        message="Êtes-vous sûr de vouloir supprimer ce paiement ?"
+        btn_yes="Oui"
+        btn_no="Non"
+        func={executeDelete}
+      />
       <Modal
         show={show}
         onHide={handleClose}
@@ -371,6 +417,14 @@ function PaymentInfo({ show, onHide, onEdit, data = {}, loading = false }) {
             onClick={handleClose}
           >
             Fermer
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={() => setShowConfirm(true)}
+          >
+            Supprimer
           </button>
 
           {editing ? (
