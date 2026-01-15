@@ -456,3 +456,33 @@ export async function remove_enrollment(sid, fid) {
     return 500;
   }
 }
+
+export async function get_enrolled_students(fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
+  const token = sessionStorage.getItem("access_token");
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/formations/${fid}/enrollments`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return { status: response.status, students: responseData };
+  } else {
+    return { status: response.status, students: null };
+  }
+}
