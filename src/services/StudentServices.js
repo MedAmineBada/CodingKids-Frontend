@@ -45,8 +45,8 @@ export async function updateStudent(id, data) {
   const payload = {
     name: data.name,
     birth_date: data.birth_date,
-    tel1: data.tel1,
-    tel2: data.tel2,
+    tel1: removeAllSpaces(data.tel1) === "" ? null : data.tel1,
+    tel2: removeAllSpaces(data.tel2) === "" ? null : data.tel2,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 
@@ -80,8 +80,8 @@ export async function addStudent(data) {
   const payload = {
     name: data.name,
     birth_date: data.birth_date,
-    tel1: data.tel1,
-    tel2: data.tel2,
+    tel1: removeAllSpaces(data.tel1) === "" ? null : data.tel1,
+    tel2: removeAllSpaces(data.tel2) === "" ? null : data.tel2,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 

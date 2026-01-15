@@ -75,11 +75,17 @@ export default function Inscription({ show, close }) {
       errors.name = "Nom invalide — uniquement des lettres et espaces.";
     if (touched.birth_date && !(await verifyDOB(form.birth_date)))
       errors.birth_date = "Date invalide ou future.";
-    if (touched.tel1 && !(await verifyTel(form.tel1)))
+    if (touched.tel1 && form.tel1 && !(await verifyTel(form.tel1)))
       errors.tel1 = "Téléphone 1 doit être 8 chiffres.";
-    if (touched.tel2 && !(await verifyTel(form.tel2)))
+    if (touched.tel2 && form.tel2 && !(await verifyTel(form.tel2)))
       errors.tel2 = "Téléphone 2 doit être 8 chiffres.";
-    if (touched.tel1 && touched.tel2 && form.tel1 === form.tel2)
+    if (
+      touched.tel1 &&
+      touched.tel2 &&
+      form.tel1 &&
+      form.tel2 &&
+      form.tel1 === form.tel2
+    )
       errors.tel2 = "Les numéros doivent être différents.";
     if (touched.email && !(await verifyMail(form.email)))
       errors.email = "E-mail invalide.";
@@ -105,7 +111,7 @@ export default function Inscription({ show, close }) {
       setShowError(true);
       return false;
     }
-    if (!(await verifyTel(form.tel1))) {
+    if (form.tel1 && !(await verifyTel(form.tel1))) {
       setErrCode(422);
       setErrMsg(
         "Le numéro de téléphone 1 doit contenir uniquement des chiffres et comporter 8 caractères.",
@@ -113,7 +119,7 @@ export default function Inscription({ show, close }) {
       setShowError(true);
       return false;
     }
-    if (!(await verifyTel(form.tel2))) {
+    if (form.tel2 && !(await verifyTel(form.tel2))) {
       setErrCode(422);
       setErrMsg(
         "Le numéro de téléphone 2 doit contenir uniquement des chiffres et comporter 8 caractères.",
@@ -121,7 +127,7 @@ export default function Inscription({ show, close }) {
       setShowError(true);
       return false;
     }
-    if (form.tel1 === form.tel2) {
+    if (form.tel1 && form.tel2 && form.tel1 === form.tel2) {
       setErrCode(422);
       setErrMsg("Les numéros de téléphone 1 et 2 doivent être différents.");
       setShowError(true);
@@ -383,7 +389,7 @@ export default function Inscription({ show, close }) {
 
                 <div className={styles.col}>
                   <label htmlFor="tel1" className={styles.label}>
-                    Tel. 1 <span className={styles.required}>*</span>
+                    Tel. 1
                   </label>
                   <input
                     id="tel1"
@@ -404,7 +410,7 @@ export default function Inscription({ show, close }) {
               <div className={styles.splitRow}>
                 <div className={styles.col}>
                   <label htmlFor="tel2" className={styles.label}>
-                    Tel. 2 <span className={styles.required}>*</span>
+                    Tel. 2
                   </label>
                   <input
                     id="tel2"

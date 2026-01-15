@@ -396,7 +396,7 @@ function Enseignants() {
                       >
                         {teacher.name}{" "}
                         <Badge bg="light" className={styles.badge}>
-                          CIN:{teacher.cin}
+                          CIN:{teacher.cin || "—"}
                         </Badge>
                       </td>
                       <td>

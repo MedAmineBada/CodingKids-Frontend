@@ -54,8 +54,8 @@ export async function updateTeacher(id, data) {
 
   const payload = {
     name: data.name,
-    cin: data.cin,
-    tel: data.tel,
+    cin: removeAllSpaces(data.cin) === "" ? null : data.cin,
+    tel: removeAllSpaces(data.tel) === "" ? null : data.tel,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 
@@ -88,8 +88,8 @@ export async function addTeacher(data) {
 
   const payload = {
     name: data.name,
-    cin: data.cin,
-    tel: data.tel,
+    cin: removeAllSpaces(data.cin) === "" ? null : data.cin,
+    tel: removeAllSpaces(data.tel) === "" ? null : data.tel,
     email: removeAllSpaces(data.email) === "" ? null : data.email,
   };
 

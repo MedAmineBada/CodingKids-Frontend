@@ -28,7 +28,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
     const email = EmailRef.current?.value?.trim() ?? "";
     const cv = CVRef.current?.files[0] ?? null;
 
-    if (!/^\d{8}$/.test(cin)) {
+    if (cin && !/^\d{8}$/.test(cin)) {
       setErrors({ cin: true });
       setErrcode(422);
       setErrmsg("CIN invalide : doit contenir exactement 8 chiffres.");
@@ -44,7 +44,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
       return;
     }
 
-    if (!/^\d{8}$/.test(tel)) {
+    if (tel && !/^\d{8}$/.test(tel)) {
       setErrors({ tel: true });
       setErrcode(422);
       setErrmsg("Numéro Tel. invalide : doit contenir exactement 8 chiffres.");
@@ -52,7 +52,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setErrors({ email: true });
       setErrcode(422);
       setErrmsg("Adresse e-mail invalide.");
@@ -153,16 +153,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
           >
             <div className={styles.row}>
               <label htmlFor="cin" className={styles.label}>
-                CIN{" "}
-                <span
-                  style={{
-                    color: "#fd9f09",
-                    fontSize: "21px",
-                    fontWeight: "bolder",
-                  }}
-                >
-                  *
-                </span>
+                CIN
               </label>
               <input
                 id="cin"
@@ -200,16 +191,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
 
             <div className={styles.row}>
               <label htmlFor="tel" className={styles.label}>
-                Tel.{" "}
-                <span
-                  style={{
-                    color: "#fd9f09",
-                    fontSize: "21px",
-                    fontWeight: "bolder",
-                  }}
-                >
-                  *
-                </span>
+                Tel.
               </label>
               <input
                 id="tel"
@@ -224,16 +206,7 @@ export default function AddTeacher({ show, onHide, onSuccess }) {
 
             <div className={styles.row}>
               <label htmlFor="email" className={styles.label}>
-                Email{" "}
-                <span
-                  style={{
-                    color: "#fd9f09",
-                    fontSize: "21px",
-                    fontWeight: "bolder",
-                  }}
-                >
-                  *
-                </span>
+                Email
               </label>
               <input
                 id="email"

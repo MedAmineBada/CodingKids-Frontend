@@ -75,7 +75,7 @@ function TeacherList({ show = false, onSelect = () => {}, selectedId = null }) {
             <span className={styles.name}>
               {t.name ?? t.full_name ?? t.label ?? `#${t.id}`}
             </span>
-            <span className={styles.id}>CIN: {t.cin}</span>
+            <span className={styles.id}>CIN: {t.cin || "—"}</span>
           </button>
         ))}
       </div>

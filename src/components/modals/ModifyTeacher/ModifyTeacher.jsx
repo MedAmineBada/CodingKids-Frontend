@@ -404,18 +404,7 @@ export default function ModifyTeacherModal({
             </label>
 
             <label className={styles.field}>
-              <span className={styles.label}>
-                CIN{" "}
-                <span
-                  style={{
-                    color: "#fd9f09",
-                    fontWeight: "bolder",
-                    fontSize: "18px",
-                  }}
-                >
-                  *
-                </span>
-              </span>
+              <span className={styles.label}>CIN</span>
               <input
                 className={styles.input}
                 type="number"
@@ -428,18 +417,7 @@ export default function ModifyTeacherModal({
 
             <div className={styles.row}>
               <label className={styles.fieldSmall}>
-                <span className={styles.label}>
-                  Tel.{" "}
-                  <span
-                    style={{
-                      color: "#fd9f09",
-                      fontWeight: "bolder",
-                      fontSize: "18px",
-                    }}
-                  >
-                    *
-                  </span>
-                </span>
+                <span className={styles.label}>Tel.</span>
                 <input
                   className={styles.input}
                   type="tel"
@@ -452,18 +430,7 @@ export default function ModifyTeacherModal({
               </label>
 
               <label className={styles.field}>
-                <span className={styles.label}>
-                  E-mail{" "}
-                  <span
-                    style={{
-                      color: "#fd9f09",
-                      fontWeight: "bolder",
-                      fontSize: "18px",
-                    }}
-                  >
-                    *
-                  </span>
-                </span>
+                <span className={styles.label}>E-mail</span>
                 <input
                   className={styles.input}
                   style={{ textTransform: "none" }}
