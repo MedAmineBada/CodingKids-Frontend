@@ -486,3 +486,74 @@ export async function get_enrolled_students(fid) {
     return { status: response.status, students: null };
   }
 }
+
+export async function assign(tid, fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
+
+  try {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/formations/assign/${tid}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          formation_id: fid,
+        }),
+      },
+    );
+    return response.status;
+  } catch {
+    return 500;
+  }
+}
+
+export async function getFormationDetails(fid) {
+  if (!(await check_access_token())) {
+    if (!(await check_refresh_token())) {
+      disconnect();
+    }
+    await refresh();
+
+    if (!(await check_access_token())) {
+      disconnect();
+    }
+  }
+
+  try {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/formations/${fid}/details`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      const responseData = await response.json();
+      return { status: response.status, details: responseData };
+    } else {
+      return { status: response.status, details: null };
+    }
+  } catch {
+    return { status: 500, details: null };
+  }
+}

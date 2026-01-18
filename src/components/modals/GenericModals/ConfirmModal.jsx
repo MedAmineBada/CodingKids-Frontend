@@ -27,7 +27,8 @@ function ConfirmModal({
     >
       <Modal.Header
         style={{
-          border: "none",
+          borderColor: "white",
+
           paddingTop: 30,
           paddingBottom: 0,
         }}

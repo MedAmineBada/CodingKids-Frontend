@@ -46,10 +46,8 @@ function Etudiants() {
     const thisRequestId = ++requestIdRef.current;
 
     try {
-      const { status, students } = await getAllStudents(
-        sortDir + order,
-        search,
-      );
+      // Fetch all students without any parameters
+      const { status, students } = await getAllStudents();
 
       if (thisRequestId !== requestIdRef.current) return;
 
@@ -68,7 +66,7 @@ function Etudiants() {
 
       setEtudiants([]);
       setErrMsg(
-        "Une erreur s’est produite lors du chargement des étudiants, veuillez réessayer plus tard.",
+        "Une erreur s'est produite lors du chargement des étudiants, veuillez réessayer plus tard.",
       );
       setErrCode(500);
       setShowError(true);
@@ -77,20 +75,64 @@ function Etudiants() {
     }
   }
 
+  // Fetch only on mount
   useEffect(() => {
     fetchStudents();
-  }, [order, sortDir, search]);
+  }, []);
 
-  const totalPages = Math.max(1, Math.ceil(etudiants.length / PAGE_SIZE));
+  // Filter and sort students locally
+  const filteredAndSortedEtudiants = useMemo(() => {
+    let result = [...etudiants];
+
+    // Filter by search
+    if (search.trim()) {
+      const searchLower = search.toLowerCase().trim();
+      result = result.filter((stud) => {
+        return (
+          stud.name?.toLowerCase().includes(searchLower) ||
+          stud.email?.toLowerCase().includes(searchLower) ||
+          stud.id?.toString().includes(searchLower)
+        );
+      });
+    }
+
+    // Sort locally
+    result.sort((a, b) => {
+      let comparison = 0;
+
+      if (order === "name") {
+        const nameA = (a.name || "").toLowerCase();
+        const nameB = (b.name || "").toLowerCase();
+        comparison = nameA.localeCompare(nameB);
+      } else if (order === "id") {
+        comparison = (a.id || 0) - (b.id || 0);
+      }
+
+      // Apply sort direction
+      return sortDir === "-" ? -comparison : comparison;
+    });
+
+    return result;
+  }, [etudiants, search, order, sortDir]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredAndSortedEtudiants.length / PAGE_SIZE),
+  );
+
+  // Reset to page 1 when search, order, or sortDir changes
+  useEffect(() => {
+    setPage(1);
+  }, [search, order, sortDir]);
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
-  }, [etudiants.length, totalPages, page]);
+  }, [filteredAndSortedEtudiants.length, totalPages, page]);
 
   const pageData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return etudiants.slice(start, start + PAGE_SIZE);
-  }, [etudiants, page]);
+    return filteredAndSortedEtudiants.slice(start, start + PAGE_SIZE);
+  }, [filteredAndSortedEtudiants, page]);
 
   const goToPage = (p) => {
     const next = Math.min(Math.max(1, p), totalPages);
@@ -127,19 +169,7 @@ function Etudiants() {
   }
 
   function handleSortDir() {
-    if (sortDir === "-") {
-      setSortDir("");
-    } else {
-      setSortDir("-");
-    }
-  }
-
-  function handleSearch() {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    setSearch(inputValue);
+    setSortDir(sortDir === "-" ? "" : "-");
   }
 
   function handleInputChange(e) {
@@ -188,14 +218,14 @@ function Etudiants() {
         setQrSrc(URL.createObjectURL(blob));
       } else {
         setErrMsg(
-          "Une erreur s’est produite lors de la récupération du code QR de l’étudiant. Veuillez réessayer.",
+          "Une erreur s'est produite lors de la récupération du code QR de l'étudiant. Veuillez réessayer.",
         );
         setErrCode(500);
         setShowError(true);
       }
     } catch {
       setErrMsg(
-        "Une erreur s’est produite lors de la récupération du code QR de l’étudiant. Veuillez réessayer.",
+        "Une erreur s'est produite lors de la récupération du code QR de l'étudiant. Veuillez réessayer.",
       );
     }
     setShowQR(true);
@@ -339,7 +369,6 @@ function Etudiants() {
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSearch();
               }}
             >
               <InputGroup>
@@ -364,6 +393,10 @@ function Etudiants() {
           ) : pageData.length === 0 && search === "" ? (
             <div className={styles.empty}>
               <h1>Aucun étudiant pour le moment.</h1>
+            </div>
+          ) : pageData.length === 0 && search !== "" ? (
+            <div className={styles.empty}>
+              <h1>Aucun résultat pour "{search}"</h1>
             </div>
           ) : (
             <>

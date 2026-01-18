@@ -41,7 +41,7 @@ function SuccessModal({ title, message, show = false, onClose }) {
     >
       <Modal.Header
         closeButton
-        style={{ border: "none", paddingBottom: 0 }}
+        style={{ borderColor: "white", paddingBottom: 0 }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       ></Modal.Header>

@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  position: absolute;
+  position: fixed;
   background-color: #ffffff;
   width: 70px;
   height: 70px;
